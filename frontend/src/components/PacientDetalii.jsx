@@ -260,3 +260,79 @@ export default function PacientDetalii({ pacient, onBack }) {
               color: showConsultatie ? '#333' : '#fff',
               border: '1px solid #ddd', borderRadius: '6px' }}>
             {showConsultatie ? 'Anuleaza' : '+ Consultatie noua'}
+          </button>
+        </div>
+
+        {showConsultatie && (
+          <form onSubmit={salveazaConsultatie}
+            style={{ borderTop: '1px solid #eee', paddingTop: '16px', marginBottom: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
+              <div>
+                <label style={labelStyle}>Data si ora *</label>
+                <input type="datetime-local" value={formConsultatie.data_ora}
+                  onChange={e => setFormConsultatie(p => ({ ...p, data_ora: e.target.value }))}
+                  required style={inputStyle}/>
+              </div>
+            </div>
+            <label style={labelStyle}>Simptome</label>
+            <textarea value={formConsultatie.simptome}
+              onChange={e => setFormConsultatie(p => ({ ...p, simptome: e.target.value }))}
+              style={{ ...inputStyle, height: '70px', resize: 'vertical' }}
+              placeholder="Descrie simptomele pacientului..."/>
+            <label style={labelStyle}>Examen clinic</label>
+            <textarea value={formConsultatie.examen_clinic}
+              onChange={e => setFormConsultatie(p => ({ ...p, examen_clinic: e.target.value }))}
+              style={{ ...inputStyle, height: '70px', resize: 'vertical' }}
+              placeholder="Rezultatele examenului clinic..."/>
+            <label style={labelStyle}>Tratament</label>
+            <textarea value={formConsultatie.tratament}
+              onChange={e => setFormConsultatie(p => ({ ...p, tratament: e.target.value }))}
+              style={{ ...inputStyle, height: '70px', resize: 'vertical' }}
+              placeholder="Medicatie, doze, durata..."/>
+            <label style={labelStyle}>Observatii</label>
+            <textarea value={formConsultatie.observatii}
+              onChange={e => setFormConsultatie(p => ({ ...p, observatii: e.target.value }))}
+              style={{ ...inputStyle, height: '60px', resize: 'vertical' }}
+              placeholder="Observatii suplimentare..."/>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+              <button type="button" onClick={() => setShowConsultatie(false)}
+                style={{ padding: '8px 20px', fontSize: '14px', cursor: 'pointer',
+                  border: '1px solid #ddd', borderRadius: '6px', background: '#fff' }}>
+                Anuleaza
+              </button>
+              <button type="submit" disabled={salvandConsultatie}
+                style={{ padding: '8px 20px', fontSize: '14px', cursor: 'pointer',
+                  background: '#185FA5', color: '#fff', border: 'none',
+                  borderRadius: '6px', opacity: salvandConsultatie ? 0.6 : 1 }}>
+                {salvandConsultatie ? 'Se salveaza...' : 'Salveaza consultatia'}
+              </button>
+            </div>
+          </form>
+        )}
+
+        {loading && <p style={{ color: '#888' }}>Se incarca...</p>}
+        {!loading && consultatii.length === 0 && (
+          <p style={{ color: '#888' }}>Nicio consultatie inregistrata.</p>
+        )}
+        {!loading && consultatii.map(c => (
+          <div key={c.id} style={{ borderBottom: '1px solid #eee',
+            paddingBottom: '12px', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between',
+              marginBottom: '6px' }}>
+              <span style={{ fontWeight: '500', fontSize: '14px' }}>
+                {new Date(c.data_ora).toLocaleDateString('ro-RO')}
+              </span>
+              <span style={{ fontSize: '12px', color: '#888' }}>
+                Dr. {c.medic_nume}
+              </span>
+            </div>
+            {c.simptome && <p style={{ fontSize: '13px', color: '#555',
+              marginBottom: '4px' }}><b>Simptome:</b> {c.simptome}</p>}
+            {c.tratament && <p style={{ fontSize: '13px', color: '#555' }}>
+              <b>Tratament:</b> {c.tratament}</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
