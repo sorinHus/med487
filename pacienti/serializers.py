@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Pacient, Diagnostic, Consultatie, DiagnosticConsultatie
+from .models import CustomUser, Pacient, Diagnostic, Consultatie, DiagnosticConsultatie, Programare
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,3 +43,18 @@ class PacientSerializer(serializers.ModelSerializer):
 
     def get_consultatii_count(self, obj):
         return obj.consultatii.count()
+    
+class ProgramareSerializer(serializers.ModelSerializer):
+    pacient_nume_complet = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Programare
+        fields = ['id', 'pacient', 'medic', 'data_ora', 'durata_min',
+                  'motiv', 'nume_pacient', 'telefon_pacient', 'email_pacient',
+                  'status', 'creat_la', 'pacient_nume_complet']
+        read_only_fields = ['creat_la']
+
+    def get_pacient_nume_complet(self, obj):
+        if obj.pacient:
+            return f"{obj.pacient.nume} {obj.pacient.prenume}"
+        return obj.nume_pacient

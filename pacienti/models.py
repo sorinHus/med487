@@ -80,3 +80,34 @@ class DiagnosticConsultatie(models.Model):
 
     class Meta:
         unique_together = ('consultatie', 'diagnostic')
+
+class Programare(models.Model):
+    STATUS_CHOICES = [
+        ('programat', 'Programat'),
+        ('confirmat', 'Confirmat'),
+        ('anulat', 'Anulat'),
+        ('finalizat', 'Finalizat'),
+    ]
+
+    pacient       = models.ForeignKey(Pacient, on_delete=models.PROTECT,
+                                      related_name='programari',
+                                      null=True, blank=True)
+    medic         = models.ForeignKey(CustomUser, on_delete=models.PROTECT,
+                                      related_name='programari')
+    data_ora      = models.DateTimeField()
+    durata_min    = models.PositiveIntegerField(default=20)
+    motiv         = models.CharField(max_length=255, blank=True)
+    nume_pacient  = models.CharField(max_length=100, blank=True)
+    telefon_pacient = models.CharField(max_length=20, blank=True)
+    email_pacient = models.EmailField(blank=True)
+    status        = models.CharField(max_length=20, choices=STATUS_CHOICES,
+                                     default='programat')
+    creat_la      = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['data_ora']
+
+    def __str__(self):
+        nume = self.pacient or self.nume_pacient
+        return f"{nume} — {self.data_ora:%d.%m.%Y %H:%M}"
+       
