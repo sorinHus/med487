@@ -57,7 +57,7 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
                   marginBottom: '2px', textAlign: 'left',
                   background: active ? 'rgba(58,123,213,0.15)' : 'transparent',
                   color: active ? '#60a5fa' : '#7a8499',
-                  fontSize: '13px', fontWeight: active ? '600' : '400',
+                  fontSize: '16px', fontWeight: active ? '600' : '400',
                   transition: 'background 0.15s, color 0.15s',
                   borderLeft: active ? '3px solid #3a7bd5' : '3px solid transparent',
                 }}
@@ -72,18 +72,18 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
         </nav>
 
         {/* User + Logout */}
-        <div style={{ padding: '12px 14px', borderTop: '1px solid #1e2535' }}>
+        <div style={{ padding: '15px 14px', borderTop: '1px solid #1e2535' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '9px', marginBottom: '10px' }}>
-            <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
+            <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
               {initials}
             </div>
             <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: '12px', fontWeight: '500', color: '#cbd5e1', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{fullName}</div>
-              <div style={{ fontSize: '11px', color: '#4b5563', textTransform: 'capitalize' }}>{rol}</div>
+              <div style={{ fontSize: '15px', fontWeight: '500', color: '#cbd5e1', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{fullName}</div>
+              <div style={{ fontSize: '14px', color: '#4b5563', textTransform: 'capitalize' }}>{rol}</div>
             </div>
           </div>
           <button onClick={onLogout}
-            style={{ width: '100%', padding: '7px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: '#6b7280', fontSize: '12px', cursor: 'pointer', transition: 'all 0.15s' }}
+            style={{ width: '100%', padding: '7px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: '#6b7280', fontSize: '15px', cursor: 'pointer', transition: 'all 0.15s' }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#f87171'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#6b7280'; e.currentTarget.style.borderColor = '#1e2535' }}
           >
@@ -99,8 +99,8 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
         <header style={{ height: '54px', background: '#161b27', borderBottom: '1px solid #1e2535', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0 }}>
           <span style={{ fontSize: '14px', fontWeight: '600', color: '#e2e8f0' }}>{title}</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '13px', color: '#4b5563' }}>{fullName}</span>
-            <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff' }}>
+            <span style={{ fontSize: '16px', color: '#4b5563' }}>{fullName}</span>
+            <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: '#fff' }}>
               {initials}
             </div>
           </div>

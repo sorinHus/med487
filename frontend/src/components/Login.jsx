@@ -2,60 +2,76 @@ import { useState } from 'react'
 import { login } from '../auth'
 
 export default function Login({ onLogin }) {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername]         = useState('')
+  const [password, setPassword]         = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError]               = useState(null)
+  const [loading, setLoading]           = useState(false)
 
   const handleLogin = async (e) => {
     e.preventDefault()
+    setLoading(true)
+    setError(null)
     try {
       await login(username, password)
       onLogin()
     } catch {
       setError('Username sau parola incorecta')
+    } finally {
+      setLoading(false)
     }
   }
 
+  const inputStyle = {
+    width: '100%', padding: '11px 14px', fontSize: '14px',
+    background: '#0f1117', border: '1px solid #1e2535', borderRadius: '9px',
+    color: '#e2e8f0', boxSizing: 'border-box', outline: 'none',
+  }
+
   return (
-    <div style={{ maxWidth: '360px', margin: '80px auto', padding: '32px',
-      border: '1px solid #eee', borderRadius: '12px' }}>
-      <h1 style={{ fontSize: '22px', fontWeight: '500', marginBottom: '24px' }}>
-        MED487 — Login
-      </h1>
-      {error && <p style={{ color: 'red', marginBottom: '12px' }}>{error}</p>}
-      <form onSubmit={handleLogin}>
-        <input
-          type="text" placeholder="Username" value={username}
-          onChange={e => setUsername(e.target.value)}
-          style={{ width: '100%', padding: '8px 12px', fontSize: '14px',
-            border: '1px solid #ddd', borderRadius: '6px',
-            marginBottom: '12px', boxSizing: 'border-box' }}
-        />
-        <div style={{ position: 'relative', marginBottom: '16px' }}>
-          <input
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Parola" value={password}
-            onChange={e => setPassword(e.target.value)}
-            style={{ width: '100%', padding: '8px 12px', fontSize: '14px',
-              border: '1px solid #ddd', borderRadius: '6px',
-              boxSizing: 'border-box', paddingRight: '80px' }}
-          />
-          <span
-            onClick={() => setShowPassword(!showPassword)}
-            style={{ position: 'absolute', right: '12px', top: '50%',
-              transform: 'translateY(-50%)', fontSize: '12px',
-              color: '#185FA5', cursor: 'pointer', userSelect: 'none' }}>
-            {showPassword ? 'Ascunde' : 'Arata'}
-          </span>
+    <div style={{ minHeight: '100vh', background: '#0f1117', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', 'Segoe UI', system-ui, sans-serif" }}>
+      <div style={{ width: '380px', maxWidth: '95vw' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <img src="/logo.png" alt="MED487" style={{ height: '60px', objectFit: 'contain' }} />
         </div>
-        <button type="submit"
-          style={{ width: '100%', padding: '10px', fontSize: '14px',
-            background: '#185FA5', color: '#fff', border: 'none',
-            borderRadius: '6px', cursor: 'pointer' }}>
-          Intra in cont
-        </button>
-      </form>
+        <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '14px', padding: '32px' }}>
+          <div style={{ fontSize: '18px', fontWeight: '600', color: '#e2e8f0', marginBottom: '6px' }}>Autentificare</div>
+          <div style={{ fontSize: '13px', color: '#4b5563', marginBottom: '24px' }}>Introduceti credentialele pentru a accesa aplicatia</div>
+          {error && (
+            <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', padding: '10px 14px', color: '#f87171', fontSize: '13px', marginBottom: '18px' }}>
+              {error}
+            </div>
+          )}
+          <form onSubmit={handleLogin}>
+            <label style={{ fontSize: '13px', color: '#6b7280', display: 'block', marginBottom: '6px' }}>Username</label>
+            <input type="text" value={username} onChange={e => setUsername(e.target.value)}
+              placeholder="ex. sorin487" style={{ ...inputStyle, marginBottom: '14px' }}
+              onFocus={e => e.target.style.borderColor = '#3a7bd5'}
+              onBlur={e => e.target.style.borderColor = '#1e2535'}
+              autoComplete="username" />
+            <label style={{ fontSize: '13px', color: '#6b7280', display: 'block', marginBottom: '6px' }}>Parola</label>
+            <div style={{ position: 'relative', marginBottom: '22px' }}>
+              <input type={showPassword ? 'text' : 'password'} value={password}
+                onChange={e => setPassword(e.target.value)} placeholder="••••••••"
+                style={{ ...inputStyle, paddingRight: '80px' }}
+                onFocus={e => e.target.style.borderColor = '#3a7bd5'}
+                onBlur={e => e.target.style.borderColor = '#1e2535'}
+                autoComplete="current-password" />
+              <span onClick={() => setShowPassword(!showPassword)}
+                style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '12px', color: '#3a7bd5', cursor: 'pointer', userSelect: 'none' }}>
+                {showPassword ? 'Ascunde' : 'Arata'}
+              </span>
+            </div>
+            <button type="submit" disabled={loading}
+              style={{ width: '100%', padding: '12px', fontSize: '14px', fontWeight: '600', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '9px', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.8 : 1 }}
+              onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#2d6bc4' }}
+              onMouseLeave={e => { if (!loading) e.currentTarget.style.background = '#3a7bd5' }}>
+              {loading ? 'Se conecteaza...' : 'Intra in cont'}
+            </button>
+          </form>
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '12px', color: '#2d3748' }}>MED487 — Gestiune Medicala</div>
+      </div>
     </div>
   )
 }
