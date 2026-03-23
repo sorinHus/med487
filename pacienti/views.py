@@ -5,6 +5,8 @@ from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare
 from .serializers import (UserSerializer, PacientSerializer,
                           DiagnosticSerializer, ConsulatieSerializer,
                           ProgramareSerializer)
+from django.core.mail import send_mail
+from django.conf import settings
 
 class PacientViewSet(viewsets.ModelViewSet):
     queryset = Pacient.objects.all()
@@ -47,12 +49,16 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    @action(detail=False, methods=['get'])
+    def me(self, request):
+        return Response(UserSerializer(request.user).data)
+
 class ProgramareViewSet(viewsets.ModelViewSet):
     queryset = Programare.objects.all()
     serializer_class = ProgramareSerializer
 
     def get_permissions(self):
-        if self.action in ['create', 'list_slots']:
+        if self.action in ['create', 'slots_libere']:
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated()]
 
@@ -68,6 +74,56 @@ class ProgramareViewSet(viewsets.ModelViewSet):
             end = start + timedelta(days=6)
             qs = qs.filter(data_ora__date__range=[start, end])
         return qs
+
+    def perform_create(self, serializer):
+        programare = serializer.save()
+        self._trimite_emailuri(programare)
+
+    def _trimite_emailuri(self, p):
+        data = p.data_ora.strftime('%d %B %Y')
+        ora  = p.data_ora.strftime('%H:%M')
+        nume = str(p.pacient) if p.pacient else p.nume_pacient
+
+        # Email catre pacient
+        if p.email_pacient:
+            try:
+                send_mail(
+                    subject='Confirmare programare — Cabinet Medical',
+                    message=(
+                        f'Buna ziua, {nume},\n\n'
+                        f'Programarea dumneavoastra a fost inregistrata:\n'
+                        f'  Data:  {data}\n'
+                        f'  Ora:   {ora}\n'
+                        f'  Motiv: {p.motiv or "—"}\n\n'
+                        f'Va rugam sa anulati cu cel putin 2 ore inainte daca nu puteti ajunge.\n\n'
+                        f'Cabinet Medical MED487'
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[p.email_pacient],
+                    fail_silently=True,
+                )
+            except Exception:
+                pass
+
+        # Email catre cabinet
+        try:
+            send_mail(
+                subject=f'Programare noua — {nume} — {data} {ora}',
+                message=(
+                    f'Programare noua inregistrata:\n\n'
+                    f'  Pacient: {nume}\n'
+                    f'  Telefon: {p.telefon_pacient or "—"}\n'
+                    f'  Email:   {p.email_pacient or "—"}\n'
+                    f'  Data:    {data}\n'
+                    f'  Ora:     {ora}\n'
+                    f'  Motiv:   {p.motiv or "—"}\n'
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.EMAIL_CABINET],
+                fail_silently=True,
+            )
+        except Exception:
+            pass
 
     @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny])
     def slots_libere(self, request):

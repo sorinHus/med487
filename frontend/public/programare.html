@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Programare Online — Cabinet Medical</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f4f8;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .header img { height: 48px; object-fit: contain; }
+    .header-info h1 { font-size: 17px; font-weight: 700; color: #0f172a; }
+    .header-info p  { font-size: 13px; color: #64748b; margin-top: 2px; }
+
+    /* Main */
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 560px;
+      overflow: hidden;
+    }
+
+    /* Steps indicator */
+    .steps {
+      display: flex;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0;
+    }
+    .step {
+      flex: 1;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: #94a3b8;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .step.active   { color: #1d4ed8; border-bottom-color: #1d4ed8; font-weight: 600; }
+    .step.done     { color: #16a34a; border-bottom-color: #16a34a; }
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #e2e8f0; color: #64748b;
+      font-size: 11px; font-weight: 700;
+      margin-right: 6px;
+    }
+    .step.active .step-num { background: #1d4ed8; color: #fff; }
+    .step.done   .step-num { background: #16a34a; color: #fff; }
+
+    .card-body { padding: 28px 32px; }
+    .card-title { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    .card-sub   { font-size: 13px; color: #64748b; margin-bottom: 24px; }
+
+    /* Calendar */
+    .calendar-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .calendar-header span { font-size: 15px; font-weight: 600; color: #0f172a; }
+    .nav-btn {
+      background: none; border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 6px 12px; cursor: pointer; font-size: 14px; color: #475569;
+      transition: all 0.15s;
+    }
+    .nav-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .cal-day-name {
+      text-align: center; font-size: 11px; font-weight: 600;
+      color: #94a3b8; padding: 4px 0; text-transform: uppercase;
+    }
+    .cal-day {
+      text-align: center; padding: 8px 4px; border-radius: 8px;
+      font-size: 13px; cursor: pointer; color: #374151;
+      transition: all 0.15s; border: 2px solid transparent;
+    }
+    .cal-day:hover:not(.disabled):not(.empty):not(.selected) { background: #eff6ff; color: #1d4ed8; }
+    .cal-day.today    { font-weight: 700; color: #1d4ed8; }
+    .cal-day.selected { background: #1d4ed8; color: #fff !important; border-color: #1d4ed8; }
+    .cal-day.disabled { color: #d1d5db; cursor: not-allowed; }
+    .cal-day.empty    { cursor: default; }
+    
+
+    /* Slots */
+    .slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 4px; }
+    .slot {
+      padding: 10px 6px; text-align: center; border-radius: 8px;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      border: 2px solid #e2e8f0; color: #374151;
+      transition: all 0.15s;
+    }
+    .slot:hover        { border-color: #1d4ed8; color: #1d4ed8; background: #eff6ff; }
+    .slot.selected     { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+    .slot.ocupat       { background: #f8fafc; color: #d1d5db; cursor: not-allowed; border-color: #f1f5f9; text-decoration: line-through; }
+    .slots-loading     { text-align: center; color: #94a3b8; font-size: 14px; padding: 24px 0; }
+    .no-slots          { text-align: center; color: #94a3b8; font-size: 14px; padding: 24px 0; }
+
+    /* Form */
+    label { font-size: 13px; font-weight: 500; color: #374151; display: block; margin-bottom: 5px; }
+    input, textarea, select {
+      width: 100%; padding: 10px 13px; font-size: 14px;
+      border: 1.5px solid #e2e8f0; border-radius: 9px;
+      color: #0f172a; background: #fff; outline: none;
+      transition: border-color 0.15s; margin-bottom: 14px;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus { border-color: #1d4ed8; }
+    textarea { resize: vertical; height: 80px; }
+    .field-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+
+    /* Summary box */
+    .summary {
+      background: #f0f7ff; border: 1px solid #bfdbfe;
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 20px;
+      font-size: 13px; color: #1e40af; line-height: 1.7;
+    }
+    .summary strong { color: #1d4ed8; }
+
+    /* Buttons */
+    .btn-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
+    .btn {
+      padding: 11px 22px; font-size: 14px; font-weight: 600;
+      border-radius: 9px; cursor: pointer; border: none;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: #1d4ed8; color: #fff; }
+    .btn-primary:hover { background: #1e40af; }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-secondary { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+    .btn-secondary:hover { background: #e2e8f0; }
+
+    /* Success */
+    .success {
+      text-align: center; padding: 40px 32px;
+    }
+    .success-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #dcfce7; display: flex; align-items: center;
+      justify-content: center; margin: 0 auto 20px; font-size: 28px;
+    }
+    .success h2 { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    .success p  { font-size: 14px; color: #64748b; line-height: 1.6; margin-bottom: 6px; }
+    .success .detail { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 18px; margin: 20px 0; font-size: 14px; color: #166534; line-height: 1.8; text-align: left; }
+
+    /* Error */
+    .error-box {
+      background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px;
+      padding: 10px 14px; color: #dc2626; font-size: 13px; margin-bottom: 14px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center; padding: 20px; font-size: 12px; color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <img src="/logo.png" alt="MED487" onerror="this.style.display='none'"/>
+  <div class="header-info">
+    <h1>Cabinet Medical</h1>
+    <p>Programare online — rapid si simplu</p>
+  </div>
+</header>
+
+<main class="main">
+  <div class="card">
+
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step active" id="step-ind-1">
+        <span class="step-num">1</span>Data
+      </div>
+      <div class="step" id="step-ind-2">
+        <span class="step-num">2</span>Ora
+      </div>
+      <div class="step" id="step-ind-3">
+        <span class="step-num">3</span>Date contact
+      </div>
+    </div>
+
+    <!-- Step 1: Calendar -->
+    <div class="card-body" id="step-1">
+      <div class="card-title">Alege data</div>
+      <div class="card-sub">Selectati ziua dorita pentru programare</div>
+
+      <div class="calendar-header">
+        <button class="nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+        <span id="cal-title"></span>
+        <button class="nav-btn" onclick="changeMonth(1)">&#8250;</button>
+      </div>
+      <div class="calendar-grid" id="cal-grid"></div>
+
+      <div class="btn-row" style="margin-top: 20px;">
+        <button class="btn btn-primary" id="btn-next-1" onclick="goToStep2()" disabled>
+          Continua →
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Slots -->
+    <div class="card-body" id="step-2" style="display:none;">
+      <div class="card-title">Alege ora</div>
+      <div class="card-sub" id="step2-sub"></div>
+      <div id="slots-container"><div class="slots-loading">Se incarca orele disponibile...</div></div>
+      <div class="btn-row" style="margin-top: 20px;">
+        <button class="btn btn-secondary" onclick="goToStep(1)">← Inapoi</button>
+        <button class="btn btn-primary" id="btn-next-2" onclick="goToStep3()" disabled>Continua →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Form -->
+    <div class="card-body" id="step-3" style="display:none;">
+      <div class="card-title">Date de contact</div>
+      <div class="card-sub">Completati datele pentru confirmare</div>
+
+      <div class="summary" id="summary-box"></div>
+      <div class="error-box" id="form-error" style="display:none;"></div>
+
+      <div class="field-group">
+        <div>
+          <label>Nume si prenume *</label>
+          <input type="text" id="f-nume" placeholder="ex. Ionescu Maria" required/>
+        </div>
+        <div>
+          <label>Telefon *</label>
+          <input type="tel" id="f-telefon" placeholder="07xx xxx xxx" required/>
+        </div>
+      </div>
+      <label>Email (pentru confirmare)</label>
+      <input type="email" id="f-email" placeholder="adresa@email.ro"/>
+      <label>Motiv consultatie</label>
+      <input type="text" id="f-motiv" placeholder="ex. Control periodic, Reinnoire reteta..."/>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(2)">← Inapoi</button>
+        <button class="btn btn-primary" id="btn-submit" onclick="submitProgramare()">
+          Confirma programarea
+        </button>
+      </div>
+    </div>
+
+    <!-- Success -->
+    <div id="step-success" style="display:none;">
+      <div class="success">
+        <div class="success-icon">✓</div>
+        <h2>Programare inregistrata!</h2>
+        <p>Veti fi contactat pentru confirmare.</p>
+        <div class="detail" id="success-detail"></div>
+        <p style="font-size:13px; color:#94a3b8;">Daca nu puteti ajunge, va rugam sa anulati cu cel putin 2 ore inainte.</p>
+        <button class="btn btn-primary" style="margin-top: 20px;" onclick="resetForm()">
+          Programare noua
+        </button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>MED487 — Gestiune Medicala &nbsp;·&nbsp; Programare online</footer>
+
+<script>
+  const API = 'http://127.0.0.1:8000/api'
+  const MEDIC_ID = 1
+
+  const LUNI = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie']
+  const LUNI_RO = ['ianuarie','februarie','martie','aprilie','mai','iunie','iulie','august','septembrie','octombrie','noiembrie','decembrie']
+  const ZILE = ['Lu','Ma','Mi','Jo','Vi','Sa','Du']
+
+  let state = {
+    today: new Date(),
+    viewYear: new Date().getFullYear(),
+    viewMonth: new Date().getMonth(),
+    selectedDate: null,
+    selectedSlot: null,
+    currentStep: 1,
+  }
+
+  // ── Calendar ──
+  function renderCalendar() {
+    const { viewYear, viewMonth, today, selectedDate } = state
+    document.getElementById('cal-title').textContent = `${LUNI[viewMonth]} ${viewYear}`
+
+    const grid = document.getElementById('cal-grid')
+    grid.innerHTML = ''
+
+    ZILE.forEach(z => {
+      const el = document.createElement('div')
+      el.className = 'cal-day-name'
+      el.textContent = z
+      grid.appendChild(el)
+    })
+
+    const firstDay = new Date(viewYear, viewMonth, 1).getDay()
+    const offset = firstDay === 0 ? 6 : firstDay - 1
+    const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
+
+    for (let i = 0; i < offset; i++) {
+      const el = document.createElement('div')
+      el.className = 'cal-day empty'
+      grid.appendChild(el)
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(viewYear, viewMonth, d)
+      const el = document.createElement('div')
+      el.textContent = d
+
+      const isToday = date.toDateString() === today.toDateString()
+      const isPast  = date < new Date(today.getFullYear(), today.getMonth(), today.getDate())
+      const isSun   = date.getDay() === 0
+      const dateStr = formatDate(date)
+      const isSel   = selectedDate === dateStr
+
+      let cls = 'cal-day'
+      if (isSel)          cls += ' selected'
+      else if (isToday)   cls += ' today'
+      if (isPast || isSun) cls += ' disabled'
+
+      el.className = cls
+
+      if (!isPast && !isSun) {
+        el.onclick = () => selectDate(dateStr)
+      }
+      grid.appendChild(el)
+    }
+  }
+
+  function selectDate(dateStr) {
+    state.selectedDate = dateStr
+    state.selectedSlot = null
+    document.getElementById('btn-next-1').disabled = false
+    renderCalendar()
+  }
+
+  function changeMonth(dir) {
+    state.viewMonth += dir
+    if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear++ }
+    if (state.viewMonth < 0)  { state.viewMonth = 11; state.viewYear-- }
+    renderCalendar()
+  }
+
+  // ── Slots ──
+  async function loadSlots() {
+    const container = document.getElementById('slots-container')
+    container.innerHTML = '<div class="slots-loading">Se incarca orele disponibile...</div>'
+    document.getElementById('btn-next-2').disabled = true
+
+    try {
+      const res = await fetch(`${API}/programari/slots_libere/?data=${state.selectedDate}&medic=${MEDIC_ID}`)
+      const slots = await res.json()
+
+      if (!slots.length) {
+        container.innerHTML = '<div class="no-slots">Nu exista ore disponibile pentru aceasta zi.</div>'
+        return
+      }
+
+      const grid = document.createElement('div')
+      grid.className = 'slots-grid'
+
+      slots.forEach(s => {
+        const el = document.createElement('div')
+        el.textContent = s.ora
+        el.className = 'slot' + (s.liber ? '' : ' ocupat')
+        if (s.liber) {
+          el.onclick = () => selectSlot(s.ora)
+        }
+        grid.appendChild(el)
+      })
+
+      container.innerHTML = ''
+      container.appendChild(grid)
+    } catch {
+      container.innerHTML = '<div class="no-slots" style="color:#dc2626;">Eroare la incarcarea orelor. Reincercati.</div>'
+    }
+  }
+
+  function selectSlot(ora) {
+    state.selectedSlot = ora
+    document.getElementById('btn-next-2').disabled = false
+    document.querySelectorAll('.slot').forEach(el => {
+      el.classList.toggle('selected', el.textContent === ora)
+    })
+  }
+
+  // ── Navigation ──
+  function goToStep(n) {
+    ;[1,2,3].forEach(i => {
+      document.getElementById(`step-${i}`).style.display = i === n ? '' : 'none'
+      const ind = document.getElementById(`step-ind-${i}`)
+      ind.className = 'step' + (i === n ? ' active' : i < n ? ' done' : '')
+    })
+    state.currentStep = n
+  }
+
+  function goToStep2() {
+    if (!state.selectedDate) return
+    const d = new Date(state.selectedDate + 'T00:00:00')
+    document.getElementById('step2-sub').textContent =
+      `${d.getDate()} ${LUNI_RO[d.getMonth()]} ${d.getFullYear()} — alegeti ora dorita`
+    goToStep(2)
+    loadSlots()
+  }
+
+  function goToStep3() {
+    if (!state.selectedSlot) return
+    const d = new Date(state.selectedDate + 'T00:00:00')
+    document.getElementById('summary-box').innerHTML =
+      `<strong>Data:</strong> ${d.getDate()} ${LUNI_RO[d.getMonth()]} ${d.getFullYear()}<br>` +
+      `<strong>Ora:</strong> ${state.selectedSlot}`
+    goToStep(3)
+  }
+
+  // ── Submit ──
+  async function submitProgramare() {
+    const nume    = document.getElementById('f-nume').value.trim()
+    const telefon = document.getElementById('f-telefon').value.trim()
+    const email   = document.getElementById('f-email').value.trim()
+    const motiv   = document.getElementById('f-motiv').value.trim()
+    const errBox  = document.getElementById('form-error')
+
+    errBox.style.display = 'none'
+
+    if (!nume) { showError('Numele este obligatoriu.'); return }
+    if (nume.length < 3) { showError('Numele trebuie sa aiba cel putin 3 caractere.'); return }
+    if (!telefon) { showError('Telefonul este obligatoriu.'); return }
+    if (!/^[0-9+\s]{10,15}$/.test(telefon.replace(/\s/g, ''))) { 
+  showError('Telefon invalid — introduceti minim 10 cifre.'); return 
+}
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { 
+  showError('Adresa de email nu este valida.'); return 
+}
+    if (motiv && motiv.length > 255) { 
+  showError('Motivul nu poate depasi 255 de caractere.'); return 
+}
+
+    const btn = document.getElementById('btn-submit')
+    btn.disabled = true
+    btn.textContent = 'Se trimite...'
+
+    const dataOra = `${state.selectedDate}T${state.selectedSlot}:00`
+
+    try {
+      const res = await fetch(`${API}/programari/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          data_ora: dataOra,
+          durata_min: 20,
+          nume_pacient: nume,
+          telefon_pacient: telefon,
+          email_pacient: email,
+          motiv: motiv,
+          medic: MEDIC_ID,
+          status: 'programat',
+        })
+      })
+
+      if (!res.ok) throw new Error('Server error')
+
+      const d = new Date(state.selectedDate + 'T00:00:00')
+      document.getElementById('success-detail').innerHTML =
+        `<strong>Pacient:</strong> ${nume}<br>` +
+        `<strong>Data:</strong> ${d.getDate()} ${LUNI_RO[d.getMonth()]} ${d.getFullYear()}<br>` +
+        `<strong>Ora:</strong> ${state.selectedSlot}<br>` +
+        (motiv ? `<strong>Motiv:</strong> ${motiv}<br>` : '') +
+        (email ? `<strong>Confirmare trimisa la:</strong> ${email}` : '')
+
+      ;[1,2,3].forEach(i => {
+        document.getElementById(`step-${i}`).style.display = 'none'
+        document.getElementById(`step-ind-${i}`).className = 'step done'
+      })
+      document.getElementById('step-success').style.display = ''
+
+    } catch {
+      showError('Eroare la trimiterea programarii. Incercati din nou sau sunati la cabinet.')
+      btn.disabled = false
+      btn.textContent = 'Confirma programarea'
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('form-error')
+    el.textContent = msg
+    el.style.display = ''
+  }
+
+  function resetForm() {
+    state.selectedDate = null
+    state.selectedSlot = null
+    document.getElementById('f-nume').value = ''
+    document.getElementById('f-telefon').value = ''
+    document.getElementById('f-email').value = ''
+    document.getElementById('f-motiv').value = ''
+    document.getElementById('step-success').style.display = 'none'
+    document.getElementById('btn-next-1').disabled = true
+    goToStep(1)
+    renderCalendar()
+  }
+
+  function formatDate(date) {
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const d = String(date.getDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
+  }
+
+  // Init
+  renderCalendar()
+</script>
+</body>
+</html>
