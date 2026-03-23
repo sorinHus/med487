@@ -80,7 +80,10 @@ class ProgramareViewSet(viewsets.ModelViewSet):
         self._trimite_emailuri(programare)
 
     def _trimite_emailuri(self, p):
-        data = p.data_ora.strftime('%d %B %Y')
+        from datetime import datetime
+        LUNI_RO = ['ianuarie','februarie','martie','aprilie','mai','iunie',
+           'iulie','august','septembrie','octombrie','noiembrie','decembrie']
+        data = f"{p.data_ora.day} {LUNI_RO[p.data_ora.month - 1]} {p.data_ora.year}"
         ora  = p.data_ora.strftime('%H:%M')
         nume = str(p.pacient) if p.pacient else p.nume_pacient
 

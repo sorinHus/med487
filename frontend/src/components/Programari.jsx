@@ -81,19 +81,18 @@ function ModalProgramare({ onClose, onSaved, defaultData }) {
   const labelStyle = { fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSaving(true)
-    setError(null)
-    try {
-      await api.post('/programari/', form)
-      onSaved()
-    } catch (err) {
-      setError('Eroare la salvare. Verificati datele.')
-      console.error(err.response?.data)
-    } finally {
-      setSaving(false)
-    }
+  e.preventDefault()
+  setSaving(true)
+  setError(null)
+  try {
+    await api.post('/programari/', form)
+    setSaving(false)
+    onSaved()
+  } catch (err) {
+    setError('Eroare la salvare. Verificati datele.')
+    setSaving(false)
   }
+}
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
