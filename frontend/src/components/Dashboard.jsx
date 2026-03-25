@@ -115,6 +115,20 @@ export default function Dashboard({ onNavigate }) {
             <button onClick={() => onNavigate('programari')}
               style={{ fontSize: '12px', color: '#3a7bd5', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
               Vezi toate
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+  <span style={{ fontSize: '14px', fontWeight: '600', color: '#e2e8f0' }}>Programari azi</span>
+  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+    <button onClick={() => onNavigate('programari')}
+      style={{ fontSize: '13px', color: '#3a7bd5', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+      Vezi toate
+    </button>
+    <span style={{ color: '#1e2535' }}>|</span>
+    <button onClick={() => onNavigate('programari')}
+      style={{ fontSize: '12px', padding: '4px 10px', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
+      + Programare
+    </button>
+  </div>
+</div>
             </button>
           </div>
 
