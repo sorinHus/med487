@@ -42,13 +42,13 @@ function StatCard({ label, value, sub, color }) {
 }
 
 export default function Dashboard({ onNavigate }) {
-  const [stats, setStats]             = useState({ pacienti: null, programariAzi: null, consultatiiLuna: null })
+  const [stats, setStats]                 = useState({ pacienti: null, programariAzi: null, programariRamase: null })
   const [programariAzi, setProgramariAzi] = useState([])
   const [pacientiRecenti, setPacientiRecenti] = useState([])
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery]     = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [loadingSearch, setLoadingSearch] = useState(false)
-  const [loading, setLoading]         = useState(true)
+  const [loading, setLoading]             = useState(true)
 
   const azi = new Date().toISOString().slice(0, 10)
 
@@ -61,7 +61,6 @@ export default function Dashboard({ onNavigate }) {
       const totalPacienti = pacientiRes.data.count ?? (Array.isArray(pacientiRes.data) ? pacientiRes.data.length : 0)
       const prog = Array.isArray(programariRes.data) ? programariRes.data : (programariRes.data.results || [])
       const recenti = Array.isArray(recentiRes.data) ? recentiRes.data.slice(0,5) : (recentiRes.data.results || []).slice(0,5)
-
       setStats({
         pacienti: totalPacienti,
         programariAzi: prog.length,
@@ -80,9 +79,7 @@ export default function Dashboard({ onNavigate }) {
         const res = await api.get('/pacienti/', { params: { search: searchQuery } })
         const list = Array.isArray(res.data) ? res.data : (res.data.results || [])
         setSearchResults(list.slice(0, 5))
-      } finally {
-        setLoadingSearch(false)
-      }
+      } finally { setLoadingSearch(false) }
     }, 300)
     return () => clearTimeout(timer)
   }, [searchQuery])
@@ -112,24 +109,17 @@ export default function Dashboard({ onNavigate }) {
         <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '18px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0' }}>Programari azi</span>
-            <button onClick={() => onNavigate('programari')}
-              style={{ fontSize: '12px', color: '#3a7bd5', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-              Vezi toate
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-  <span style={{ fontSize: '14px', fontWeight: '600', color: '#e2e8f0' }}>Programari azi</span>
-  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-    <button onClick={() => onNavigate('programari')}
-      style={{ fontSize: '13px', color: '#3a7bd5', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-      Vezi toate
-    </button>
-    <span style={{ color: '#1e2535' }}>|</span>
-    <button onClick={() => onNavigate('programari')}
-      style={{ fontSize: '12px', padding: '4px 10px', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
-      + Programare
-    </button>
-  </div>
-</div>
-            </button>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <button onClick={() => onNavigate('programari')}
+                style={{ fontSize: '12px', color: '#3a7bd5', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                Vezi toate
+              </button>
+              <span style={{ color: '#2a3550' }}>|</span>
+              <a href="/programare.html" target="_blank"
+                style={{ fontSize: '12px', padding: '4px 10px', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', textDecoration: 'none' }}>
+               + Programare online
+              </a>
+            </div>
           </div>
 
           {programariAzi.length === 0 ? (
@@ -169,7 +159,6 @@ export default function Dashboard({ onNavigate }) {
             </button>
           </div>
 
-          {/* Search */}
           <div style={{ position: 'relative', marginBottom: '12px' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="#4b5563" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }}>
               <path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="#4b5563" strokeWidth="2" fill="none" strokeLinecap="round"/>
@@ -182,14 +171,14 @@ export default function Dashboard({ onNavigate }) {
             />
           </div>
 
-          {/* List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {loadingSearch && <div style={{ color: '#4b5563', fontSize: '12px' }}>Se cauta...</div>}
             {!loadingSearch && displayPacienti.map(p => {
               const nume = `${p.nume} ${p.prenume}`
               const varsta = p.data_nastere ? Math.floor((new Date() - new Date(p.data_nastere)) / 31557600000) : null
               return (
-                <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 8px', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.12s' }}
+                <div key={p.id}
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 8px', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.12s' }}
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >
