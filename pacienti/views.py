@@ -33,10 +33,15 @@ class PacientViewSet(viewsets.ModelViewSet):
         serializer = ConsulatieSerializer(consultatii, many=True)
         return Response(serializer.data)
 
+# pacienti/views.py
 class ConsulatieViewSet(viewsets.ModelViewSet):
-    queryset = Consultatie.objects.all()
     serializer_class = ConsulatieSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['simptome', 'pacient__nume', 'pacient__prenume', 'medic__last_name']
+
+    def get_queryset(self):
+        return Consultatie.objects.select_related('pacient', 'medic').prefetch_related('diagnostice')
 
 class DiagnosticViewSet(viewsets.ModelViewSet):
     queryset = Diagnostic.objects.all()

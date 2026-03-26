@@ -6,6 +6,7 @@ import Layout from './components/Layout'
 import Dashboard from './components/Dashboard'
 import PacientList from './components/PacientList'
 import Programari from './components/Programari'
+import Consultatii from "./components/Consultatii";
 
 export default function App() {
   const [loggedIn, setLoggedIn]     = useState(!!getToken())
@@ -38,7 +39,7 @@ export default function App() {
       {activePage === 'dashboard'   && <Dashboard onNavigate={setActivePage} />}
       {activePage === 'pacienti'    && <PacientList />}
       {activePage === 'programari'  && <Programari />}
-      {activePage === 'consultatii' && <div style={{ color: '#6b7280', padding: '40px', textAlign: 'center' }}>Consultatii — in curand</div>}
+      {activePage === 'consultatii' && <Consultatii />}
     </Layout>
   )
 }
