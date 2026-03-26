@@ -39,7 +39,7 @@ export default function App() {
       {activePage === 'dashboard'   && <Dashboard onNavigate={setActivePage} />}
       {activePage === 'pacienti'    && <PacientList />}
       {activePage === 'programari'  && <Programari />}
-      {activePage === 'consultatii' && <Consultatii />}
+      {activePage === 'consultatii' && <Consultatii onNavigate={setActivePage} />}
     </Layout>
   )
 }

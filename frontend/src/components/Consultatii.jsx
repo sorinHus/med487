@@ -1,143 +1,151 @@
-// frontend/src/pages/Consultatii.jsx
-import { useState, useEffect, useCallback } from "react";
-import api from "../api";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from 'react'
+import api from '../api'
 
-const FORMAT_DATA = (iso) => {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  return d.toLocaleDateString("ro-RO", {
-    day: "2-digit", month: "2-digit", year: "numeric",
-    hour: "2-digit", minute: "2-digit",
-  });
-};
+function formatData(iso) {
+  if (!iso) return '—'
+  return new Date(iso).toLocaleDateString('ro-RO', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  })
+}
 
-export default function Consultatii() {
-  const [consultatii, setConsultatii] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [pagina, setPagina] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [selected, setSelected] = useState(null); // consultatie deschisa in modal
-  const navigate = useNavigate();
-  const PER_PAGE = 20;
+const thStyle = {
+  padding: '10px 14px', fontSize: '11px', fontWeight: '600',
+  color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em',
+  textAlign: 'left', borderBottom: '1px solid #1e2535', whiteSpace: 'nowrap',
+}
 
-  const fetchConsultatii = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = { page: pagina };
-      if (search) params.search = search;
-      const res = await api.get("/consultatii/", { params });
-      // suporta atat lista simpla cat si paginata
-      if (res.data.results) {
-        setConsultatii(res.data.results);
-        setTotal(res.data.count);
-      } else {
-        setConsultatii(res.data);
-        setTotal(res.data.length);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }, [pagina, search]);
+const tdStyle = {
+  padding: '12px 14px', color: '#9ca3af', fontSize: '13px',
+}
 
-  useEffect(() => { fetchConsultatii(); }, [fetchConsultatii]);
+export default function Consultatii({ onNavigate }) {
+  const [consultatii, setConsultatii] = useState([])
+  const [loading, setLoading]         = useState(true)
+  const [searchInput, setSearchInput] = useState('')
+  const [search, setSearch]           = useState('')
+  const [pagina, setPagina]           = useState(1)
+  const [total, setTotal]             = useState(0)
+  const [selected, setSelected]       = useState(null)
+  const PER_PAGE = 20
 
   // debounce search
-  const [searchInput, setSearchInput] = useState("");
   useEffect(() => {
-    const t = setTimeout(() => { setSearch(searchInput); setPagina(1); }, 400);
-    return () => clearTimeout(t);
-  }, [searchInput]);
+    const t = setTimeout(() => { setSearch(searchInput); setPagina(1) }, 400)
+    return () => clearTimeout(t)
+  }, [searchInput])
 
-  const totalPagini = Math.ceil(total / PER_PAGE);
+  const fetchConsultatii = useCallback(async () => {
+    setLoading(true)
+    try {
+      const params = { page: pagina }
+      if (search) params.search = search
+      const res = await api.get('/consultatii/', { params })
+      if (res.data.results) {
+        setConsultatii(res.data.results)
+        setTotal(res.data.count)
+      } else {
+        setConsultatii(res.data)
+        setTotal(res.data.length)
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [pagina, search])
+
+  useEffect(() => { fetchConsultatii() }, [fetchConsultatii])
+
+  const totalPagini = Math.ceil(total / PER_PAGE)
 
   return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Consultații</h1>
-          <p className="text-sm text-gray-500 mt-1">{total} înregistrări totale</p>
+    <div>
+      {/* Toolbar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', gap: '12px' }}>
+        <div style={{ position: 'relative', flex: 1, maxWidth: '380px' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+            <circle cx="11" cy="11" r="6" stroke="#4b5563" strokeWidth="2"/>
+            <path d="M16 16l4 4" stroke="#4b5563" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+          <input
+            value={searchInput}
+            onChange={e => setSearchInput(e.target.value)}
+            placeholder="Cauta dupa pacient, simptome..."
+            style={{ width: '100%', padding: '9px 12px 9px 32px', background: '#161b27', border: '1px solid #1e2535', borderRadius: '9px', color: '#e2e8f0', fontSize: '13px', boxSizing: 'border-box', outline: 'none' }}
+            onFocus={e => e.target.style.borderColor = '#3a7bd5'}
+            onBlur={e => e.target.style.borderColor = '#1e2535'}
+          />
         </div>
-      </div>
-
-      {/* Search */}
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Caută după pacient, medic, simptome..."
-          value={searchInput}
-          onChange={e => setSearchInput(e.target.value)}
-          className="w-full max-w-md border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <span style={{ fontSize: '12px', color: '#4b5563' }}>
+          {total} înregistrări
+        </span>
       </div>
 
       {/* Tabel */}
-      <div className="bg-white rounded-xl shadow overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
+      <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+          <thead>
             <tr>
-              <th className="px-4 py-3 text-left">Data</th>
-              <th className="px-4 py-3 text-left">Pacient</th>
-              <th className="px-4 py-3 text-left">Medic</th>
-              <th className="px-4 py-3 text-left">Simptome</th>
-              <th className="px-4 py-3 text-left">Diagnostice</th>
-              <th className="px-4 py-3 text-left">Acțiuni</th>
+              <th style={thStyle}>Data</th>
+              <th style={thStyle}>Pacient</th>
+              <th style={thStyle}>Medic</th>
+              <th style={thStyle}>Simptome</th>
+              <th style={thStyle}>Diagnostice</th>
+              <th style={thStyle}>Acțiuni</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
-            {loading ? (
-              <tr>
-                <td colSpan={6} className="text-center py-12 text-gray-400">
-                  Se încarcă...
-                </td>
-              </tr>
-            ) : consultatii.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="text-center py-12 text-gray-400">
-                  Nicio consultație găsită.
-                </td>
-              </tr>
-            ) : consultatii.map(c => (
-              <tr key={c.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-3 whitespace-nowrap text-gray-700">
-                  {FORMAT_DATA(c.data_ora)}
-                </td>
-                <td className="px-4 py-3">
+          <tbody>
+            {loading && (
+              <tr><td colSpan="6" style={{ padding: '40px', textAlign: 'center', color: '#4b5563' }}>
+                Se încarcă...
+              </td></tr>
+            )}
+            {!loading && consultatii.length === 0 && (
+              <tr><td colSpan="6" style={{ padding: '40px', textAlign: 'center', color: '#4b5563' }}>
+                {search ? 'Nicio consultație găsită.' : 'Nu există consultații înregistrate.'}
+              </td></tr>
+            )}
+            {!loading && consultatii.map(c => (
+              <tr key={c.id}
+                style={{ borderBottom: '1px solid #1a2033', transition: 'background 0.12s' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>{formatData(c.data_ora)}</td>
+                <td style={tdStyle}>
                   <button
-                    onClick={() => navigate(`/pacienti/${c.pacient}`)}
-                    className="text-blue-600 hover:underline font-medium"
+                    onClick={() => onNavigate && onNavigate('pacienti')}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#60a5fa', fontSize: '13px', padding: 0, fontWeight: '500' }}
                   >
                     {c.pacient_nume || `Pacient #${c.pacient}`}
                   </button>
                 </td>
-                <td className="px-4 py-3 text-gray-600">
-                  {c.medic_nume || `Medic #${c.medic}`}
+                <td style={tdStyle}>{c.medic_nume || `Medic #${c.medic}`}</td>
+                <td style={{ ...tdStyle, maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {c.simptome || '—'}
                 </td>
-                <td className="px-4 py-3 text-gray-600 max-w-xs truncate">
-                  {c.simptome || "—"}
-                </td>
-                <td className="px-4 py-3">
+                <td style={tdStyle}>
                   {c.diagnostice?.length > 0 ? (
-                    <div className="flex flex-wrap gap-1">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                       {c.diagnostice.slice(0, 2).map((d, i) => (
-                        <span key={i} className="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-full">
+                        <span key={i} style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: 'rgba(58,123,213,0.15)', color: '#60a5fa' }}>
                           {d.cod_icd10 || d.denumire}
                         </span>
                       ))}
                       {c.diagnostice.length > 2 && (
-                        <span className="text-xs text-gray-400">+{c.diagnostice.length - 2}</span>
+                        <span style={{ fontSize: '11px', color: '#4b5563' }}>+{c.diagnostice.length - 2}</span>
                       )}
                     </div>
-                  ) : "—"}
+                  ) : '—'}
                 </td>
-                <td className="px-4 py-3">
+                <td style={tdStyle}>
                   <button
                     onClick={() => setSelected(c)}
-                    className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-lg transition"
+                    style={{ padding: '5px 12px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: '#9ca3af', fontSize: '12px', cursor: 'pointer', transition: 'all 0.15s' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#e2e8f0' }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#9ca3af' }}
                   >
                     Detalii
                   </button>
@@ -150,20 +158,20 @@ export default function Consultatii() {
 
       {/* Paginare */}
       {totalPagini > 1 && (
-        <div className="flex items-center justify-between mt-4 text-sm text-gray-600">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', fontSize: '12px', color: '#4b5563' }}>
           <span>Pagina {pagina} din {totalPagini}</span>
-          <div className="flex gap-2">
+          <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={() => setPagina(p => Math.max(1, p - 1))}
               disabled={pagina === 1}
-              className="px-3 py-1 border rounded-lg disabled:opacity-40 hover:bg-gray-50"
+              style={{ padding: '6px 14px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: pagina === 1 ? '#2d3748' : '#9ca3af', fontSize: '12px', cursor: pagina === 1 ? 'default' : 'pointer' }}
             >
               ← Anterior
             </button>
             <button
               onClick={() => setPagina(p => Math.min(totalPagini, p + 1))}
               disabled={pagina === totalPagini}
-              className="px-3 py-1 border rounded-lg disabled:opacity-40 hover:bg-gray-50"
+              style={{ padding: '6px 14px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: pagina === totalPagini ? '#2d3748' : '#9ca3af', fontSize: '12px', cursor: pagina === totalPagini ? 'default' : 'pointer' }}
             >
               Următor →
             </button>
@@ -176,84 +184,94 @@ export default function Consultatii() {
         <ModalConsultatie
           consultatie={selected}
           onClose={() => setSelected(null)}
-          onNavigate={(id) => { setSelected(null); navigate(`/pacienti/${id}`); }}
+          onNavigate={onNavigate}
         />
       )}
     </div>
-  );
+  )
 }
 
 function ModalConsultatie({ consultatie: c, onClose, onNavigate }) {
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between px-6 py-4 border-b">
-          <h2 className="font-semibold text-gray-800 text-lg">
-            Consultație — {FORMAT_DATA(c.data_ora)}
-          </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+      <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '16px', width: '100%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #1e2535' }}>
+          <span style={{ fontWeight: '600', color: '#e2e8f0', fontSize: '15px' }}>
+            Consultație — {formatData(c.data_ora)}
+          </span>
+          <button onClick={onClose}
+            style={{ background: 'none', border: 'none', color: '#4b5563', fontSize: '20px', cursor: 'pointer', lineHeight: 1 }}
+            onMouseEnter={e => e.currentTarget.style.color = '#e2e8f0'}
+            onMouseLeave={e => e.currentTarget.style.color = '#4b5563'}
+          >✕</button>
         </div>
-        <div className="px-6 py-4 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+
+        {/* Body */}
+        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <InfoRow label="Pacient">
               <button
-                onClick={() => onNavigate(c.pacient)}
-                className="text-blue-600 hover:underline"
+                onClick={() => { onClose(); onNavigate && onNavigate('pacienti') }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#60a5fa', fontSize: '13px', padding: 0 }}
               >
                 {c.pacient_nume || `#${c.pacient}`}
               </button>
             </InfoRow>
-            <InfoRow label="Medic">{c.medic_nume || `#${c.medic}`}</InfoRow>
+            <InfoRow label="Medic">
+              <span style={{ color: '#e2e8f0', fontSize: '13px' }}>{c.medic_nume || `#${c.medic}`}</span>
+            </InfoRow>
           </div>
 
-          {c.simptome && <InfoBlock label="Simptome" text={c.simptome} />}
+          {c.simptome     && <InfoBlock label="Simptome"     text={c.simptome} />}
           {c.examen_clinic && <InfoBlock label="Examen clinic" text={c.examen_clinic} />}
-          {c.tratament && <InfoBlock label="Tratament" text={c.tratament} />}
-          {c.observatii && <InfoBlock label="Observații" text={c.observatii} />}
+          {c.tratament    && <InfoBlock label="Tratament"    text={c.tratament} />}
+          {c.observatii   && <InfoBlock label="Observații"   text={c.observatii} />}
 
           {c.diagnostice?.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Diagnostice</p>
-              <div className="flex flex-wrap gap-2">
+              <p style={{ fontSize: '11px', fontWeight: '600', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>Diagnostice</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                 {c.diagnostice.map((d, i) => (
-                  <span key={i} className="bg-blue-50 text-blue-700 text-sm px-3 py-1 rounded-full">
-                    {d.cod_icd10} — {d.denumire}
-                    {d.tip === "principal" && (
-                      <span className="ml-1 text-xs opacity-60">(principal)</span>
-                    )}
+                  <span key={i} style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', background: 'rgba(58,123,213,0.15)', color: '#60a5fa' }}>
+                    {d.cod_icd10 && `${d.cod_icd10} — `}{d.denumire}
+                    {d.tip === 'principal' && <span style={{ opacity: 0.6, marginLeft: '4px' }}>(principal)</span>}
                   </span>
                 ))}
               </div>
             </div>
           )}
         </div>
-        <div className="px-6 py-4 border-t flex justify-end">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm"
+
+        {/* Footer */}
+        <div style={{ padding: '14px 20px', borderTop: '1px solid #1e2535', display: 'flex', justifyContent: 'flex-end' }}>
+          <button onClick={onClose}
+            style={{ padding: '7px 18px', borderRadius: '8px', border: '1px solid #1e2535', background: 'transparent', color: '#9ca3af', fontSize: '13px', cursor: 'pointer' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#e2e8f0' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#9ca3af' }}
           >
             Închide
           </button>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function InfoRow({ label, children }) {
   return (
     <div>
-      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">{label}</p>
-      <p className="text-gray-800">{children}</p>
+      <p style={{ fontSize: '11px', fontWeight: '600', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>{label}</p>
+      {children}
     </div>
-  );
+  )
 }
 
 function InfoBlock({ label, text }) {
   return (
     <div>
-      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">{label}</p>
-      <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 rounded-lg px-3 py-2 text-sm">{text}</p>
+      <p style={{ fontSize: '11px', fontWeight: '600', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>{label}</p>
+      <p style={{ fontSize: '13px', color: '#cbd5e1', background: '#0f1117', border: '1px solid #1e2535', borderRadius: '8px', padding: '10px 12px', margin: 0, whiteSpace: 'pre-wrap' }}>{text}</p>
     </div>
-  );
+  )
 }

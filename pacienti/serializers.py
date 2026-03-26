@@ -34,16 +34,13 @@ class ConsulatieSerializer(serializers.ModelSerializer):
 
 class PacientSerializer(serializers.ModelSerializer):
     consultatii_count = serializers.IntegerField(read_only=True, default=0)
-    ultima_consultatie = serializers.DateTimeField(read_only=True, default=None)  # <-- adaugă aici
+    ultima_consultatie = serializers.DateTimeField(read_only=True, default=None)
 
     class Meta:
         model = Pacient
-        fields = '__all__'
-    class Meta:
-        model = Pacient
-        fields = ['id', 'cnp', 'nume', 'prenume', 'data_nastere', 'sex',
-                  'telefon', 'email', 'adresa', 'grup_sangvin', 'alergii',
-                  'data_inregistrare', 'status', 'medic', 'consultatii_count']
+        fields = ['id', 'cnp', 'nume', 'prenume', 'data_nastere', 'sex', 'telefon', 
+          'email', 'adresa', 'grup_sangvin', 'alergii', 'data_inregistrare', 
+          'status', 'medic', 'consultatii_count', 'ultima_consultatie']
 
     def get_consultatii_count(self, obj):
         return obj.consultatii.count()
