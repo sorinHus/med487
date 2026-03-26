@@ -7,17 +7,23 @@ from .serializers import (UserSerializer, PacientSerializer,
                           ProgramareSerializer)
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db.models import Max
 
 class PacientViewSet(viewsets.ModelViewSet):
-    queryset = Pacient.objects.all()
     serializer_class = PacientSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        qs = Pacient.objects.all()
+        qs = Pacient.objects.annotate(
+            ultima_consultatie=Max('consultatii__data_ora')
+        )
         search = self.request.query_params.get('search')
         if search:
-            qs = qs.filter(nume__icontains=search) | qs.filter(cnp__icontains=search)
+            qs = qs.filter(
+                Q(nume__icontains=search) |
+                Q(prenume__icontains=search) |
+                Q(cnp__icontains=search)
+            )
         return qs
 
     @action(detail=True, methods=['get'])

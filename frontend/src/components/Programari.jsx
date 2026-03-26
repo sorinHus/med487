@@ -247,6 +247,7 @@ export default function Programari() {
   const [programari, setProgramari] = useState([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
+  const [modalKey, setModalKey] = useState(0)
 
   const days = Array.from({ length: 7 }, (_, i) => addDays(monday, i))
 
@@ -312,7 +313,7 @@ export default function Programari() {
             Programari — saptamana {saptamanaLabel()}
           </span>
         </div>
-        <button onClick={() => setShowModal(true)}
+        <button onClick={() => { setShowModal(true); setModalKey(k => k + 1) }}
           style={{ padding: '9px 18px', fontSize: '13px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: '500' }}
           onMouseEnter={e => e.currentTarget.style.background = '#2d6bc4'}
           onMouseLeave={e => e.currentTarget.style.background = '#3a7bd5'}
@@ -367,11 +368,12 @@ export default function Programari() {
 
       {/* Modal */}
       {showModal && (
-        <ModalProgramare
-          onClose={() => setShowModal(false)}
-          onSaved={() => { setShowModal(false); fetchProgramari() }}
-        />
-      )}
+  <ModalProgramare
+    key={modalKey}
+    onClose={() => setShowModal(false)}
+    onSaved={() => { setShowModal(false); fetchProgramari() }}
+  />
+)}
     </div>
   )
 }

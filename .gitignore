@@ -4,9 +4,12 @@ __pycache__/
 *.pyc
 .env
 
-# Node
+# Node (frontend)
 frontend/node_modules/
 frontend/dist/
+
+# fallback (în caz că apare și în root)
+node_modules/
 
 # VS Code
 .vscode/

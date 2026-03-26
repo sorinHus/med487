@@ -33,8 +33,12 @@ class ConsulatieSerializer(serializers.ModelSerializer):
                   'simptome', 'examen_clinic', 'tratament', 'observatii', 'diagnostice']
 
 class PacientSerializer(serializers.ModelSerializer):
-    consultatii_count = serializers.SerializerMethodField()
+    consultatii_count = serializers.IntegerField(read_only=True, default=0)
+    ultima_consultatie = serializers.DateTimeField(read_only=True, default=None)  # <-- adaugă aici
 
+    class Meta:
+        model = Pacient
+        fields = '__all__'
     class Meta:
         model = Pacient
         fields = ['id', 'cnp', 'nume', 'prenume', 'data_nastere', 'sex',
