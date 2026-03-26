@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Pacient, Diagnostic, Consultatie, DiagnosticConsultatie, Programare
+from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, DiagnosticConsultatie
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,12 +26,30 @@ class ConsulatieSerializer(serializers.ModelSerializer):
         source='diagnosticconsultatie_set', many=True, read_only=True
     )
     medic_nume = serializers.CharField(source='medic.get_full_name', read_only=True)
+    pacient_nume = serializers.SerializerMethodField()
+    diagnostice_ids = serializers.ListField(
+        child=serializers.IntegerField(), write_only=True, required=False, default=list
+    )
+
+    def get_pacient_nume(self, obj):
+        return f"{obj.pacient.nume} {obj.pacient.prenume}"
 
     class Meta:
         model = Consultatie
-        fields = ['id', 'pacient', 'medic', 'medic_nume', 'data_ora',
-                  'simptome', 'examen_clinic', 'tratament', 'observatii', 'diagnostice']
+        fields = ['id', 'pacient', 'medic', 'medic_nume', 'pacient_nume', 'data_ora',
+                  'simptome', 'examen_clinic', 'tratament', 'observatii',
+                  'diagnostice', 'diagnostice_ids']
 
+    def create(self, validated_data):
+        diagnostice_ids = validated_data.pop('diagnostice_ids', [])
+        consultatie = super().create(validated_data)
+        for diag_id in diagnostice_ids:
+            DiagnosticConsultatie.objects.create(
+                consultatie=consultatie,
+                diagnostic_id=diag_id,
+                tip='principal' if diag_id == diagnostice_ids[0] else 'secundar'
+            )
+        return consultatie
 class PacientSerializer(serializers.ModelSerializer):
     consultatii_count = serializers.IntegerField(read_only=True, default=0)
     ultima_consultatie = serializers.DateTimeField(read_only=True, default=None)

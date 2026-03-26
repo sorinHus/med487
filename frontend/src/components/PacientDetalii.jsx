@@ -2,6 +2,75 @@ import { useState, useEffect } from 'react'
 import api from '../api'
 import { validareCNP } from '../utils/cnp'
 
+function ICD10Search({ selectate, onAdd, onRemove, inputStyle, labelStyle }) {
+  const [query, setQuery]       = useState('')
+  const [rezultate, setRezultate] = useState([])
+  const [loading, setLoading]   = useState(false)
+
+  useEffect(() => {
+    if (query.length < 2) { setRezultate([]); return }
+    const t = setTimeout(async () => {
+      setLoading(true)
+      try {
+        const res = await api.get('/diagnostice/', { params: { search: query } })
+        const lista = Array.isArray(res.data) ? res.data : (res.data.results || [])
+        setRezultate(lista.filter(d => !selectate.find(s => s.id === d.id)))
+      } catch { setRezultate([]) }
+      finally { setLoading(false) }
+    }, 300)
+    return () => clearTimeout(t)
+  }, [query, selectate])
+
+  return (
+    <div style={{ marginBottom: '12px' }}>
+      <label style={labelStyle}>Diagnostice ICD-10</label>
+
+      {/* Diagnostice selectate */}
+      {selectate.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
+          {selectate.map((d, i) => (
+            <span key={d.id} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', background: i === 0 ? 'rgba(58,123,213,0.2)' : 'rgba(107,114,128,0.15)', color: i === 0 ? '#60a5fa' : '#9ca3af', border: `1px solid ${i === 0 ? '#3a7bd5' : '#1e2535'}` }}>
+              {d.cod_icd10} — {d.denumire}
+              {i === 0 && <span style={{ fontSize: '10px', opacity: 0.7 }}>(principal)</span>}
+              <button onClick={() => onRemove(d.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: '0', fontSize: '14px', lineHeight: 1, opacity: 0.7 }}>×</button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Input cautare */}
+      <div style={{ position: 'relative' }}>
+        <input
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder="Cauta cod ICD-10 sau denumire..."
+          style={{ ...inputStyle, marginBottom: 0 }}
+        />
+        {/* Dropdown rezultate */}
+        {(rezultate.length > 0 || (loading && query.length >= 2)) && (
+          <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#1a2235', border: '1px solid #1e2535', borderRadius: '8px', zIndex: 10, maxHeight: '200px', overflowY: 'auto', marginTop: '4px' }}>
+            {loading && <div style={{ padding: '10px 14px', fontSize: '12px', color: '#4b5563' }}>Se cauta...</div>}
+            {!loading && rezultate.map(d => (
+              <button key={d.id}
+                onClick={() => { onAdd(d); setQuery(''); setRezultate([]) }}
+                style={{ width: '100%', textAlign: 'left', padding: '9px 14px', background: 'none', border: 'none', cursor: 'pointer', borderBottom: '1px solid #1e2535', color: '#e2e8f0', fontSize: '13px' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(58,123,213,0.1)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'none'}
+              >
+                <span style={{ color: '#60a5fa', fontWeight: '600', marginRight: '8px' }}>{d.cod_icd10}</span>
+                {d.denumire}
+              </button>
+            ))}
+            {!loading && rezultate.length === 0 && query.length >= 2 && (
+              <div style={{ padding: '10px 14px', fontSize: '12px', color: '#4b5563' }}>Niciun rezultat.</div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 const AVATAR_COLORS = ['#3a7bd5','#e05c7a','#f5a623','#50c878','#9b59b6','#1abc9c','#e67e22']
 function getInitials(name) {
   if (!name) return '?'
@@ -31,8 +100,12 @@ export default function PacientDetalii({ pacient, onBack }) {
   const [errorsEdit, setErrorsEdit]     = useState({})
   const [salvandEdit, setSalvandEdit]   = useState(false)
   const [showConsultatie, setShowConsultatie] = useState(false)
-  const [formC, setFormC]               = useState({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '' })
-  const [salvandC, setSalvandC]         = useState(false)
+  const [formC, setFormC] = useState({
+  data_ora: new Date().toISOString().slice(0,16),
+  simptome: '', examen_clinic: '', tratament: '', observatii: '',
+  diagnostice: []   // <-- adaugat
+})
+const [salvandC, setSalvandC]         = useState(false)
 
   const inputStyle = { width: '100%', padding: '8px 12px', fontSize: '13px', background: '#0f1117', border: '1px solid #1e2535', borderRadius: '8px', color: '#e2e8f0', boxSizing: 'border-box', marginBottom: '12px', outline: 'none' }
   const labelStyle = { fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }
@@ -69,24 +142,42 @@ const fieldValue = { fontSize: '18px', fontWeight: '500', color: '#e2e8f0', marg
     finally { setSalvandEdit(false) }
   }
 
-  const salveazaConsultatie = async (e) => {
-    e.preventDefault(); setSalvandC(true)
-    try {
-      await api.post('/consultatii/', { ...formC, pacient: pacient.id, medic: pacient.medic })
-      const res = await api.get(`/pacienti/${pacient.id}/consultatii/`)
-      setConsultatii(res.data)
-      setShowConsultatie(false)
-      setFormC({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '' })
-    } catch { alert('Eroare la salvarea consultatiei.') }
-    finally { setSalvandC(false) }
-  }
+  // salveazaConsultatie — trimite diagnostice_ids
+const salveazaConsultatie = async (e) => {
+  e.preventDefault(); setSalvandC(true)
+  try {
+    await api.post('/consultatii/', {
+      ...formC,
+      pacient: pacient.id,
+      medic: pacient.medic,
+      diagnostice_ids: formC.diagnostice.map(d => d.id)  // <-- adaugat
+    })
+    const res = await api.get(`/pacienti/${pacient.id}/consultatii/`)
+    setConsultatii(res.data)
+    setShowConsultatie(false)
+    setFormC({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] })
+  } catch { alert('Eroare la salvarea consultatiei.') }
+  finally { setSalvandC(false) }
+}
 
   const nume = `${pacient.nume} ${pacient.prenume}`
   const statusObj = STATUS_OPTS.find(s => s.value === status) || STATUS_OPTS[0]
 
+
+  
   return (
     <div>
       {/* Back + actiuni */}
+
+<ICD10Search
+  selectate={formC.diagnostice}
+  onAdd={d => setFormC(p => ({ ...p, diagnostice: [...p.diagnostice, d] }))}
+  onRemove={id => setFormC(p => ({ ...p, diagnostice: p.diagnostice.filter(d => d.id !== id) }))}
+  inputStyle={inputStyle}
+  labelStyle={labelStyle}
+/>
+<div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}></div>
+      
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
         <button onClick={onBack}
           style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '20px', padding: '0', lineHeight: 1 }}>
@@ -210,6 +301,15 @@ const fieldValue = { fontSize: '18px', fontWeight: '500', color: '#e2e8f0', marg
             <textarea value={formC.tratament} onChange={e => setFormC(p => ({ ...p, tratament: e.target.value }))} style={{ ...inputStyle, height: '70px', resize: 'vertical' }} placeholder="Medicatie, doze, durata..."/>
             <label style={labelStyle}>Observatii</label>
             <textarea value={formC.observatii} onChange={e => setFormC(p => ({ ...p, observatii: e.target.value }))} style={{ ...inputStyle, height: '60px', resize: 'vertical' }}/>
+            
+            <ICD10Search
+            selectate={formC.diagnostice}
+            onAdd={d => setFormC(p => ({ ...p, diagnostice: [...p.diagnostice, d] }))}
+            onRemove={id => setFormC(p => ({ ...p, diagnostice: p.diagnostice.filter(d => d.id !== id) }))}
+            inputStyle={inputStyle}
+            labelStyle={labelStyle}
+            />
+            
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}>
               <button type="button" onClick={() => setShowConsultatie(false)} style={{ padding: '8px 18px', fontSize: '13px', cursor: 'pointer', border: '1px solid #1e2535', borderRadius: '8px', background: 'transparent', color: '#9ca3af' }}>Anuleaza</button>
               <button type="submit" disabled={salvandC} style={{ padding: '8px 18px', fontSize: '13px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', opacity: salvandC ? 0.6 : 1 }}>
