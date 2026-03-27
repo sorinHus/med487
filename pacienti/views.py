@@ -288,3 +288,88 @@ def print_concediu(request, pk):
     }
 
     return render(request, 'pacienti/concediu_print.html', context)
+
+from datetime import timedelta
+ 
+def print_reteta(request, pk):
+    """Genereaza pagina HTML pentru print/PDF reteta medicala."""
+    reteta = get_object_or_404(
+        Reteta.objects.select_related('pacient', 'medic').prefetch_related('linii'),
+        pk=pk
+    )
+    cabinet = ConfiguratieCabinet.get()
+    pacient = reteta.pacient
+ 
+    # Varsta pacient
+    from datetime import date
+    azi = date.today()
+    try:
+        cnp = pacient.cnp
+        # Primul digit indica secolul: 1/2=1900, 3/4=1800, 5/6=2000, 7/8/9=rezidenti
+        s = int(cnp[0])
+        an2 = int(cnp[1:3])
+        luna = int(cnp[3:5])
+        zi = int(cnp[5:7])
+        if s in (1, 2):
+            an = 1900 + an2
+        elif s in (3, 4):
+            an = 1800 + an2
+        elif s in (5, 6):
+            an = 2000 + an2
+        else:
+            an = 1900 + an2  # rezidenti — aproximatie
+        data_nastere_cnp = date(an, luna, zi)
+        varsta = azi.year - data_nastere_cnp.year - (
+            (azi.month, azi.day) < (data_nastere_cnp.month, data_nastere_cnp.day)
+        )
+    except Exception:
+        # Fallback la data_nastere din DB
+        varsta = azi.year - pacient.data_nastere.year - (
+            (azi.month, azi.day) < (pacient.data_nastere.month, pacient.data_nastere.day)
+        )
+ 
+    # CNP ca lista de cifre pentru casute
+    cnp_lista = list(pacient.cnp) if pacient.cnp else [''] * 13
+ 
+    # Data expirare
+    data_expirare = reteta.data_emiterii + timedelta(days=reteta.valabilitate_zile)
+ 
+    context = {
+        # Cabinet
+        'denumire_unitate':   cabinet.denumire_unitate,
+        'localitate_cabinet': cabinet.localitate,
+        'judet_cabinet':      cabinet.judet,
+        'strada_cabinet':     cabinet.strada,
+        'numar_cabinet':      cabinet.numar,
+        'cui':                cabinet.cui,
+        'cod_parafa':         cabinet.cod_parafă,
+ 
+        # Reteta
+        'numar_reteta':       reteta.numar_reteta,
+        'data_emiterii':      reteta.data_emiterii.strftime('%d.%m.%Y'),
+        'valabilitate_zile':  reteta.valabilitate_zile,
+        'data_expirare':      data_expirare.strftime('%d.%m.%Y'),
+        'gratuit':            reteta.gratuit,
+        'diagnostic':         reteta.diagnostic,
+        'cod_diagnostic':     '',
+        'nr_fisa':            reteta.nr_fisa,
+        'nr_conventie':       reteta.nr_conventie if hasattr(reteta, 'nr_conventie') else '',
+        'linii':              reteta.linii.all(),
+ 
+        # Medic
+        'medic_nume':         reteta.medic.get_full_name(),
+ 
+        # Pacient
+        'pacient_nume':       pacient.nume,
+        'pacient_prenume':    pacient.prenume,
+        'cnp_lista':          cnp_lista,
+        'varsta':             varsta,
+        'sex':                pacient.sex,
+        'grup_sangvin':       pacient.grup_sangvin,
+        'judet':              pacient.judet,
+        'localitate':         pacient.localitate,
+        'strada':             pacient.strada,
+        'numar_strada':       pacient.numar_strada,
+    }
+ 
+    return render(request, 'pacienti/reteta_print.html', context)

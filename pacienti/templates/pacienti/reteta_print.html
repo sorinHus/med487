@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>Rețetă Medicală — {{ numar_reteta }}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11pt;
+    background: #fff;
+    color: #000;
+  }
+
+  .pagina {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 12mm 14mm 10mm 14mm;
+    background: #fff;
+  }
+
+  /* ── ANTET ── */
+  .antet {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #000;
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+  }
+
+  .antet-stanga {
+    font-size: 9.5pt;
+    line-height: 1.5;
+  }
+
+  .antet-stanga .unitate {
+    font-size: 11pt;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .antet-dreapta {
+    text-align: right;
+    font-size: 9.5pt;
+    line-height: 1.6;
+  }
+
+  /* ── TITLU ── */
+  .titlu-bloc {
+    text-align: center;
+    margin: 8px 0 10px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 6px;
+  }
+
+  .titlu-bloc h1 {
+    font-size: 16pt;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .titlu-bloc .nr-reteta {
+    font-size: 10pt;
+    margin-top: 3px;
+  }
+
+  /* ── GRATUIT ── */
+  .gratuit-rand {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 6px;
+  }
+
+  .gratuit-bloc {
+    border: 1px solid #000;
+    padding: 3px 8px;
+    font-size: 9pt;
+    line-height: 1.6;
+  }
+
+  .gratuit-bloc .bifa {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #000;
+    margin-right: 3px;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 9pt;
+    line-height: 10px;
+  }
+
+  /* ── DATE PACIENT ── */
+  .sectiune {
+    margin-bottom: 6px;
+  }
+
+  .rand {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 4px;
+    font-size: 10pt;
+  }
+
+  .rand .eticheta {
+    font-weight: bold;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .rand .valoare {
+    border-bottom: 1px solid #000;
+    flex: 1;
+    min-width: 40px;
+    padding: 0 2px;
+    line-height: 1.4;
+  }
+
+  .rand .valoare.fix {
+    flex: none;
+  }
+
+  /* CNP — casute individuale */
+  .cnp-rand {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+    font-size: 10pt;
+  }
+
+  .cnp-casute {
+    display: flex;
+    gap: 2px;
+  }
+
+  .cnp-casuta {
+    width: 14px;
+    height: 16px;
+    border: 1px solid #000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+    font-weight: bold;
+  }
+
+  /* Grid date */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    gap: 0 10px;
+  }
+
+  /* ── LINIE SEPARATOR ── */
+  .separator {
+    border: none;
+    border-top: 1px solid #000;
+    margin: 8px 0;
+  }
+
+  /* ── ZONA Rp ── */
+  .rp-titlu {
+    font-size: 13pt;
+    font-weight: bold;
+    font-style: italic;
+    margin-bottom: 6px;
+    margin-top: 4px;
+  }
+
+  .medicament-bloc {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #999;
+    page-break-inside: avoid;
+  }
+
+  .medicament-bloc:last-child {
+    border-bottom: none;
+  }
+
+  .medicament-nr {
+    font-weight: bold;
+    font-size: 10pt;
+    margin-bottom: 2px;
+  }
+
+  .medicament-nume {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+
+  .medicament-detalii {
+    font-size: 10pt;
+    color: #222;
+    line-height: 1.5;
+  }
+
+  .medicament-detalii span {
+    margin-right: 16px;
+  }
+
+  /* ── SUBSOL ── */
+  .subsol {
+    margin-top: 16px;
+    border-top: 1px solid #000;
+    padding-top: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    font-size: 9.5pt;
+  }
+
+  .subsol-bloc .titlu-subsol {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .linie-semnatura {
+    border-top: 1px solid #000;
+    margin-top: 4px;
+    font-size: 8.5pt;
+    color: #444;
+    padding-top: 2px;
+  }
+
+  .valabilitate {
+    text-align: center;
+    font-size: 9pt;
+    margin-top: 10px;
+    color: #333;
+    font-style: italic;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; }
+    .pagina { margin: 0; padding: 10mm 12mm; }
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  }
+
+  @media screen {
+    body { background: #e5e7eb; }
+    .pagina {
+      margin: 20px auto;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+    }
+    .btn-print {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 30px;
+      background: #3a7bd5;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+    }
+    .btn-print:hover { background: #2d6bc4; }
+  }
+</style>
+</head>
+<body>
+
+<button class="btn-print" onclick="window.print()" style="position:fixed;top:10px;right:10px;z-index:999;">
+  🖨️ Printează / Save PDF
+</button>
+
+<div class="pagina">
+
+  <!-- ANTET -->
+  <div class="antet">
+    <div class="antet-stanga">
+      <div class="unitate">{{ denumire_unitate }}</div>
+      <div>{{ localitate_cabinet }}, {{ judet_cabinet }}</div>
+      {% if strada_cabinet %}<div>Str. {{ strada_cabinet }} nr. {{ numar_cabinet }}</div>{% endif %}
+      {% if cui %}<div>CUI: {{ cui }}</div>{% endif %}
+    </div>
+    <div class="antet-dreapta">
+      <div><strong>Data:</strong> {{ data_emiterii }}</div>
+      <div><strong>Nr. convenție CAS:</strong> {{ nr_conventie|default:"—" }}</div>
+      <div><strong>Nr. fișă:</strong> {{ nr_fisa|default:"—" }}</div>
+    </div>
+  </div>
+
+  <!-- GRATUIT -->
+  <div class="gratuit-rand">
+    <div class="gratuit-bloc">
+      <div><span class="bifa">{% if gratuit == 'da' %}✓{% endif %}</span> Gratuit</div>
+      <div><span class="bifa">{% if gratuit == 'nu' %}✓{% endif %}</span> Cu plată</div>
+    </div>
+  </div>
+
+  <!-- TITLU -->
+  <div class="titlu-bloc">
+    <h1>Rețetă Medicală</h1>
+    <div class="nr-reteta"><strong>Seria/Nr.:</strong> {{ numar_reteta }}</div>
+  </div>
+
+  <!-- DATE PACIENT -->
+  <div class="sectiune">
+
+    <!-- CNP -->
+    <div class="cnp-rand">
+      <span class="eticheta">C.N.P.</span>
+      <div class="cnp-casute">
+        {% for cifra in cnp_lista %}
+        <div class="cnp-casuta">{{ cifra }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Nume + Prenume -->
+    <div class="grid-2">
+      <div class="rand">
+        <span class="eticheta">Numele:</span>
+        <span class="valoare">{{ pacient_nume }}</span>
+      </div>
+      <div class="rand">
+        <span class="eticheta">Prenumele:</span>
+        <span class="valoare">{{ pacient_prenume }}</span>
+      </div>
+    </div>
+
+    <!-- Varsta + Sex -->
+    <div class="grid-2">
+      <div class="rand">
+        <span class="eticheta">Vârsta:</span>
+        <span class="valoare fix" style="width:40px;">{{ varsta }}</span>
+        <span class="eticheta" style="margin-left:8px;">ani &nbsp; Sex:</span>
+        <span class="valoare fix" style="width:30px;">{{ sex }}</span>
+      </div>
+      <div class="rand">
+        <span class="eticheta">Grup sangvin:</span>
+        <span class="valoare fix" style="width:40px;">{{ grup_sangvin|default:"—" }}</span>
+      </div>
+    </div>
+
+    <!-- Domiciliu -->
+    <div class="rand">
+      <span class="eticheta">Domiciliat, jud.:</span>
+      <span class="valoare fix" style="width:80px;">{{ judet }}</span>
+      <span class="eticheta">Localitatea:</span>
+      <span class="valoare">{{ localitate }}</span>
+    </div>
+    <div class="rand">
+      <span class="eticheta">Strada:</span>
+      <span class="valoare">{{ strada }}</span>
+      <span class="eticheta">Nr.:</span>
+      <span class="valoare fix" style="width:30px;">{{ numar_strada }}</span>
+    </div>
+
+    <!-- Diagnostic -->
+    <div class="rand" style="margin-top:4px;">
+      <span class="eticheta">Diagnostic:</span>
+      <span class="valoare">{{ diagnostic }}</span>
+      {% if cod_diagnostic %}
+      <span class="eticheta" style="margin-left:8px;">Cod:</span>
+      <span class="valoare fix" style="width:60px;">{{ cod_diagnostic }}</span>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <hr class="separator">
+
+  <!-- Rp — MEDICAMENTE -->
+  <div class="rp-titlu">Rp.</div>
+
+  {% for linie in linii %}
+  <div class="medicament-bloc">
+    <div class="medicament-nr">{{ forloop.counter }}.</div>
+    <div class="medicament-nume">
+      {{ linie.nume_medicament }}{% if linie.concentratie %} — {{ linie.concentratie }}{% endif %}
+    </div>
+    <div class="medicament-detalii">
+      {% if linie.doza_frecventa %}<span><strong>Doză:</strong> {{ linie.doza_frecventa }}</span>{% endif %}
+      {% if linie.durata_zile %}<span><strong>Durată:</strong> {{ linie.durata_zile }} zile</span>{% endif %}
+      {% if linie.cantitate %}<span><strong>Cantitate:</strong> {{ linie.cantitate }} cutie(i)</span>{% endif %}
+      {% if linie.observatii %}<div style="margin-top:2px; font-style:italic;">{{ linie.observatii }}</div>{% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <div style="color:#999; font-style:italic; font-size:10pt;">— fără medicamente —</div>
+  {% endfor %}
+
+  <!-- SUBSOL -->
+  <div class="subsol">
+    <div class="subsol-bloc">
+      <div class="titlu-subsol">Medic prescriptor:</div>
+      <div>Dr. {{ medic_nume }}</div>
+      {% if cod_parafa %}<div style="margin-top:4px;">Cod parafă: <strong>{{ cod_parafa }}</strong></div>{% endif %}
+      <div class="linie-semnatura">Semnătură și parafă</div>
+    </div>
+    <div class="subsol-bloc">
+      <div class="titlu-subsol">Ștampila unității</div>
+      <div style="margin-top:4px; font-size:9.5pt;">Data eliberării: {{ data_emiterii }}</div>
+      <div class="linie-semnatura" style="margin-top:36px;">&nbsp;</div>
+    </div>
+  </div>
+
+  <div class="valabilitate">
+    Valabilă {{ valabilitate_zile }} zile de la data emiterii (până la
+    {% if data_expirare %}{{ data_expirare }}{% endif %})
+  </div>
+
+</div>
+
+</body>
+</html>

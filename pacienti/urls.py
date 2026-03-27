@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import (LinieRetetaViewSet, PacientViewSet, ConsulatieViewSet,
                     DiagnosticViewSet, RetetaViewSet, UserViewSet,
                     ProgramareViewSet, ConfiguratieCabinetViewSet,
-                    ConcediuMedicalViewSet, print_concediu)
+                    ConcediuMedicalViewSet)
+from .views import print_concediu, print_reteta
 
 router = DefaultRouter()
 router.register('pacienti', PacientViewSet, basename='pacient')
@@ -18,4 +19,5 @@ router.register(r'concedii', ConcediuMedicalViewSet, basename='concediu')
 
 urlpatterns = router.urls + [
     path('concedii/<int:pk>/print/', print_concediu, name='print-concediu'),
+    path('retete/<int:pk>/print/', print_reteta, name='print-reteta'),
 ]
