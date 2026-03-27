@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import api from '../api'
 import { validareCNP, parseCNP } from '../utils/cnp'
+import AdresaFields from '../components/AdresaFields'
 
 export default function PacientForm({ onSaved, onCancel }) {
   const [form, setForm] = useState({
     cnp: '', nume: '', prenume: '', data_nastere: '',
-    sex: 'M', telefon: '', email: '', adresa: '',
+    sex: 'M', telefon: '', email: '',
+    judet: '', localitate: '', strada: '', numar_strada: '',
     grup_sangvin: '', alergii: '', status: 'activ', medic: 1
   })
   const [errors, setErrors] = useState({})
@@ -35,6 +37,10 @@ export default function PacientForm({ onSaved, onCancel }) {
         setErrors(prev => ({ ...prev, cnp: null }))
       }
     }
+  }
+
+  const handleAdresaChange = (field, value) => {
+    setForm(prev => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = async e => {
@@ -139,11 +145,15 @@ export default function PacientForm({ onSaved, onCancel }) {
             onFocus={e => e.target.style.borderColor = '#3a7bd5'}
             onBlur={e => e.target.style.borderColor = '#1e2535'} />
 
-          <label style={labelStyle}>Adresa</label>
-          <textarea name="adresa" value={form.adresa} onChange={handleChange}
-            style={{ ...inputStyle, height: '70px', resize: 'vertical' }}
-            onFocus={e => e.target.style.borderColor = '#3a7bd5'}
-            onBlur={e => e.target.style.borderColor = '#1e2535'} />
+          {/* Adresa — inlocuieste textarea-ul vechi */}
+          <div style={{ borderTop: '1px solid #1e2535', paddingTop: '14px', marginTop: '2px', marginBottom: '4px' }}>
+            <div style={{ fontSize: '12px', color: '#4b5563', marginBottom: '12px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresă</div>
+            <AdresaFields
+              values={{ judet: form.judet, localitate: form.localitate, strada: form.strada, numar_strada: form.numar_strada }}
+              onChange={handleAdresaChange}
+              errors={errors}
+            />
+          </div>
 
           <label style={labelStyle}>Alergii cunoscute</label>
           <textarea name="alergii" value={form.alergii} onChange={handleChange}

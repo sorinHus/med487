@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import api from '../api'
 import { validareCNP } from '../utils/cnp'
+import AdresaFields from '../components/AdresaFields'
 
 function ICD10Search({ selectate, onAdd, onRemove, inputStyle, labelStyle }) {
   const [query, setQuery]       = useState('')
@@ -24,8 +25,6 @@ function ICD10Search({ selectate, onAdd, onRemove, inputStyle, labelStyle }) {
   return (
     <div style={{ marginBottom: '12px' }}>
       <label style={labelStyle}>Diagnostice ICD-10</label>
-
-      {/* Diagnostice selectate */}
       {selectate.length > 0 && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
           {selectate.map((d, i) => (
@@ -37,8 +36,6 @@ function ICD10Search({ selectate, onAdd, onRemove, inputStyle, labelStyle }) {
           ))}
         </div>
       )}
-
-      {/* Input cautare */}
       <div style={{ position: 'relative' }}>
         <input
           value={query}
@@ -46,7 +43,6 @@ function ICD10Search({ selectate, onAdd, onRemove, inputStyle, labelStyle }) {
           placeholder="Cauta cod ICD-10 sau denumire..."
           style={{ ...inputStyle, marginBottom: 0 }}
         />
-        {/* Dropdown rezultate */}
         {(rezultate.length > 0 || (loading && query.length >= 2)) && (
           <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#1a2235', border: '1px solid #1e2535', borderRadius: '8px', zIndex: 10, maxHeight: '200px', overflowY: 'auto', marginTop: '4px' }}>
             {loading && <div style={{ padding: '10px 14px', fontSize: '12px', color: '#4b5563' }}>Se cauta...</div>}
@@ -91,26 +87,26 @@ const STATUS_OPTS = [
 ]
 
 export default function PacientDetalii({ pacient, onBack }) {
-  const [consultatii, setConsultatii]   = useState([])
-  const [loading, setLoading]           = useState(true)
-  const [status, setStatus]             = useState(pacient.status)
+  const [consultatii, setConsultatii]     = useState([])
+  const [loading, setLoading]             = useState(true)
+  const [status, setStatus]               = useState(pacient.status)
   const [salvandStatus, setSalvandStatus] = useState(false)
-  const [editMode, setEditMode]         = useState(false)
-  const [formEdit, setFormEdit]         = useState({ ...pacient })
-  const [errorsEdit, setErrorsEdit]     = useState({})
-  const [salvandEdit, setSalvandEdit]   = useState(false)
+  const [editMode, setEditMode]           = useState(false)
+  const [formEdit, setFormEdit]           = useState({ ...pacient })
+  const [errorsEdit, setErrorsEdit]       = useState({})
+  const [salvandEdit, setSalvandEdit]     = useState(false)
   const [showConsultatie, setShowConsultatie] = useState(false)
   const [formC, setFormC] = useState({
-  data_ora: new Date().toISOString().slice(0,16),
-  simptome: '', examen_clinic: '', tratament: '', observatii: '',
-  diagnostice: []   // <-- adaugat
-})
-const [salvandC, setSalvandC]         = useState(false)
+    data_ora: new Date().toISOString().slice(0,16),
+    simptome: '', examen_clinic: '', tratament: '', observatii: '',
+    diagnostice: []
+  })
+  const [salvandC, setSalvandC] = useState(false)
 
   const inputStyle = { width: '100%', padding: '8px 12px', fontSize: '13px', background: '#0f1117', border: '1px solid #1e2535', borderRadius: '8px', color: '#e2e8f0', boxSizing: 'border-box', marginBottom: '12px', outline: 'none' }
   const labelStyle = { fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }
   const fieldLabel = { fontSize: '16px', color: '#6b7280', marginBottom: '3px' }
-const fieldValue = { fontSize: '18px', fontWeight: '500', color: '#e2e8f0', marginBottom: '16px' }
+  const fieldValue = { fontSize: '18px', fontWeight: '500', color: '#e2e8f0', marginBottom: '16px' }
 
   useEffect(() => {
     api.get(`/pacienti/${pacient.id}/consultatii/`)
@@ -142,42 +138,33 @@ const fieldValue = { fontSize: '18px', fontWeight: '500', color: '#e2e8f0', marg
     finally { setSalvandEdit(false) }
   }
 
-  // salveazaConsultatie — trimite diagnostice_ids
-const salveazaConsultatie = async (e) => {
-  e.preventDefault(); setSalvandC(true)
-  try {
-    await api.post('/consultatii/', {
-      ...formC,
-      pacient: pacient.id,
-      medic: pacient.medic,
-      diagnostice_ids: formC.diagnostice.map(d => d.id)  // <-- adaugat
-    })
-    const res = await api.get(`/pacienti/${pacient.id}/consultatii/`)
-    setConsultatii(res.data)
-    setShowConsultatie(false)
-    setFormC({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] })
-  } catch { alert('Eroare la salvarea consultatiei.') }
-  finally { setSalvandC(false) }
-}
+  const salveazaConsultatie = async (e) => {
+    e.preventDefault(); setSalvandC(true)
+    try {
+      await api.post('/consultatii/', {
+        ...formC,
+        pacient: pacient.id,
+        medic: pacient.medic,
+        diagnostice_ids: formC.diagnostice.map(d => d.id)
+      })
+      const res = await api.get(`/pacienti/${pacient.id}/consultatii/`)
+      setConsultatii(res.data)
+      setShowConsultatie(false)
+      setFormC({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] })
+    } catch { alert('Eroare la salvarea consultatiei.') }
+    finally { setSalvandC(false) }
+  }
+
+  // Adresa completa pentru view
+  const adresaDisplay = [pacient.strada, pacient.numar_strada, pacient.localitate, pacient.judet]
+    .filter(Boolean).join(', ') || '—'
 
   const nume = `${pacient.nume} ${pacient.prenume}`
   const statusObj = STATUS_OPTS.find(s => s.value === status) || STATUS_OPTS[0]
 
-
-  
   return (
     <div>
       {/* Back + actiuni */}
-
-<ICD10Search
-  selectate={formC.diagnostice}
-  onAdd={d => setFormC(p => ({ ...p, diagnostice: [...p.diagnostice, d] }))}
-  onRemove={id => setFormC(p => ({ ...p, diagnostice: p.diagnostice.filter(d => d.id !== id) }))}
-  inputStyle={inputStyle}
-  labelStyle={labelStyle}
-/>
-<div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}></div>
-      
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
         <button onClick={onBack}
           style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '20px', padding: '0', lineHeight: 1 }}>
@@ -223,8 +210,16 @@ const salveazaConsultatie = async (e) => {
                   <option value="M">Masculin</option><option value="F">Feminin</option>
                 </select></div>
             </div>
-            <label style={labelStyle}>Adresa</label>
-            <textarea value={formEdit.adresa} onChange={e => setFormEdit(p => ({ ...p, adresa: e.target.value }))} style={{ ...inputStyle, height: '60px', resize: 'vertical' }}/>
+
+            {/* Adresa — inlocuieste textarea-ul vechi */}
+            <div style={{ borderTop: '1px solid #1e2535', paddingTop: '14px', marginTop: '2px', marginBottom: '4px' }}>
+              <div style={{ fontSize: '12px', color: '#4b5563', marginBottom: '12px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresă</div>
+              <AdresaFields
+                values={{ judet: formEdit.judet || '', localitate: formEdit.localitate || '', strada: formEdit.strada || '', numar_strada: formEdit.numar_strada || '' }}
+                onChange={(field, value) => setFormEdit(p => ({ ...p, [field]: value }))}
+              />
+            </div>
+
             <label style={labelStyle}>Alergii</label>
             <textarea value={formEdit.alergii} onChange={e => setFormEdit(p => ({ ...p, alergii: e.target.value }))} style={{ ...inputStyle, height: '60px', resize: 'vertical' }}/>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}>
@@ -269,7 +264,7 @@ const salveazaConsultatie = async (e) => {
           <div style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0', marginBottom: '16px' }}>Contact</div>
           <p style={fieldLabel}>Telefon</p><p style={fieldValue}>{pacient.telefon || '—'}</p>
           <p style={fieldLabel}>Email</p><p style={fieldValue}>{pacient.email || '—'}</p>
-          <p style={fieldLabel}>Adresa</p><p style={fieldValue}>{pacient.adresa || '—'}</p>
+          <p style={fieldLabel}>Adresă</p><p style={fieldValue}>{adresaDisplay}</p>
           <p style={fieldLabel}>Alergii</p>
           <p style={{ ...fieldValue, color: pacient.alergii ? '#fbbf24' : '#4b5563' }}>{pacient.alergii || 'Nicio alergie cunoscuta'}</p>
         </div>
@@ -301,15 +296,13 @@ const salveazaConsultatie = async (e) => {
             <textarea value={formC.tratament} onChange={e => setFormC(p => ({ ...p, tratament: e.target.value }))} style={{ ...inputStyle, height: '70px', resize: 'vertical' }} placeholder="Medicatie, doze, durata..."/>
             <label style={labelStyle}>Observatii</label>
             <textarea value={formC.observatii} onChange={e => setFormC(p => ({ ...p, observatii: e.target.value }))} style={{ ...inputStyle, height: '60px', resize: 'vertical' }}/>
-            
             <ICD10Search
-            selectate={formC.diagnostice}
-            onAdd={d => setFormC(p => ({ ...p, diagnostice: [...p.diagnostice, d] }))}
-            onRemove={id => setFormC(p => ({ ...p, diagnostice: p.diagnostice.filter(d => d.id !== id) }))}
-            inputStyle={inputStyle}
-            labelStyle={labelStyle}
+              selectate={formC.diagnostice}
+              onAdd={d => setFormC(p => ({ ...p, diagnostice: [...p.diagnostice, d] }))}
+              onRemove={id => setFormC(p => ({ ...p, diagnostice: p.diagnostice.filter(d => d.id !== id) }))}
+              inputStyle={inputStyle}
+              labelStyle={labelStyle}
             />
-            
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}>
               <button type="button" onClick={() => setShowConsultatie(false)} style={{ padding: '8px 18px', fontSize: '13px', cursor: 'pointer', border: '1px solid #1e2535', borderRadius: '8px', background: 'transparent', color: '#9ca3af' }}>Anuleaza</button>
               <button type="submit" disabled={salvandC} style={{ padding: '8px 18px', fontSize: '13px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', opacity: salvandC ? 0.6 : 1 }}>

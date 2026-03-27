@@ -2,13 +2,19 @@ from rest_framework import viewsets, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
+    DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical
 from .serializers import (UserSerializer, PacientSerializer,
                           DiagnosticSerializer, ConsulatieSerializer,
-                          ProgramareSerializer)
+                          ProgramareSerializer, ConfiguratieCabinetSerializer,
+                          RetetaSerializer, RetetaCreateSerializer,
+                          LinieRetetaSerializer, ConcediuMedicalSerializer)
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db.models import Max, Q
+from django.shortcuts import render, get_object_or_404
 
 class PacientViewSet(viewsets.ModelViewSet):
     serializer_class = PacientSerializer
@@ -177,3 +183,108 @@ class ProgramareViewSet(viewsets.ModelViewSet):
             ora_curenta += timedelta(minutes=durata)
 
         return Response(slots)
+
+
+class ConfiguratieCabinetViewSet(viewsets.ModelViewSet):
+    serializer_class = ConfiguratieCabinetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return ConfiguratieCabinet.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        obj = ConfiguratieCabinet.get()
+        serializer = self.get_serializer(obj)
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        obj = ConfiguratieCabinet.get()
+        serializer = self.get_serializer(obj, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+class RetetaViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['numar_reteta', 'pacient__nume', 'pacient__prenume', 'diagnostic']
+
+    def get_queryset(self):
+        qs = Reteta.objects.select_related('pacient', 'medic', 'consultatie').prefetch_related('linii')
+        pacient_id = self.request.query_params.get('pacient')
+        if pacient_id:
+            qs = qs.filter(pacient_id=pacient_id)
+        return qs
+
+    def get_serializer_class(self):
+        if self.action in ['create', 'update', 'partial_update']:
+            return RetetaCreateSerializer
+        return RetetaSerializer
+
+
+class LinieRetetaViewSet(viewsets.ModelViewSet):
+    serializer_class = LinieRetetaSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return LinieReteta.objects.filter(reteta__medic=self.request.user)
+    
+class ConcediuMedicalViewSet(viewsets.ModelViewSet):
+    serializer_class = ConcediuMedicalSerializer
+    permission_classes = [IsAuthenticated]
+ 
+    def get_queryset(self):
+        qs = ConcediuMedical.objects.select_related('pacient', 'medic', 'consultatie')
+        pacient_id = self.request.query_params.get('pacient')
+        if pacient_id:
+            qs = qs.filter(pacient_id=pacient_id)
+        return qs
+from django.shortcuts import render, get_object_or_404
+
+LUNI_RO = [
+    '', 'ianuarie', 'februarie', 'martie', 'aprilie', 'mai', 'iunie',
+    'iulie', 'august', 'septembrie', 'octombrie', 'noiembrie', 'decembrie'
+]
+
+def print_concediu(request, pk):
+    concediu = get_object_or_404(ConcediuMedical, pk=pk)
+    cabinet = ConfiguratieCabinet.get()
+    pacient = concediu.pacient
+
+    context = {
+        'serie_numar':          concediu.serie_numar,
+        'tip':                  concediu.tip,
+        'serie_initial':        concediu.serie_initial,
+        'luna_text':            LUNI_RO[concediu.luna],
+        'an':                   concediu.an,
+        'cod_indemnizatie':     concediu.cod_indemnizatie,
+        'pacient_nume':         pacient.nume,
+        'pacient_prenume':      pacient.prenume,
+        'cnp':                  pacient.cnp,
+        'judet':                pacient.judet,
+        'localitate':           pacient.localitate,
+        'strada':               pacient.strada,
+        'numar_strada':         pacient.numar_strada,
+        'data_acordarii_zi':    concediu.data_acordarii.strftime('%d'),
+        'data_acordarii_luna':  concediu.data_acordarii.strftime('%m'),
+        'data_acordarii_an':    concediu.data_acordarii.strftime('%y'),
+        'nr_zile':              concediu.nr_zile,
+        'de_la_zi':             concediu.de_la.strftime('%d'),
+        'de_la_luna':           concediu.de_la.strftime('%m'),
+        'de_la_an':             concediu.de_la.strftime('%y'),
+        'pana_la_zi':           concediu.pana_la.strftime('%d'),
+        'pana_la_luna':         concediu.pana_la.strftime('%m'),
+        'pana_la_an':           concediu.pana_la.strftime('%y'),
+        'cod_diagnostic':       concediu.cod_diagnostic,
+        'acut_subacut_cronic':  concediu.acut_subacut_cronic,
+        'nr_inreg':             concediu.nr_inreg,
+        'ambulator_internat':   concediu.ambulator_internat,
+        'nr_conventie':         concediu.nr_conventie,
+        'cas':                  concediu.cas,
+        'denumire_unitate':     cabinet.denumire_unitate,
+        'cui':                  cabinet.cui,
+        'cod_parafa':           cabinet.cod_parafă,
+    }
+
+    return render(request, 'pacienti/concediu_print.html', context)

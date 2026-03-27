@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, DiagnosticConsultatie
+from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
+    DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,19 +51,21 @@ class ConsulatieSerializer(serializers.ModelSerializer):
                 tip='principal' if diag_id == diagnostice_ids[0] else 'secundar'
             )
         return consultatie
+
 class PacientSerializer(serializers.ModelSerializer):
     consultatii_count = serializers.IntegerField(read_only=True, default=0)
     ultima_consultatie = serializers.DateTimeField(read_only=True, default=None)
 
     class Meta:
         model = Pacient
-        fields = ['id', 'cnp', 'nume', 'prenume', 'data_nastere', 'sex', 'telefon', 
-          'email', 'adresa', 'grup_sangvin', 'alergii', 'data_inregistrare', 
-          'status', 'medic', 'consultatii_count', 'ultima_consultatie']
+        fields = ['id', 'cnp', 'nume', 'prenume', 'data_nastere', 'sex', 'telefon',
+                  'email', 'judet', 'localitate', 'strada', 'numar_strada',
+                  'grup_sangvin', 'alergii', 'data_inregistrare',
+                  'status', 'medic', 'consultatii_count', 'ultima_consultatie']
 
     def get_consultatii_count(self, obj):
         return obj.consultatii.count()
-    
+
 class ProgramareSerializer(serializers.ModelSerializer):
     pacient_nume_complet = serializers.SerializerMethodField()
 
@@ -77,3 +80,69 @@ class ProgramareSerializer(serializers.ModelSerializer):
         if obj.pacient:
             return f"{obj.pacient.nume} {obj.pacient.prenume}"
         return obj.nume_pacient
+    
+  
+class ConfiguratieCabinetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConfiguratieCabinet
+        fields = ['id', 'denumire_unitate', 'localitate', 'judet',
+                  'strada', 'numar', 'telefon', 'email', 'cui', 'cod_parafă']
+
+
+class LinieRetetaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LinieReteta
+        fields = ['id', 'nume_medicament', 'concentratie', 'doza_frecventa',
+                  'durata_zile', 'cantitate', 'observatii', 'ordine']
+
+
+class RetetaSerializer(serializers.ModelSerializer):
+    linii         = LinieRetetaSerializer(many=True, read_only=True)
+    pacient_nume  = serializers.SerializerMethodField()
+    medic_nume    = serializers.CharField(source='medic.get_full_name', read_only=True)
+
+    def get_pacient_nume(self, obj):
+        return f'{obj.pacient.nume} {obj.pacient.prenume}'
+
+    class Meta:
+        model = Reteta
+        fields = ['id', 'numar_reteta', 'pacient', 'pacient_nume', 'medic', 'medic_nume',
+                  'consultatie', 'data_emiterii', 'valabilitate_zile', 'gratuit',
+                  'diagnostic', 'nr_fisa', 'observatii', 'creat_la', 'linii']
+        read_only_fields = ['numar_reteta', 'data_emiterii', 'creat_la']
+
+
+class RetetaCreateSerializer(serializers.ModelSerializer):
+    """Folosit la POST — accepta linii nested."""
+    linii = LinieRetetaSerializer(many=True, required=False, default=list)
+
+    class Meta:
+        model = Reteta
+        fields = ['pacient', 'medic', 'consultatie', 'valabilitate_zile', 'gratuit',
+                  'diagnostic', 'nr_fisa', 'observatii', 'linii']
+
+    def create(self, validated_data):
+        linii_data = validated_data.pop('linii', [])
+        reteta = Reteta.objects.create(**validated_data)
+        for i, linie in enumerate(linii_data):
+            LinieReteta.objects.create(reteta=reteta, ordine=i, **linie)
+        return reteta
+
+
+class ConcediuMedicalSerializer(serializers.ModelSerializer):
+    pacient_nume = serializers.SerializerMethodField()
+    medic_nume   = serializers.CharField(source='medic.get_full_name', read_only=True)
+
+    def get_pacient_nume(self, obj):
+        return f'{obj.pacient.nume} {obj.pacient.prenume}'
+
+    class Meta:
+        model = ConcediuMedical
+        fields = [
+            'id', 'pacient', 'pacient_nume', 'medic', 'medic_nume', 'consultatie',
+            'serie_numar', 'tip', 'serie_initial', 'luna', 'an', 'cod_indemnizatie',
+            'data_acordarii', 'nr_zile', 'de_la', 'pana_la',
+            'cod_diagnostic', 'acut_subacut_cronic', 'nr_inreg', 'ambulator_internat',
+            'nr_conventie', 'cas', 'observatii', 'creat_la',
+        ]
+        read_only_fields = ['creat_la']

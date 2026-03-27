@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>Concediu Medical — {{ serie_numar }}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    background: #fff;
+    color: #000;
+  }
+
+  /* Containerul principal — dimensiune exacta A4 */
+  #formular {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  /* Imaginea de fundal (formular gol scanat) */
+  #formular img.fundal {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0.3; /* vizibil in mod calibrare, invizibil la print */
+    pointer-events: none;
+  }
+
+  /* Campurile pozitionate absolut */
+  .camp {
+    position: absolute;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    line-height: 1;
+    color: #000;
+    white-space: nowrap;
+    cursor: move; /* in mod calibrare */
+  }
+
+  /* Mod calibrare — campurile au border */
+  body.calibrare .camp {
+    border: 1px dashed #e53e3e;
+    background: rgba(229, 62, 62, 0.05);
+    padding: 1px 2px;
+    min-width: 20px;
+    min-height: 14px;
+  }
+
+  body.calibrare #formular img.fundal {
+    opacity: 0.5;
+  }
+
+  /* Toolbar calibrare */
+  #toolbar {
+    display: none;
+    position: fixed;
+    top: 10px; right: 10px;
+    background: #1a202c;
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    z-index: 1000;
+    min-width: 220px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  body.calibrare #toolbar { display: block; }
+
+  #toolbar h3 { font-size: 13px; margin-bottom: 10px; color: #60a5fa; }
+  #toolbar .info { color: #9ca3af; margin-bottom: 8px; font-size: 11px; }
+  #toolbar .selected-camp { color: #fbbf24; margin-bottom: 8px; font-size: 11px; min-height: 16px; }
+  #toolbar .coords { color: #34d399; font-family: monospace; margin-bottom: 10px; font-size: 11px; }
+
+  #toolbar button {
+    display: block; width: 100%; padding: 7px 10px; margin-bottom: 6px;
+    border: none; border-radius: 5px; cursor: pointer;
+    font-size: 12px; font-weight: 600;
+  }
+  #btn-print { background: #3a7bd5; color: #fff; }
+  #btn-toggle { background: #4b5563; color: #fff; }
+  #btn-export { background: #059669; color: #fff; }
+  #btn-print:hover { background: #2d6bc4; }
+
+  #coords-output {
+    margin-top: 8px; background: #0f172a; padding: 8px;
+    border-radius: 4px; font-family: monospace; font-size: 10px;
+    color: #a3e635; max-height: 150px; overflow-y: auto;
+    display: none;
+  }
+
+  /* Print */
+  @media print {
+    #toolbar { display: none !important; }
+    body { background: #fff; }
+    #formular img.fundal { opacity: 0 !important; }
+    .camp { border: none !important; background: none !important; padding: 0 !important; cursor: default !important; }
+    body.calibrare .camp { border: none !important; background: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <h3>🔧 Mod Calibrare</h3>
+  <div class="info">Trage câmpurile roșii pe poziția corectă de pe formular.</div>
+  <div class="selected-camp" id="selected-name">Niciun câmp selectat</div>
+  <div class="coords" id="selected-coords">—</div>
+  <button id="btn-export" onclick="exportCoords()">📋 Copiază coordonate</button>
+  <button id="btn-print" onclick="window.print()">🖨️ Printează</button>
+  <button id="btn-toggle" onclick="toggleCalibrare()">✅ Ieși din calibrare</button>
+  <div id="coords-output"></div>
+</div>
+
+<div id="formular">
+  <!--
+    Imaginea de fundal — pune scan-ul formularului gol aici.
+    In productie, inlocuieste src cu calea catre imaginea reala.
+    La print, imaginea e invizibila (opacity 0).
+  -->
+  <img class="fundal" src="" alt="" id="img-fundal" />
+
+  <!--
+    CAMPURI POZITIONATE
+    top/left in mm de la coltul din stanga-sus al formularului A4.
+    Ajusteaza in mod calibrare sau direct in CSS.
+  -->
+
+  <!-- Seria si numarul -->
+  <div class="camp" id="c-serie-numar" style="top:42mm; left:105mm; font-size:12px; font-weight:bold;">
+    {{ serie_numar }}
+  </div>
+
+  <!-- Luna (in litere) -->
+  <div class="camp" id="c-luna" style="top:52mm; left:28mm;">
+    {{ luna_text }}
+  </div>
+
+  <!-- Anul -->
+  <div class="camp" id="c-an" style="top:52mm; left:95mm;">
+    {{ an }}
+  </div>
+
+  <!-- Cod indemnizatie -->
+  <div class="camp" id="c-cod-indemnizatie" style="top:52mm; left:155mm;">
+    {{ cod_indemnizatie }}
+  </div>
+
+  <!-- CAS -->
+  <div class="camp" id="c-cas" style="top:60mm; left:50mm;">
+    {{ cas }}
+  </div>
+
+  <!-- Nume si prenume pacient -->
+  <div class="camp" id="c-nume" style="top:65mm; left:35mm;">
+    {{ pacient_nume }} {{ pacient_prenume }}
+  </div>
+
+  <!-- CNP -->
+  <div class="camp" id="c-cnp" style="top:70mm; left:35mm; letter-spacing: 3.2px;">
+    {{ cnp }}
+  </div>
+
+  <!-- Domiciliu — judet -->
+  <div class="camp" id="c-judet" style="top:75mm; left:65mm;">
+    {{ judet }}
+  </div>
+
+  <!-- Localitate -->
+  <div class="camp" id="c-localitate" style="top:80mm; left:20mm;">
+    {{ localitate }}
+  </div>
+
+  <!-- Strada -->
+  <div class="camp" id="c-strada" style="top:80mm; left:75mm;">
+    {{ strada }}
+  </div>
+
+  <!-- Nr strada -->
+  <div class="camp" id="c-nr-strada" style="top:80mm; left:155mm;">
+    {{ numar_strada }}
+  </div>
+
+  <!-- Nr inregistrare RC/FO -->
+  <div class="camp" id="c-nr-inreg" style="top:92mm; left:18mm;">
+    {{ nr_inreg }}
+  </div>
+
+  <!-- Data acordarii zi -->
+  <div class="camp" id="c-data-zi" style="top:92mm; left:55mm;">
+    {{ data_acordarii_zi }}
+  </div>
+
+  <!-- Data acordarii luna -->
+  <div class="camp" id="c-data-luna" style="top:92mm; left:63mm;">
+    {{ data_acordarii_luna }}
+  </div>
+
+  <!-- Data acordarii an -->
+  <div class="camp" id="c-data-an" style="top:92mm; left:71mm;">
+    {{ data_acordarii_an }}
+  </div>
+
+  <!-- Nr zile -->
+  <div class="camp" id="c-nr-zile" style="top:92mm; left:83mm;">
+    {{ nr_zile }}
+  </div>
+
+  <!-- De la zi -->
+  <div class="camp" id="c-dela-zi" style="top:92mm; left:98mm;">
+    {{ de_la_zi }}
+  </div>
+  <div class="camp" id="c-dela-luna" style="top:92mm; left:106mm;">
+    {{ de_la_luna }}
+  </div>
+  <div class="camp" id="c-dela-an" style="top:92mm; left:114mm;">
+    {{ de_la_an }}
+  </div>
+
+  <!-- Pana la zi -->
+  <div class="camp" id="c-panala-zi" style="top:92mm; left:128mm;">
+    {{ pana_la_zi }}
+  </div>
+  <div class="camp" id="c-panala-luna" style="top:92mm; left:136mm;">
+    {{ pana_la_luna }}
+  </div>
+  <div class="camp" id="c-panala-an" style="top:92mm; left:144mm;">
+    {{ pana_la_an }}
+  </div>
+
+  <!-- Cod diagnostic -->
+  <div class="camp" id="c-cod-diag" style="top:92mm; left:163mm;">
+    {{ cod_diagnostic }}
+  </div>
+
+  <!-- Acut/Subacut/Cronic — bife -->
+  <div class="camp" id="c-acut" style="top:92mm; left:181mm;">
+    {% if acut_subacut_cronic == 'acut' %}X{% endif %}
+  </div>
+  <div class="camp" id="c-subacut" style="top:96mm; left:181mm;">
+    {% if acut_subacut_cronic == 'subacut' %}X{% endif %}
+  </div>
+  <div class="camp" id="c-cronic" style="top:100mm; left:181mm;">
+    {% if acut_subacut_cronic == 'cronic' %}X{% endif %}
+  </div>
+
+  <!-- Tip: Initial / In continuare -->
+  <div class="camp" id="c-tip-initial" style="top:35mm; left:155mm;">
+    {% if tip == 'initial' %}X{% endif %}
+  </div>
+  <div class="camp" id="c-tip-continuare" style="top:40mm; left:155mm;">
+    {% if tip == 'continuare' %}X{% endif %}
+  </div>
+
+  <!-- Seria certificat initial -->
+  <div class="camp" id="c-serie-initial" style="top:45mm; left:155mm;">
+    {{ serie_initial }}
+  </div>
+
+  <!-- Unitate sanitara -->
+  <div class="camp" id="c-unitate" style="top:108mm; left:20mm;">
+    {{ denumire_unitate }}
+  </div>
+
+  <!-- Nr conventie -->
+  <div class="camp" id="c-nr-conventie" style="top:108mm; left:100mm;">
+    {{ nr_conventie }}
+  </div>
+
+  <!-- CAS (jos) -->
+  <div class="camp" id="c-cas2" style="top:108mm; left:160mm;">
+    {{ cas }}
+  </div>
+
+  <!-- CUI cabinet -->
+  <div class="camp" id="c-cui" style="top:118mm; left:20mm;">
+    {{ cui }}
+  </div>
+
+  <!-- Cod parafa medic -->
+  <div class="camp" id="c-parafa" style="top:118mm; left:95mm;">
+    {{ cod_parafa }}
+  </div>
+
+  <!-- Ambulator/Internat -->
+  <div class="camp" id="c-ambulator" style="top:97mm; left:18mm;">
+    {% if ambulator_internat == 'ambulator' %}X{% endif %}
+  </div>
+  <div class="camp" id="c-internat" style="top:101mm; left:18mm;">
+    {% if ambulator_internat == 'internat' %}X{% endif %}
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// MOD CALIBRARE — drag & drop campuri + export coordonate
+// ============================================================
+
+let selectedCamp = null;
+let isDragging = false;
+let dragOffsetX = 0, dragOffsetY = 0;
+let isCalibrare = false;
+
+// Activare mod calibrare cu ?calibrare in URL
+if (window.location.search.includes('calibrare')) {
+  toggleCalibrare();
+}
+
+function toggleCalibrare() {
+  isCalibrare = !isCalibrare;
+  document.body.classList.toggle('calibrare', isCalibrare);
+  document.getElementById('btn-toggle').textContent =
+    isCalibrare ? '✅ Ieși din calibrare' : '🔧 Mod calibrare';
+  if (isCalibrare) initDrag();
+}
+
+function initDrag() {
+  document.querySelectorAll('.camp').forEach(el => {
+    el.addEventListener('mousedown', startDrag);
+  });
+}
+
+function startDrag(e) {
+  if (!isCalibrare) return;
+  e.preventDefault();
+  selectedCamp = e.currentTarget;
+  isDragging = true;
+
+  const rect = selectedCamp.getBoundingClientRect();
+  dragOffsetX = e.clientX - rect.left;
+  dragOffsetY = e.clientY - rect.top;
+
+  document.getElementById('selected-name').textContent = '📌 ' + selectedCamp.id;
+  updateCoords();
+
+  document.addEventListener('mousemove', onDrag);
+  document.addEventListener('mouseup', stopDrag);
+}
+
+function onDrag(e) {
+  if (!isDragging || !selectedCamp) return;
+  const formular = document.getElementById('formular');
+  const fRect = formular.getBoundingClientRect();
+
+  // Pozitie in px relativa la formular
+  let x = e.clientX - fRect.left - dragOffsetX;
+  let y = e.clientY - fRect.top - dragOffsetY;
+
+  // Conversie in mm (1mm = 3.7795px la 96dpi)
+  const mmX = (x / fRect.width * 210).toFixed(1);
+  const mmY = (y / fRect.height * 297).toFixed(1);
+
+  selectedCamp.style.left = mmX + 'mm';
+  selectedCamp.style.top = mmY + 'mm';
+
+  updateCoords();
+}
+
+function stopDrag() {
+  isDragging = false;
+  document.removeEventListener('mousemove', onDrag);
+  document.removeEventListener('mouseup', stopDrag);
+}
+
+function updateCoords() {
+  if (!selectedCamp) return;
+  const top = selectedCamp.style.top;
+  const left = selectedCamp.style.left;
+  document.getElementById('selected-coords').textContent = `top: ${top}  left: ${left}`;
+}
+
+function exportCoords() {
+  let output = '/* Coordonate calibrate */\n';
+  document.querySelectorAll('.camp').forEach(el => {
+    output += `#${el.id} { top: ${el.style.top}; left: ${el.style.left}; }\n`;
+  });
+
+  const box = document.getElementById('coords-output');
+  box.style.display = 'block';
+  box.textContent = output;
+
+  // Copiaza in clipboard
+  navigator.clipboard.writeText(output).then(() => {
+    document.getElementById('btn-export').textContent = '✅ Copiat!';
+    setTimeout(() => document.getElementById('btn-export').textContent = '📋 Copiază coordonate', 2000);
+  });
+}
+</script>
+
+</body>
+</html>
