@@ -2,7 +2,7 @@ import axios from 'axios'
 import { getToken } from './auth'
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
+  baseURL: 'https://web-production-26811.up.railway.app/api/',
 })
 
 api.interceptors.request.use(config => {
