@@ -57,7 +57,14 @@ class ConsulatieViewSet(viewsets.ModelViewSet):
     search_fields = ['simptome', 'pacient__nume', 'pacient__prenume', 'medic__last_name']
 
     def get_queryset(self):
-        return Consultatie.objects.select_related('pacient', 'medic').prefetch_related('diagnostice')
+        qs = Consultatie.objects.select_related('pacient', 'medic').prefetch_related('diagnostice')
+        data_dupa = self.request.query_params.get('data_dupa')
+        data_inainte = self.request.query_params.get('data_inainte')
+        if data_dupa:
+            qs = qs.filter(data_ora__date__gte=data_dupa)
+        if data_inainte:
+            qs = qs.filter(data_ora__date__lte=data_inainte)
+        return qs
 
 
 class DiagnosticViewSet(viewsets.ModelViewSet):

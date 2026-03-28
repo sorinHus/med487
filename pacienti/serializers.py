@@ -159,6 +159,7 @@ class ConcediuMedicalSerializer(serializers.ModelSerializer):
 class TrimitereSerializer(serializers.ModelSerializer):
     pacient_nume = serializers.SerializerMethodField()
     medic_nume   = serializers.SerializerMethodField()
+    data_emiterii = serializers.DateField(read_only=True)
 
     def get_pacient_nume(self, obj):
         return f'{obj.pacient.nume} {obj.pacient.prenume}'

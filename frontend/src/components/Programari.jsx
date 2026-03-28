@@ -88,6 +88,7 @@ function ModalProgramare({ onClose, onSaved, defaultData }) {
     await api.post('/programari/', form)
     setSaving(false)
     onSaved()
+  // eslint-disable-next-line no-unused-vars
   } catch (err) {
     setError('Eroare la salvare. Verificati datele.')
     setSaving(false)
@@ -276,6 +277,7 @@ export default function Programari() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchProgramari() }, [monday])
 
   const prevSaptamana = () => setMonday(m => addDays(m, -7))

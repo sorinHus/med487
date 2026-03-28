@@ -31,44 +31,72 @@ function Badge({ status }) {
   )
 }
 
-function StatCard({ label, value, sub, color }) {
+function StatCard({ label, value, sub, color, trend }) {
   return (
     <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '18px 20px' }}>
       <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '8px' }}>{label}</div>
       <div style={{ fontSize: '28px', fontWeight: '700', color: color || '#f1f5f9', lineHeight: 1 }}>{value ?? '—'}</div>
-      {sub && <div style={{ fontSize: '11px', color: '#4b5563', marginTop: '6px' }}>{sub}</div>}
+      {sub && (
+        <div style={{ fontSize: '11px', color: trend > 0 ? '#34d399' : trend < 0 ? '#f87171' : '#4b5563', marginTop: '6px' }}>
+          {trend > 0 ? '↑ ' : trend < 0 ? '↓ ' : ''}{sub}
+        </div>
+      )}
     </div>
   )
 }
 
 export default function Dashboard({ onNavigate }) {
-  const [stats, setStats]                 = useState({ pacienti: null, programariAzi: null, programariRamase: null })
-  const [programariAzi, setProgramariAzi] = useState([])
+  const [stats, setStats]                     = useState({ pacienti: null, programariAzi: null, programariRamase: null, consultatiiLuna: null, consultatiiLunaTrecuta: null })
+  const [programariAzi, setProgramariAzi]     = useState([])
   const [pacientiRecenti, setPacientiRecenti] = useState([])
-  const [searchQuery, setSearchQuery]     = useState('')
-  const [searchResults, setSearchResults] = useState([])
-  const [loadingSearch, setLoadingSearch] = useState(false)
-  const [loading, setLoading]             = useState(true)
+  const [searchQuery, setSearchQuery]         = useState('')
+  const [searchResults, setSearchResults]     = useState([])
+  const [loadingSearch, setLoadingSearch]     = useState(false)
+  const [loading, setLoading]                 = useState(true)
 
   const azi = new Date().toISOString().slice(0, 10)
 
+  // Calculeaza intervalul pentru luna curenta si luna trecuta
+  const getLunaInterval = (offsetLuni = 0) => {
+    const d = new Date()
+    d.setDate(1)
+    d.setMonth(d.getMonth() + offsetLuni)
+    const start = d.toISOString().slice(0, 10)
+    const end = new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().slice(0, 10)
+    return { start, end }
+  }
+
   useEffect(() => {
+    const luna = getLunaInterval(0)
+    const lunaTrecuta = getLunaInterval(-1)
+
     Promise.all([
       api.get('/pacienti/'),
       api.get('/programari/', { params: { data: azi } }),
       api.get('/pacienti/', { params: { page_size: 5 } }),
-    ]).then(([pacientiRes, programariRes, recentiRes]) => {
+      api.get('/consultatii/', { params: { page: 1, page_size: 1, data_dupa: luna.start, data_inainte: luna.end } }),
+      api.get('/consultatii/', { params: { page: 1, page_size: 1, data_dupa: lunaTrecuta.start, data_inainte: lunaTrecuta.end } }),
+    ]).then(([pacientiRes, programariRes, recentiRes, consultatiiLunaRes, consultatiiLunaTrecutaRes]) => {
       const totalPacienti = pacientiRes.data.count ?? (Array.isArray(pacientiRes.data) ? pacientiRes.data.length : 0)
       const prog = Array.isArray(programariRes.data) ? programariRes.data : (programariRes.data.results || [])
       const recenti = Array.isArray(recentiRes.data) ? recentiRes.data.slice(0,5) : (recentiRes.data.results || []).slice(0,5)
+
+      // Numarul consultatiilor — daca API-ul suporta filtrare pe data, returneaza count
+      // Daca nu, fallback la length
+      const consultatiiLuna = consultatiiLunaRes.data.count ?? (Array.isArray(consultatiiLunaRes.data) ? consultatiiLunaRes.data.length : 0)
+      const consultatiiLunaTrecuta = consultatiiLunaTrecutaRes.data.count ?? (Array.isArray(consultatiiLunaTrecutaRes.data) ? consultatiiLunaTrecutaRes.data.length : 0)
+
       setStats({
         pacienti: totalPacienti,
         programariAzi: prog.length,
         programariRamase: prog.filter(p => ['programat','confirmat'].includes(p.status)).length,
+        consultatiiLuna,
+        consultatiiLunaTrecuta,
       })
       setProgramariAzi(prog.slice(0, 6))
       setPacientiRecenti(recenti)
     }).finally(() => setLoading(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -86,6 +114,15 @@ export default function Dashboard({ onNavigate }) {
 
   const displayPacienti = searchQuery.trim() ? searchResults : pacientiRecenti
 
+  // Trend fata de luna trecuta
+  const trend = stats.consultatiiLunaTrecuta > 0
+    ? stats.consultatiiLuna - stats.consultatiiLunaTrecuta
+    : null
+
+  const subConsultatii = trend !== null
+    ? `${Math.abs(trend)} față de luna trecută (${stats.consultatiiLunaTrecuta})`
+    : 'luna curentă'
+
   if (loading) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px', color: '#4b5563' }}>
       Se incarca...
@@ -99,7 +136,7 @@ export default function Dashboard({ onNavigate }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }}>
         <StatCard label="Pacienti inregistrati" value={stats.pacienti?.toLocaleString('ro-RO')} color="#60a5fa" />
         <StatCard label="Programari azi" value={stats.programariAzi} sub={`${stats.programariRamase} ramase`} color="#fbbf24" />
-        <StatCard label="Consultatii luna" value="—" sub="vs luna trecuta" color="#34d399" />
+        <StatCard label="Consultatii luna" value={stats.consultatiiLuna} sub={subConsultatii} trend={trend} color="#34d399" />
       </div>
 
       {/* Bottom row */}
@@ -117,7 +154,7 @@ export default function Dashboard({ onNavigate }) {
               <span style={{ color: '#2a3550' }}>|</span>
               <a href="/programare.html" target="_blank"
                 style={{ fontSize: '12px', padding: '4px 10px', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', textDecoration: 'none' }}>
-               + Programare online
+                + Programare online
               </a>
             </div>
           </div>

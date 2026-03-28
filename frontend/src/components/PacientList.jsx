@@ -16,9 +16,21 @@ function getAvatarColor(name) {
   return AVATAR_COLORS[Math.abs(h) % AVATAR_COLORS.length]
 }
 
-function varsta(dataNastere) {
-  if (!dataNastere) return '—'
-  return Math.floor((new Date() - new Date(dataNastere)) / 31557600000)
+function varsta(cnp) {
+  try {
+    if (!cnp || cnp.length !== 13) return '—'
+    const s = parseInt(cnp[0])
+    const an2 = parseInt(cnp.slice(1, 3))
+    const luna = parseInt(cnp.slice(3, 5))
+    const zi = parseInt(cnp.slice(5, 7))
+    let an
+    if (s === 1 || s === 2) an = 1900 + an2
+    else if (s === 3 || s === 4) an = 1800 + an2
+    else if (s === 5 || s === 6) an = 2000 + an2
+    else an = 1900 + an2
+    const azi = new Date()
+    return azi.getFullYear() - an - ((azi.getMonth() + 1 < luna || (azi.getMonth() + 1 === luna && azi.getDate() < zi)) ? 1 : 0)
+  } catch { return '—' }
 }
 
 const STATUS_STYLE = {
@@ -28,16 +40,64 @@ const STATUS_STYLE = {
   inactiv:    { bg: 'rgba(107,114,128,0.12)', color: '#9ca3af' },
 }
 
+// ── Export Excel ─────────────────────────────────────────────────────────────
+async function exportExcel(pacienti) {
+  // Import SheetJS dinamic
+  const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs')
+
+  const data = pacienti.map(p => ({
+    'Nume':               p.nume,
+    'Prenume':            p.prenume,
+    'CNP':                p.cnp,
+    'Data nasterii':      p.data_nastere || '',
+    'Varsta':             varsta(p.cnp),
+    'Sex':                p.sex === 'M' ? 'Masculin' : p.sex === 'F' ? 'Feminin' : '',
+    'Telefon':            p.telefon || '',
+    'Email':              p.email || '',
+    'Judet':              p.judet || '',
+    'Localitate':         p.localitate || '',
+    'Strada':             p.strada || '',
+    'Nr.':                p.numar_strada || '',
+    'Grup sangvin':       p.grup_sangvin || '',
+    'Alergii':            p.alergii || '',
+    'Status':             p.status || '',
+    'Data inregistrare':  p.data_inregistrare || '',
+    'Ultima consultatie': p.ultima_consultatie
+      ? new Date(p.ultima_consultatie).toLocaleDateString('ro-RO')
+      : '',
+  }))
+
+  const ws = XLSX.utils.json_to_sheet(data)
+
+  // Latime coloane
+  ws['!cols'] = [
+    { wch: 18 }, { wch: 18 }, { wch: 15 }, { wch: 14 }, { wch: 7 },
+    { wch: 10 }, { wch: 14 }, { wch: 24 }, { wch: 12 }, { wch: 16 },
+    { wch: 20 }, { wch: 6 },  { wch: 12 }, { wch: 20 }, { wch: 12 },
+    { wch: 16 }, { wch: 18 },
+  ]
+
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, 'Pacienti')
+
+  const azi = new Date().toISOString().slice(0, 10)
+  XLSX.writeFile(wb, `pacienti_${azi}.xlsx`)
+}
+
+// ── Component principal ───────────────────────────────────────────────────────
 export default function PacientList() {
-  const [pacienti, setPacienti]         = useState([])
-  const [loading, setLoading]           = useState(true)
-  const [search, setSearch]             = useState('')
-  const [showForm, setShowForm]         = useState(false)
+  const [pacienti, setPacienti]               = useState([])
+  const [totiPacienti, setTotiPacienti]       = useState([])
+  const [loading, setLoading]                 = useState(true)
+  const [search, setSearch]                   = useState('')
+  const [showForm, setShowForm]               = useState(false)
   const [pacientSelectat, setPacientSelectat] = useState(null)
+  const [exportand, setExportand]             = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => fetchPacienti(), search ? 300 : 0)
     return () => clearTimeout(timer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
   const fetchPacienti = async () => {
@@ -47,6 +107,29 @@ export default function PacientList() {
       setPacienti(Array.isArray(res.data) ? res.data : (res.data.results || []))
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Fetch toti pacientii (fara paginare) doar pentru export
+  const handleExport = async () => {
+    setExportand(true)
+    try {
+      // Fetch toate paginile
+      let toata = []
+      let page = 1
+      while (true) {
+        const res = await api.get('/pacienti/', { params: { page, page_size: 200, ...(search ? { search } : {}) } })
+        const results = Array.isArray(res.data) ? res.data : (res.data.results || [])
+        toata = [...toata, ...results]
+        if (!res.data.next) break
+        page++
+      }
+      await exportExcel(toata)
+    } catch (err) {
+      console.error('Export error:', err)
+      alert('Eroare la export. Verificati consola.')
+    } finally {
+      setExportand(false)
     }
   }
 
@@ -90,13 +173,27 @@ export default function PacientList() {
           />
         </div>
 
-        <button onClick={() => setShowForm(true)}
-          style={{ padding: '9px 18px', fontSize: '13px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', flexShrink: 0 }}
-          onMouseEnter={e => e.currentTarget.style.background = '#2d6bc4'}
-          onMouseLeave={e => e.currentTarget.style.background = '#3a7bd5'}
-        >
-          + Pacient nou
-        </button>
+        <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+          {/* Export Excel */}
+          <button
+            onClick={handleExport}
+            disabled={exportand || loading}
+            style={{ padding: '9px 16px', fontSize: '13px', cursor: exportand ? 'default' : 'pointer', background: 'transparent', color: exportand ? '#4b5563' : '#34d399', border: '1px solid', borderColor: exportand ? '#1e2535' : '#34d399', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: exportand ? 0.6 : 1, display: 'flex', alignItems: 'center', gap: '6px' }}
+            onMouseEnter={e => { if (!exportand) e.currentTarget.style.background = 'rgba(52,211,153,0.1)' }}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          >
+            {exportand ? '⏳ Se exportă...' : '⬇️ Export Excel'}
+          </button>
+
+          {/* Pacient nou */}
+          <button onClick={() => setShowForm(true)}
+            style={{ padding: '9px 18px', fontSize: '13px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap' }}
+            onMouseEnter={e => e.currentTarget.style.background = '#2d6bc4'}
+            onMouseLeave={e => e.currentTarget.style.background = '#3a7bd5'}
+          >
+            + Pacient nou
+          </button>
+        </div>
       </div>
 
       {/* Table */}
@@ -134,7 +231,6 @@ export default function PacientList() {
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >
-                  {/* Pacient */}
                   <td style={{ padding: '12px 14px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
@@ -143,19 +239,14 @@ export default function PacientList() {
                       <span style={{ fontWeight: '500', color: '#e2e8f0' }}>{nume}</span>
                     </div>
                   </td>
-                  {/* CNP */}
                   <td style={{ padding: '12px 14px', fontFamily: 'monospace', fontSize: '12px', color: '#9ca3af' }}>{p.cnp}</td>
-                  {/* Varsta */}
-                  <td style={{ padding: '12px 14px', color: '#9ca3af' }}>{varsta(p.data_nastere)}</td>
-                  {/* Telefon */}
+                 <td style={{ padding: '12px 14px', color: '#9ca3af' }}>{varsta(p.cnp)}</td>
                   <td style={{ padding: '12px 14px', color: '#9ca3af' }}>{p.telefon || '—'}</td>
-                  {/* Ultima consultatie */}
                   <td style={{ padding: '12px 14px', color: '#9ca3af' }}>
                     {p.ultima_consultatie
                       ? new Date(p.ultima_consultatie).toLocaleDateString('ro-RO', { day: 'numeric', month: 'short', year: 'numeric' })
                       : '—'}
                   </td>
-                  {/* Grup sangvin */}
                   <td style={{ padding: '12px 14px' }}>
                     {p.grup_sangvin ? (
                       <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '700', background: 'rgba(58,123,213,0.15)', color: '#60a5fa' }}>
@@ -163,7 +254,6 @@ export default function PacientList() {
                       </span>
                     ) : <span style={{ color: '#4b5563' }}>—</span>}
                   </td>
-                  {/* Status */}
                   <td style={{ padding: '12px 14px' }}>
                     <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: st.bg, color: st.color, textTransform: 'capitalize' }}>
                       {p.status}
@@ -180,6 +270,7 @@ export default function PacientList() {
       {!loading && pacienti.length > 0 && (
         <div style={{ marginTop: '10px', fontSize: '12px', color: '#4b5563', textAlign: 'right' }}>
           {pacienti.length} pacient{pacienti.length !== 1 ? 'i' : ''}
+          {search && ' (filtrat)'}
         </div>
       )}
     </div>
