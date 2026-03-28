@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>Bilet de Trimitere — {{ numar_trimitere }}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11pt;
+    background: #fff;
+    color: #000;
+  }
+
+  .pagina {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 12mm 14mm 10mm 14mm;
+    background: #fff;
+  }
+
+  /* ── ANTET ── */
+  .antet {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #000;
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+  }
+
+  .antet-stanga {
+    font-size: 9.5pt;
+    line-height: 1.5;
+  }
+
+  .antet-stanga .unitate {
+    font-size: 11pt;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .antet-dreapta {
+    text-align: right;
+    font-size: 9.5pt;
+    line-height: 1.6;
+  }
+
+  /* ── ANEXA ── */
+  .anexa-label {
+    text-align: right;
+    font-size: 9pt;
+    font-style: italic;
+    margin-bottom: 4px;
+    color: #333;
+  }
+
+  /* ── TITLU ── */
+  .titlu-bloc {
+    text-align: center;
+    margin: 10px 0 12px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 8px;
+  }
+
+  .titlu-bloc h1 {
+    font-size: 17pt;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .titlu-bloc .nr-trimitere {
+    font-size: 10pt;
+    margin-top: 4px;
+  }
+
+  /* ── PRIORITATE ── */
+  .prioritate-rand {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+    gap: 10px;
+  }
+
+  .prioritate-bloc {
+    border: 1px solid #000;
+    padding: 3px 10px;
+    font-size: 9pt;
+    line-height: 1.7;
+  }
+
+  .prioritate-bloc .bifa {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #000;
+    margin-right: 3px;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 9pt;
+    line-height: 10px;
+  }
+
+  /* ── SECTIUNI & RANDURI ── */
+  .sectiune {
+    margin-bottom: 8px;
+  }
+
+  .sectiune-titlu {
+    font-size: 9pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #555;
+    padding-bottom: 2px;
+    margin-bottom: 6px;
+    color: #222;
+  }
+
+  .rand {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 5px;
+    font-size: 10pt;
+  }
+
+  .rand .eticheta {
+    font-weight: bold;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .rand .valoare {
+    border-bottom: 1px solid #000;
+    flex: 1;
+    min-width: 40px;
+    padding: 0 2px;
+    line-height: 1.4;
+  }
+
+  .rand .valoare.fix {
+    flex: none;
+  }
+
+  /* CNP — casute individuale */
+  .cnp-rand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+    font-size: 10pt;
+  }
+
+  .cnp-casute {
+    display: flex;
+    gap: 2px;
+  }
+
+  .cnp-casuta {
+    width: 14px;
+    height: 16px;
+    border: 1px solid #000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+    font-weight: bold;
+  }
+
+  /* Grid */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0 10px;
+  }
+
+  /* ── SEPARATOR ── */
+  .separator {
+    border: none;
+    border-top: 1px solid #000;
+    margin: 8px 0;
+  }
+
+  /* ── ZONA CATRE ── */
+  .catre-bloc {
+    margin: 10px 0;
+    padding: 8px 10px;
+    border: 1px solid #000;
+    font-size: 10pt;
+  }
+
+  .catre-bloc .catre-titlu {
+    font-weight: bold;
+    font-size: 9pt;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    color: #333;
+  }
+
+  .catre-linie {
+    border-bottom: 1px solid #000;
+    min-height: 18px;
+    margin-bottom: 4px;
+    padding: 0 4px;
+    font-size: 10.5pt;
+  }
+
+  /* ── ZONA TEXT LIBER ── */
+  .text-bloc {
+    margin-bottom: 6px;
+  }
+
+  .text-bloc .eticheta {
+    font-weight: bold;
+    font-size: 10pt;
+    margin-bottom: 3px;
+    display: block;
+  }
+
+  .text-linie {
+    border-bottom: 1px solid #000;
+    min-height: 18px;
+    margin-bottom: 4px;
+    padding: 0 2px;
+    font-size: 10pt;
+    line-height: 1.6;
+  }
+
+  .text-linie.continut {
+    min-height: 16px;
+    padding: 1px 4px;
+  }
+
+  /* Linii goale de scris */
+  .linii-goale .linie-goala {
+    border-bottom: 1px solid #000;
+    height: 18px;
+    margin-bottom: 4px;
+  }
+
+  /* ── SUBSOL ── */
+  .subsol {
+    margin-top: 20px;
+    border-top: 1px solid #000;
+    padding-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    font-size: 9.5pt;
+  }
+
+  .subsol-bloc .titlu-subsol {
+    font-weight: bold;
+    margin-bottom: 24px;
+    font-size: 10pt;
+  }
+
+  .linie-semnatura {
+    border-top: 1px solid #000;
+    margin-top: 4px;
+    font-size: 8.5pt;
+    color: #444;
+    padding-top: 2px;
+    text-align: center;
+  }
+
+  .valabilitate {
+    text-align: center;
+    font-size: 9pt;
+    margin-top: 10px;
+    color: #333;
+    font-style: italic;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; }
+    .pagina { margin: 0; padding: 10mm 12mm; }
+    @page { size: A4; margin: 0; }
+    .btn-print { display: none !important; }
+  }
+
+  @media screen {
+    body { background: #e5e7eb; }
+    .pagina {
+      margin: 20px auto;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+    }
+    .btn-print {
+      display: block;
+      position: fixed;
+      top: 10px; right: 10px;
+      z-index: 999;
+      padding: 10px 30px;
+      background: #3a7bd5;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+    }
+    .btn-print:hover { background: #2d6bc4; }
+  }
+</style>
+</head>
+<body>
+
+<button class="btn-print" onclick="window.print()">🖨️ Printează / Save PDF</button>
+
+<div class="pagina">
+
+  <!-- ANTET -->
+  <div class="antet">
+    <div class="antet-stanga">
+      <div class="unitate">{{ denumire_unitate }}</div>
+      <div>{{ localitate_cabinet }}, {{ judet_cabinet }}</div>
+      {% if strada_cabinet %}<div>Str. {{ strada_cabinet }} nr. {{ numar_cabinet }}</div>{% endif %}
+      {% if cui %}<div>CUI: {{ cui }}</div>{% endif %}
+      {% if telefon_cabinet %}<div>Tel.: {{ telefon_cabinet }}</div>{% endif %}
+    </div>
+    <div class="antet-dreapta">
+      <div><strong>Nr.:</strong> {{ numar_trimitere }}</div>
+      <div><strong>Data:</strong> {{ data_emiterii }}</div>
+      {% if nr_fisa %}<div><strong>Nr. fișă:</strong> {{ nr_fisa }}</div>{% endif %}
+    </div>
+  </div>
+
+  <div class="anexa-label">Anexa Nr. 9</div>
+
+  <!-- PRIORITATE -->
+  <div class="prioritate-rand">
+    <div class="prioritate-bloc">
+      <div><span class="bifa">{% if prioritate == 'urgent' %}✓{% endif %}</span> Urgent</div>
+      <div><span class="bifa">{% if prioritate == 'normal' %}✓{% endif %}</span> Curent</div>
+    </div>
+  </div>
+
+  <!-- TITLU -->
+  <div class="titlu-bloc">
+    <h1>Bilet de Trimitere</h1>
+  </div>
+
+  <!-- CATRE -->
+  <div class="catre-bloc">
+    <div class="catre-titlu">Către specialist:</div>
+    <div class="catre-linie">
+      {{ specialist_display }}{% if specialist_custom %} — {{ specialist_custom }}{% endif %}
+    </div>
+    {% if unitate_medicala %}
+    <div style="font-size:9.5pt; margin-top:2px;">Unitate: <strong>{{ unitate_medicala }}</strong></div>
+    {% endif %}
+  </div>
+
+  <!-- DATE PACIENT -->
+  <div class="sectiune">
+    <div class="sectiune-titlu">Date pacient</div>
+
+    <!-- CNP -->
+    <div class="cnp-rand">
+      <span class="eticheta">C.N.P.</span>
+      <div class="cnp-casute">
+        {% for cifra in cnp_lista %}
+        <div class="cnp-casuta">{{ cifra }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Nume + Prenume -->
+    <div class="grid-2">
+      <div class="rand">
+        <span class="eticheta">Numele:</span>
+        <span class="valoare">{{ pacient_nume }}</span>
+      </div>
+      <div class="rand">
+        <span class="eticheta">Prenumele:</span>
+        <span class="valoare">{{ pacient_prenume }}</span>
+      </div>
+    </div>
+
+    <!-- Varsta + Sex -->
+    <div class="rand">
+      <span class="eticheta">Sexul:</span>
+      <span class="valoare fix" style="width:30px;">{{ sex }}</span>
+      <span class="eticheta" style="margin-left:12px;">în vârstă de</span>
+      <span class="valoare fix" style="width:36px;">{{ varsta }}</span>
+      <span style="margin-left:2px;">ani, cu domiciliul în:</span>
+    </div>
+
+    <!-- Domiciliu -->
+    <div class="rand">
+      <span class="eticheta">Județul:</span>
+      <span class="valoare fix" style="width:80px;">{{ judet }}</span>
+      <span class="eticheta" style="margin-left:10px;">Localitatea:</span>
+      <span class="valoare">{{ localitate }}</span>
+    </div>
+    <div class="rand">
+      <span class="eticheta">Str.:</span>
+      <span class="valoare">{{ strada }}</span>
+      <span class="eticheta" style="margin-left:6px;">nr.:</span>
+      <span class="valoare fix" style="width:30px;">{{ numar_strada }}</span>
+    </div>
+  </div>
+
+  <hr class="separator">
+
+  <!-- DIAGNOSTIC -->
+  <div class="sectiune">
+    <div class="sectiune-titlu">Diagnostic prezumtiv</div>
+    <div class="rand">
+      <span class="valoare">{{ diagnostic }}</span>
+      {% if cod_diagnostic %}
+      <span class="eticheta" style="margin-left:8px;">Cod ICD-10:</span>
+      <span class="valoare fix" style="width:60px;">{{ cod_diagnostic }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- MOTIV TRIMITERE -->
+  <div class="text-bloc">
+    <span class="eticheta">Motivul trimiterii:</span>
+    <div class="text-linie continut">{{ investigatii_solicitate|truncatechars:120 }}</div>
+    {% if investigatii_solicitate|length > 120 %}
+    <div class="text-linie continut">{{ investigatii_solicitate|slice:"120:" }}</div>
+    {% endif %}
+  </div>
+
+  <!-- INVESTIGATII SI TRATAMENTE -->
+  <div class="text-bloc">
+    <span class="eticheta">Investigații și tratamente:</span>
+    <div class="text-linie continut">{{ investigatii_solicitate }}</div>
+    <div class="linie-goala" style="border-bottom:1px solid #000; height:18px; margin-bottom:4px;"></div>
+    <div class="linie-goala" style="border-bottom:1px solid #000; height:18px; margin-bottom:4px;"></div>
+    <div class="linie-goala" style="border-bottom:1px solid #000; height:18px; margin-bottom:4px;"></div>
+  </div>
+
+  {% if observatii %}
+  <div class="text-bloc">
+    <span class="eticheta">Observații:</span>
+    <div class="text-linie continut">{{ observatii }}</div>
+  </div>
+  {% endif %}
+
+  <!-- SUBSOL -->
+  <div class="subsol">
+    <div class="subsol-bloc">
+      <div class="titlu-subsol">Medic prescriptor:</div>
+      <div>Dr. {{ medic_nume }}</div>
+      {% if cod_parafa %}<div style="margin-top:4px;">Cod parafă: <strong>{{ cod_parafa }}</strong></div>{% endif %}
+      <div class="linie-semnatura" style="margin-top:28px;">Semnătură și parafă</div>
+    </div>
+    <div class="subsol-bloc">
+      <div class="titlu-subsol">Ștampila unității</div>
+      <div style="height:50px;"></div>
+      <div class="linie-semnatura">&nbsp;</div>
+    </div>
+  </div>
+
+  <div class="valabilitate">
+    Valabilă {{ valabilitate_zile }} zile de la data emiterii
+    {% if data_expirare %}(până la {{ data_expirare }}){% endif %}
+  </div>
+
+</div>
+</body>
+</html>

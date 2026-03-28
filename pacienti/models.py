@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
+
 
 class CustomUser(AbstractUser):
     ROL_CHOICES = [('medic', 'Medic'), ('asistenta', 'Asistenta')]
@@ -78,11 +80,11 @@ class DiagnosticConsultatie(models.Model):
     TIP_CHOICES = [('principal', 'Principal'), ('secundar', 'Secundar')]
     consultatie = models.ForeignKey(Consultatie, on_delete=models.CASCADE)
     diagnostic  = models.ForeignKey(Diagnostic, on_delete=models.PROTECT)
-    tip         = models.CharField(max_length=20, choices=TIP_CHOICES,
-                                   default='principal')
+    tip         = models.CharField(max_length=20, choices=TIP_CHOICES, default='principal')
 
     class Meta:
         unique_together = ('consultatie', 'diagnostic')
+
 
 class Programare(models.Model):
     STATUS_CHOICES = [
@@ -92,20 +94,19 @@ class Programare(models.Model):
         ('finalizat', 'Finalizat'),
     ]
 
-    pacient       = models.ForeignKey(Pacient, on_delete=models.PROTECT,
-                                      related_name='programari',
-                                      null=True, blank=True)
-    medic         = models.ForeignKey(CustomUser, on_delete=models.PROTECT,
-                                      related_name='programari')
-    data_ora      = models.DateTimeField()
-    durata_min    = models.PositiveIntegerField(default=20)
-    motiv         = models.CharField(max_length=255, blank=True)
-    nume_pacient  = models.CharField(max_length=100, blank=True)
+    pacient         = models.ForeignKey(Pacient, on_delete=models.PROTECT,
+                                        related_name='programari',
+                                        null=True, blank=True)
+    medic           = models.ForeignKey(CustomUser, on_delete=models.PROTECT,
+                                        related_name='programari')
+    data_ora        = models.DateTimeField()
+    durata_min      = models.PositiveIntegerField(default=20)
+    motiv           = models.CharField(max_length=255, blank=True)
+    nume_pacient    = models.CharField(max_length=100, blank=True)
     telefon_pacient = models.CharField(max_length=20, blank=True)
-    email_pacient = models.EmailField(blank=True)
-    status        = models.CharField(max_length=20, choices=STATUS_CHOICES,
-                                     default='programat')
-    creat_la      = models.DateTimeField(auto_now_add=True)
+    email_pacient   = models.EmailField(blank=True)
+    status          = models.CharField(max_length=20, choices=STATUS_CHOICES, default='programat')
+    creat_la        = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['data_ora']
@@ -113,14 +114,9 @@ class Programare(models.Model):
     def __str__(self):
         nume = self.pacient or self.nume_pacient
         return f"{nume} — {self.data_ora:%d.%m.%Y %H:%M}"
-    
-    # ============================================================
-# T29 — Adaugă la sfârșitul fișierului pacienti/models.py
-# ============================================================
 
 
 class ConfiguratieCabinet(models.Model):
-    """Singleton — un singur rând în baza de date."""
     denumire_unitate = models.CharField(max_length=255, verbose_name='Denumire unitate sanitară')
     localitate       = models.CharField(max_length=100, verbose_name='Localitatea')
     judet            = models.CharField(max_length=50, verbose_name='Județul')
@@ -139,7 +135,6 @@ class ConfiguratieCabinet(models.Model):
 
     @classmethod
     def get(cls):
-        """Returneaza instanta singleton, o creaza daca nu exista."""
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
 
@@ -155,19 +150,15 @@ class Reteta(models.Model):
     medic             = models.ForeignKey('CustomUser', on_delete=models.PROTECT,
                                           related_name='retete')
     consultatie       = models.ForeignKey('Consultatie', on_delete=models.SET_NULL,
-                                          null=True, blank=True,
-                                          related_name='retete')
+                                          null=True, blank=True, related_name='retete')
     numar_reteta      = models.CharField(max_length=20, unique=True, blank=True,
                                          verbose_name='Număr rețetă')
     data_emiterii     = models.DateField(auto_now_add=True, verbose_name='Data emiterii')
-    valabilitate_zile = models.PositiveIntegerField(default=30,
-                                                    verbose_name='Valabilitate (zile)')
+    valabilitate_zile = models.PositiveIntegerField(default=30, verbose_name='Valabilitate (zile)')
     gratuit           = models.CharField(max_length=2, choices=GRATUIT_CHOICES,
                                          default='nu', verbose_name='Gratuit')
-    diagnostic        = models.CharField(max_length=255, blank=True,
-                                         verbose_name='Diagnostic')
-    nr_fisa           = models.CharField(max_length=50, blank=True,
-                                         verbose_name='Nr. fișă / reg. cons.')
+    diagnostic        = models.CharField(max_length=255, blank=True, verbose_name='Diagnostic')
+    nr_fisa           = models.CharField(max_length=50, blank=True, verbose_name='Nr. fișă / reg. cons.')
     observatii        = models.TextField(blank=True, verbose_name='Observații')
     creat_la          = models.DateTimeField(auto_now_add=True)
 
@@ -176,14 +167,11 @@ class Reteta(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.numar_reteta:
-            # Salvare initiala pentru a obtine pk
             super().save(*args, **kwargs)
             from django.utils import timezone
             an = timezone.now().year
-            # Numara retete din anul curent
             count = Reteta.objects.filter(data_emiterii__year=an).count()
             self.numar_reteta = f'RX{count:05d}/{an}'
-            # Salvare cu numarul generat
             Reteta.objects.filter(pk=self.pk).update(numar_reteta=self.numar_reteta)
         else:
             super().save(*args, **kwargs)
@@ -193,29 +181,20 @@ class Reteta(models.Model):
 
 
 class LinieReteta(models.Model):
-    reteta         = models.ForeignKey(Reteta, on_delete=models.CASCADE,
-                                       related_name='linii')
+    reteta          = models.ForeignKey(Reteta, on_delete=models.CASCADE, related_name='linii')
     nume_medicament = models.CharField(max_length=255, verbose_name='Medicament')
-    concentratie   = models.CharField(max_length=100, blank=True,
-                                      verbose_name='Concentrație / formă')
-    doza_frecventa = models.CharField(max_length=150, blank=True,
-                                      verbose_name='Doză și frecvență')
-    durata_zile    = models.PositiveIntegerField(null=True, blank=True,
-                                                  verbose_name='Durată tratament (zile)')
-    cantitate      = models.PositiveIntegerField(default=1,
-                                                  verbose_name='Cantitate (cutii)')
-    observatii     = models.CharField(max_length=255, blank=True,
-                                      verbose_name='Observații')
-    ordine         = models.PositiveIntegerField(default=0, verbose_name='Ordine')
+    concentratie    = models.CharField(max_length=100, blank=True, verbose_name='Concentrație / formă')
+    doza_frecventa  = models.CharField(max_length=150, blank=True, verbose_name='Doză și frecvență')
+    durata_zile     = models.PositiveIntegerField(null=True, blank=True, verbose_name='Durată tratament (zile)')
+    cantitate       = models.PositiveIntegerField(default=1, verbose_name='Cantitate (cutii)')
+    observatii      = models.CharField(max_length=255, blank=True, verbose_name='Observații')
+    ordine          = models.PositiveIntegerField(default=0, verbose_name='Ordine')
 
     class Meta:
         ordering = ['ordine', 'id']
 
     def __str__(self):
         return f'{self.nume_medicament} ({self.reteta.numar_reteta})'
-    # ============================================================
-# T30 — Adaugă la sfârșitul fișierului pacienti/models.py
-# ============================================================
 
 
 class ConcediuMedical(models.Model):
@@ -236,63 +215,41 @@ class ConcediuMedical(models.Model):
         ('14', '14 - Cancer'),
         ('15', '15 - Risc maternal'),
     ]
-
     TIP_CHOICES = [
         ('initial', 'Inițial'),
         ('continuare', 'În continuare'),
     ]
 
-    # Relatii
-    pacient     = models.ForeignKey('Pacient', on_delete=models.PROTECT,
-                                    related_name='concedii')
-    medic       = models.ForeignKey('CustomUser', on_delete=models.PROTECT,
-                                    related_name='concedii')
-    consultatie = models.ForeignKey('Consultatie', on_delete=models.SET_NULL,
-                                    null=True, blank=True,
-                                    related_name='concedii')
-
-    # Date certificat
+    pacient          = models.ForeignKey('Pacient', on_delete=models.PROTECT, related_name='concedii')
+    medic            = models.ForeignKey('CustomUser', on_delete=models.PROTECT, related_name='concedii')
+    consultatie      = models.ForeignKey('Consultatie', on_delete=models.SET_NULL,
+                                         null=True, blank=True, related_name='concedii')
     serie_numar      = models.CharField(max_length=20, verbose_name='Seria și numărul')
     tip              = models.CharField(max_length=15, choices=TIP_CHOICES,
                                         default='initial', verbose_name='Tip')
-    serie_initial    = models.CharField(max_length=20, blank=True,
-                                        verbose_name='Seria certificatului inițial')
+    serie_initial    = models.CharField(max_length=20, blank=True, verbose_name='Seria certificatului inițial')
     luna             = models.PositiveIntegerField(verbose_name='Luna (nr.)')
     an               = models.PositiveIntegerField(verbose_name='Anul')
     cod_indemnizatie = models.CharField(max_length=2, choices=COD_INDEMNIZATIE_CHOICES,
                                         verbose_name='Cod indemnizație')
-
-    # Perioada
     data_acordarii   = models.DateField(verbose_name='Data acordării')
     nr_zile          = models.PositiveIntegerField(verbose_name='Număr zile')
     de_la            = models.DateField(verbose_name='De la')
     pana_la          = models.DateField(verbose_name='Până la')
-
-    # Diagnostic
-    cod_diagnostic   = models.CharField(max_length=10, blank=True,
-                                        verbose_name='Cod diagnostic')
+    cod_diagnostic   = models.CharField(max_length=10, blank=True, verbose_name='Cod diagnostic')
     acut_subacut_cronic = models.CharField(
         max_length=10, blank=True,
         choices=[('acut', 'Acut'), ('subacut', 'Subacut'), ('cronic', 'Cronic')],
         verbose_name='Acut/Subacut/Cronic'
     )
-
-    # Internare
-    nr_inreg         = models.CharField(max_length=20, blank=True,
-                                        verbose_name='Nr. înreg. (RC/FO)')
+    nr_inreg         = models.CharField(max_length=20, blank=True, verbose_name='Nr. înreg. (RC/FO)')
     ambulator_internat = models.CharField(
         max_length=15, blank=True,
         choices=[('ambulator', 'Ambulator'), ('internat', 'Internat în spital')],
         verbose_name='Ambulator/Internat'
     )
-
-    # Unitate
-    nr_conventie     = models.CharField(max_length=30, blank=True,
-                                        verbose_name='Nr. convenție CAS')
-    cas              = models.CharField(max_length=50, blank=True,
-                                        verbose_name='CAS')
-
-    # Meta
+    nr_conventie     = models.CharField(max_length=30, blank=True, verbose_name='Nr. convenție CAS')
+    cas              = models.CharField(max_length=50, blank=True, verbose_name='CAS')
     creat_la         = models.DateTimeField(auto_now_add=True)
     observatii       = models.TextField(blank=True)
 
@@ -303,3 +260,73 @@ class ConcediuMedical(models.Model):
 
     def __str__(self):
         return f'Concediu {self.serie_numar} — {self.pacient} ({self.nr_zile} zile)'
+
+
+class Trimitere(models.Model):
+    SPECIALIST_CHOICES = [
+        ('cardiologie', 'Cardiologie'),
+        ('neurologie', 'Neurologie'),
+        ('oftalmologie', 'Oftalmologie'),
+        ('ortopedie', 'Ortopedie'),
+        ('dermatologie', 'Dermatologie'),
+        ('ginecologie', 'Ginecologie'),
+        ('urologie', 'Urologie'),
+        ('gastroenterologie', 'Gastroenterologie'),
+        ('endocrinologie', 'Endocrinologie'),
+        ('psihiatrie', 'Psihiatrie'),
+        ('pneumologie', 'Pneumologie'),
+        ('reumatologie', 'Reumatologie'),
+        ('nefrologie', 'Nefrologie'),
+        ('hematologie', 'Hematologie'),
+        ('oncologie', 'Oncologie'),
+        ('chirurgie', 'Chirurgie'),
+        ('ORL', 'ORL'),
+        ('stomatologie', 'Stomatologie'),
+        ('recuperare', 'Recuperare medicala'),
+        ('altele', 'Altele'),
+    ]
+    PRIORITATE_CHOICES = [
+        ('normal', 'Normal'),
+        ('urgent', 'Urgent'),
+    ]
+
+    pacient               = models.ForeignKey(Pacient, on_delete=models.CASCADE,
+                                               related_name='trimiteri')
+    medic                 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+                                               related_name='trimiteri_emise')
+    consultatie           = models.ForeignKey(Consultatie, on_delete=models.SET_NULL,
+                                               null=True, blank=True, related_name='trimiteri')
+    numar_trimitere       = models.CharField(max_length=20, unique=True, editable=False)
+    data_emiterii         = models.DateField(auto_now_add=True)
+    valabilitate_zile     = models.IntegerField(default=30)
+    specialist            = models.CharField(max_length=50, choices=SPECIALIST_CHOICES)
+    specialist_custom     = models.CharField(max_length=100, blank=True)
+    unitate_medicala      = models.CharField(max_length=200, blank=True)
+    diagnostic            = models.CharField(max_length=500, blank=True)
+    cod_diagnostic        = models.CharField(max_length=10, blank=True)
+    investigatii_solicitate = models.TextField(blank=True)
+    prioritate            = models.CharField(max_length=10, choices=PRIORITATE_CHOICES, default='normal')
+    nr_fisa               = models.CharField(max_length=50, blank=True)
+    observatii            = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-data_emiterii', '-id']
+        verbose_name = 'Trimitere'
+        verbose_name_plural = 'Trimiteri'
+
+    def save(self, *args, **kwargs):
+        if not self.numar_trimitere:
+            from django.utils import timezone
+            an = timezone.now().year
+            last = Trimitere.objects.filter(
+                numar_trimitere__endswith=f'/{an}'
+            ).order_by('-id').first()
+            if last:
+                nr = int(last.numar_trimitere.split('TR')[1].split('/')[0]) + 1
+            else:
+                nr = 1
+            self.numar_trimitere = f'TR{nr:05d}/{an}'
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.numar_trimitere} — {self.pacient} → {self.specialist}'

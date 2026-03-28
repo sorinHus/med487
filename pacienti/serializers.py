@@ -1,16 +1,19 @@
 from rest_framework import serializers
 from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
-    DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical
+    DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical, Trimitere
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'rol']
 
+
 class DiagnosticSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diagnostic
         fields = ['id', 'cod_icd10', 'denumire']
+
 
 class DiagnosticConsulatieSerializer(serializers.ModelSerializer):
     diagnostic = DiagnosticSerializer(read_only=True)
@@ -21,6 +24,7 @@ class DiagnosticConsulatieSerializer(serializers.ModelSerializer):
     class Meta:
         model = DiagnosticConsultatie
         fields = ['id', 'diagnostic', 'diagnostic_id', 'tip']
+
 
 class ConsulatieSerializer(serializers.ModelSerializer):
     diagnostice = DiagnosticConsulatieSerializer(
@@ -52,6 +56,7 @@ class ConsulatieSerializer(serializers.ModelSerializer):
             )
         return consultatie
 
+
 class PacientSerializer(serializers.ModelSerializer):
     consultatii_count = serializers.IntegerField(read_only=True, default=0)
     ultima_consultatie = serializers.DateTimeField(read_only=True, default=None)
@@ -65,6 +70,7 @@ class PacientSerializer(serializers.ModelSerializer):
 
     def get_consultatii_count(self, obj):
         return obj.consultatii.count()
+
 
 class ProgramareSerializer(serializers.ModelSerializer):
     pacient_nume_complet = serializers.SerializerMethodField()
@@ -80,8 +86,8 @@ class ProgramareSerializer(serializers.ModelSerializer):
         if obj.pacient:
             return f"{obj.pacient.nume} {obj.pacient.prenume}"
         return obj.nume_pacient
-    
-  
+
+
 class ConfiguratieCabinetSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConfiguratieCabinet
@@ -97,9 +103,9 @@ class LinieRetetaSerializer(serializers.ModelSerializer):
 
 
 class RetetaSerializer(serializers.ModelSerializer):
-    linii         = LinieRetetaSerializer(many=True, read_only=True)
-    pacient_nume  = serializers.SerializerMethodField()
-    medic_nume    = serializers.CharField(source='medic.get_full_name', read_only=True)
+    linii        = LinieRetetaSerializer(many=True, read_only=True)
+    pacient_nume = serializers.SerializerMethodField()
+    medic_nume   = serializers.CharField(source='medic.get_full_name', read_only=True)
 
     def get_pacient_nume(self, obj):
         return f'{obj.pacient.nume} {obj.pacient.prenume}'
@@ -113,18 +119,20 @@ class RetetaSerializer(serializers.ModelSerializer):
 
 
 class RetetaCreateSerializer(serializers.ModelSerializer):
-    """Folosit la POST — accepta linii nested."""
     linii = LinieRetetaSerializer(many=True, required=False, default=list)
 
     class Meta:
         model = Reteta
-        fields = ['pacient', 'medic', 'consultatie', 'valabilitate_zile', 'gratuit',
-                  'diagnostic', 'nr_fisa', 'observatii', 'linii']
+        fields = ['id', 'numar_reteta', 'pacient', 'medic', 'consultatie',
+                  'valabilitate_zile', 'gratuit', 'diagnostic', 'nr_fisa',
+                  'observatii', 'data_emiterii', 'linii']
+        read_only_fields = ['id', 'numar_reteta', 'data_emiterii']
 
     def create(self, validated_data):
         linii_data = validated_data.pop('linii', [])
         reteta = Reteta.objects.create(**validated_data)
         for i, linie in enumerate(linii_data):
+            linie.pop('ordine', None)
             LinieReteta.objects.create(reteta=reteta, ordine=i, **linie)
         return reteta
 
@@ -146,3 +154,19 @@ class ConcediuMedicalSerializer(serializers.ModelSerializer):
             'nr_conventie', 'cas', 'observatii', 'creat_la',
         ]
         read_only_fields = ['creat_la']
+
+
+class TrimitereSerializer(serializers.ModelSerializer):
+    pacient_nume = serializers.SerializerMethodField()
+    medic_nume   = serializers.SerializerMethodField()
+
+    def get_pacient_nume(self, obj):
+        return f'{obj.pacient.nume} {obj.pacient.prenume}'
+
+    def get_medic_nume(self, obj):
+        return f'{obj.medic.last_name} {obj.medic.first_name}'
+
+    class Meta:
+        model = Trimitere
+        fields = '__all__'
+        read_only_fields = ['numar_trimitere', 'data_emiterii']

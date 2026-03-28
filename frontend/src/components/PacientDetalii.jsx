@@ -4,9 +4,9 @@ import { validareCNP } from '../utils/cnp'
 import AdresaFields from '../components/AdresaFields'
 
 function ICD10Search({ selectate, onAdd, onRemove, inputStyle, labelStyle }) {
-  const [query, setQuery]       = useState('')
+  const [query, setQuery]         = useState('')
   const [rezultate, setRezultate] = useState([])
-  const [loading, setLoading]   = useState(false)
+  const [loading, setLoading]     = useState(false)
 
   useEffect(() => {
     if (query.length < 2) { setRezultate([]); return }
@@ -37,24 +37,16 @@ function ICD10Search({ selectate, onAdd, onRemove, inputStyle, labelStyle }) {
         </div>
       )}
       <div style={{ position: 'relative' }}>
-        <input
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="Cauta cod ICD-10 sau denumire..."
-          style={{ ...inputStyle, marginBottom: 0 }}
-        />
+        <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cauta cod ICD-10 sau denumire..." style={{ ...inputStyle, marginBottom: 0 }} />
         {(rezultate.length > 0 || (loading && query.length >= 2)) && (
           <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#1a2235', border: '1px solid #1e2535', borderRadius: '8px', zIndex: 10, maxHeight: '200px', overflowY: 'auto', marginTop: '4px' }}>
             {loading && <div style={{ padding: '10px 14px', fontSize: '12px', color: '#4b5563' }}>Se cauta...</div>}
             {!loading && rezultate.map(d => (
-              <button key={d.id}
-                onClick={() => { onAdd(d); setQuery(''); setRezultate([]) }}
+              <button key={d.id} onClick={() => { onAdd(d); setQuery(''); setRezultate([]) }}
                 style={{ width: '100%', textAlign: 'left', padding: '9px 14px', background: 'none', border: 'none', cursor: 'pointer', borderBottom: '1px solid #1e2535', color: '#e2e8f0', fontSize: '13px' }}
                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(58,123,213,0.1)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'none'}
-              >
-                <span style={{ color: '#60a5fa', fontWeight: '600', marginRight: '8px' }}>{d.cod_icd10}</span>
-                {d.denumire}
+                onMouseLeave={e => e.currentTarget.style.background = 'none'}>
+                <span style={{ color: '#60a5fa', fontWeight: '600', marginRight: '8px' }}>{d.cod_icd10}</span>{d.denumire}
               </button>
             ))}
             {!loading && rezultate.length === 0 && query.length >= 2 && (
@@ -67,6 +59,177 @@ function ICD10Search({ selectate, onAdd, onRemove, inputStyle, labelStyle }) {
   )
 }
 
+// ── Modal creare reteta ──────────────────────────────────────────────────────
+function ModalReteta({ pacientId, medicId, consultatieId, onClose, onSaved }) {
+  const inputStyle = { width: '100%', padding: '8px 12px', fontSize: '13px', background: '#0f1117', border: '1px solid #1e2535', borderRadius: '8px', color: '#e2e8f0', boxSizing: 'border-box', marginBottom: '12px', outline: 'none' }
+  const labelStyle = { fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }
+
+  const [form, setForm] = useState({
+    gratuit: 'nu',
+    valabilitate_zile: 30,
+    diagnostic: '',
+    nr_fisa: '',
+    observatii: '',
+  })
+  const [linii, setLinii] = useState([
+    { nume_medicament: '', concentratie: '', doza_frecventa: '', durata_zile: '', cantitate: 1, observatii: '' }
+  ])
+  const [salvand, setSalvand] = useState(false)
+  const [eroare, setEroare]   = useState('')
+
+  const updateLinie = (i, field, value) => {
+    setLinii(prev => prev.map((l, idx) => idx === i ? { ...l, [field]: value } : l))
+  }
+
+  const adaugaLinie = () => {
+    setLinii(prev => [...prev, { nume_medicament: '', concentratie: '', doza_frecventa: '', durata_zile: '', cantitate: 1, observatii: '' }])
+  }
+
+  const stergeLinie = (i) => {
+    setLinii(prev => prev.filter((_, idx) => idx !== i))
+  }
+
+  const salveaza = async (e) => {
+    e.preventDefault()
+    if (!linii[0]?.nume_medicament.trim()) { setEroare('Adauga cel putin un medicament.'); return }
+    setSalvand(true); setEroare('')
+    try {
+      const payload = {
+        pacient: pacientId,
+        medic: medicId,
+        ...(consultatieId ? { consultatie: consultatieId } : {}),
+        gratuit: form.gratuit,
+        valabilitate_zile: form.valabilitate_zile,
+        diagnostic: form.diagnostic,
+        nr_fisa: form.nr_fisa,
+        observatii: form.observatii,
+        linii: linii.filter(l => l.nume_medicament.trim()).map((l, i) => ({ ...l, ordine: i })),
+      }
+      const res = await api.post('/retete/', payload)
+      onSaved && onSaved(res.data)
+      onClose()
+    } catch (err) {
+      setEroare(err.response?.data?.detail || 'Eroare la salvare.')
+    } finally {
+      setSalvand(false)
+    }
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+      <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '16px', width: '100%', maxWidth: '680px', maxHeight: '92vh', overflowY: 'auto' }}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #1e2535', position: 'sticky', top: 0, background: '#161b27', zIndex: 1 }}>
+          <span style={{ fontWeight: '600', color: '#e2e8f0', fontSize: '15px' }}>Rețetă nouă</span>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#4b5563', fontSize: '20px', cursor: 'pointer' }}>✕</button>
+        </div>
+
+        <form onSubmit={salveaza} style={{ padding: '20px' }}>
+
+          {/* Date reteta */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0 16px' }}>
+            <div>
+              <label style={labelStyle}>Gratuit / Cu plată</label>
+              <select value={form.gratuit} onChange={e => setForm(p => ({ ...p, gratuit: e.target.value }))} style={inputStyle}>
+                <option value="nu">Cu plată</option>
+                <option value="da">Gratuit</option>
+              </select>
+            </div>
+            <div>
+              <label style={labelStyle}>Valabilitate (zile)</label>
+              <input type="number" min="1" max="90" value={form.valabilitate_zile}
+                onChange={e => setForm(p => ({ ...p, valabilitate_zile: e.target.value }))} style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>Nr. fișă</label>
+              <input value={form.nr_fisa} onChange={e => setForm(p => ({ ...p, nr_fisa: e.target.value }))} style={inputStyle} placeholder="optional" />
+            </div>
+          </div>
+
+          <label style={labelStyle}>Diagnostic</label>
+          <input value={form.diagnostic} onChange={e => setForm(p => ({ ...p, diagnostic: e.target.value }))} style={inputStyle} placeholder="ex: Hipertensiune arterială esențială" />
+
+          <label style={labelStyle}>Observații</label>
+          <textarea value={form.observatii} onChange={e => setForm(p => ({ ...p, observatii: e.target.value }))} style={{ ...inputStyle, height: '55px', resize: 'vertical' }} />
+
+          {/* Medicamente */}
+          <div style={{ borderTop: '1px solid #1e2535', paddingTop: '14px', marginTop: '4px', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <span style={{ fontSize: '12px', fontWeight: '600', color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Medicamente ({linii.length})
+              </span>
+              <button type="button" onClick={adaugaLinie}
+                style={{ padding: '5px 12px', fontSize: '12px', cursor: 'pointer', background: 'rgba(58,123,213,0.15)', color: '#60a5fa', border: '1px solid #3a7bd5', borderRadius: '7px' }}>
+                + Adaugă medicament
+              </button>
+            </div>
+
+            {linii.map((linie, i) => (
+              <div key={i} style={{ background: '#0f1117', border: '1px solid #1e2535', borderRadius: '10px', padding: '14px', marginBottom: '10px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <span style={{ fontSize: '12px', color: '#4b5563', fontWeight: '600' }}>Medicament {i + 1}</span>
+                  {linii.length > 1 && (
+                    <button type="button" onClick={() => stergeLinie(i)}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#4b5563', fontSize: '16px', lineHeight: 1 }}>×</button>
+                  )}
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '0 12px' }}>
+                  <div>
+                    <label style={labelStyle}>Denumire medicament *</label>
+                    <input value={linie.nume_medicament} onChange={e => updateLinie(i, 'nume_medicament', e.target.value)}
+                      style={inputStyle} placeholder="ex: Enalapril" required={i === 0} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Concentrație / formă</label>
+                    <input value={linie.concentratie} onChange={e => updateLinie(i, 'concentratie', e.target.value)}
+                      style={inputStyle} placeholder="ex: 10mg, comprimate" />
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '0 12px' }}>
+                  <div>
+                    <label style={labelStyle}>Doză și frecvență</label>
+                    <input value={linie.doza_frecventa} onChange={e => updateLinie(i, 'doza_frecventa', e.target.value)}
+                      style={inputStyle} placeholder="ex: 1cp/zi dimineata" />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Durată (zile)</label>
+                    <input type="number" min="1" value={linie.durata_zile} onChange={e => updateLinie(i, 'durata_zile', e.target.value)}
+                      style={inputStyle} placeholder="30" />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Cantitate (cutii)</label>
+                    <input type="number" min="1" value={linie.cantitate} onChange={e => updateLinie(i, 'cantitate', e.target.value)}
+                      style={inputStyle} />
+                  </div>
+                </div>
+                <label style={labelStyle}>Observații medicament</label>
+                <input value={linie.observatii} onChange={e => updateLinie(i, 'observatii', e.target.value)}
+                  style={{ ...inputStyle, marginBottom: 0 }} placeholder="optional" />
+              </div>
+            ))}
+          </div>
+
+          {eroare && <div style={{ color: '#f87171', fontSize: '13px', marginBottom: '12px' }}>{eroare}</div>}
+
+          {/* Footer */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', paddingTop: '4px' }}>
+            <button type="button" onClick={onClose}
+              style={{ padding: '8px 18px', fontSize: '13px', cursor: 'pointer', border: '1px solid #1e2535', borderRadius: '8px', background: 'transparent', color: '#9ca3af' }}>
+              Anulează
+            </button>
+            <button type="submit" disabled={salvand}
+              style={{ padding: '8px 18px', fontSize: '13px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', opacity: salvand ? 0.6 : 1 }}>
+              {salvand ? 'Se salvează...' : 'Salvează rețeta'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
 const AVATAR_COLORS = ['#3a7bd5','#e05c7a','#f5a623','#50c878','#9b59b6','#1abc9c','#e67e22']
 function getInitials(name) {
   if (!name) return '?'
@@ -86,16 +249,20 @@ const STATUS_OPTS = [
   { value: 'inactiv',    label: 'Inactiv',              color: '#9ca3af' },
 ]
 
+// ── Component principal ───────────────────────────────────────────────────────
 export default function PacientDetalii({ pacient, onBack }) {
-  const [consultatii, setConsultatii]     = useState([])
-  const [loading, setLoading]             = useState(true)
-  const [status, setStatus]               = useState(pacient.status)
-  const [salvandStatus, setSalvandStatus] = useState(false)
-  const [editMode, setEditMode]           = useState(false)
-  const [formEdit, setFormEdit]           = useState({ ...pacient })
-  const [errorsEdit, setErrorsEdit]       = useState({})
-  const [salvandEdit, setSalvandEdit]     = useState(false)
+  const [consultatii, setConsultatii]       = useState([])
+  const [retete, setRetete]                 = useState([])
+  const [loadingC, setLoadingC]             = useState(true)
+  const [loadingR, setLoadingR]             = useState(true)
+  const [status, setStatus]                 = useState(pacient.status)
+  const [salvandStatus, setSalvandStatus]   = useState(false)
+  const [editMode, setEditMode]             = useState(false)
+  const [formEdit, setFormEdit]             = useState({ ...pacient })
+  const [errorsEdit, setErrorsEdit]         = useState({})
+  const [salvandEdit, setSalvandEdit]       = useState(false)
   const [showConsultatie, setShowConsultatie] = useState(false)
+  const [showReteta, setShowReteta]         = useState(false)
   const [formC, setFormC] = useState({
     data_ora: new Date().toISOString().slice(0,16),
     simptome: '', examen_clinic: '', tratament: '', observatii: '',
@@ -112,7 +279,17 @@ export default function PacientDetalii({ pacient, onBack }) {
     api.get(`/pacienti/${pacient.id}/consultatii/`)
       .then(res => setConsultatii(res.data))
       .catch(console.error)
-      .finally(() => setLoading(false))
+      .finally(() => setLoadingC(false))
+  }, [pacient.id])
+
+  useEffect(() => {
+    api.get('/retete/', { params: { pacient: pacient.id } })
+      .then(res => {
+        const lista = Array.isArray(res.data) ? res.data : (res.data.results || [])
+        setRetete(lista)
+      })
+      .catch(console.error)
+      .finally(() => setLoadingR(false))
   }, [pacient.id])
 
   const schimbaStatus = async (val) => {
@@ -155,7 +332,10 @@ export default function PacientDetalii({ pacient, onBack }) {
     finally { setSalvandC(false) }
   }
 
-  // Adresa completa pentru view
+  const onRetetaSalvata = (reteta) => {
+    setRetete(prev => [reteta, ...prev])
+  }
+
   const adresaDisplay = [pacient.strada, pacient.numar_strada, pacient.localitate, pacient.judet]
     .filter(Boolean).join(', ') || '—'
 
@@ -167,9 +347,7 @@ export default function PacientDetalii({ pacient, onBack }) {
       {/* Back + actiuni */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
         <button onClick={onBack}
-          style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '20px', padding: '0', lineHeight: 1 }}>
-          ←
-        </button>
+          style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '20px', padding: '0', lineHeight: 1 }}>←</button>
         <span style={{ fontSize: '15px', fontWeight: '600', color: '#e2e8f0' }}>{nume}</span>
         <div style={{ flex: 1 }} />
         <button onClick={() => setEditMode(!editMode)}
@@ -210,8 +388,6 @@ export default function PacientDetalii({ pacient, onBack }) {
                   <option value="M">Masculin</option><option value="F">Feminin</option>
                 </select></div>
             </div>
-
-            {/* Adresa — inlocuieste textarea-ul vechi */}
             <div style={{ borderTop: '1px solid #1e2535', paddingTop: '14px', marginTop: '2px', marginBottom: '4px' }}>
               <div style={{ fontSize: '12px', color: '#4b5563', marginBottom: '12px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresă</div>
               <AdresaFields
@@ -219,7 +395,6 @@ export default function PacientDetalii({ pacient, onBack }) {
                 onChange={(field, value) => setFormEdit(p => ({ ...p, [field]: value }))}
               />
             </div>
-
             <label style={labelStyle}>Alergii</label>
             <textarea value={formEdit.alergii} onChange={e => setFormEdit(p => ({ ...p, alergii: e.target.value }))} style={{ ...inputStyle, height: '60px', resize: 'vertical' }}/>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}>
@@ -234,7 +409,6 @@ export default function PacientDetalii({ pacient, onBack }) {
 
       {/* Date pacient */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-        {/* Date personale */}
         <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '18px' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
@@ -258,8 +432,6 @@ export default function PacientDetalii({ pacient, onBack }) {
             {salvandStatus && <span style={{ fontSize: '11px', color: '#4b5563' }}>Se salveaza...</span>}
           </div>
         </div>
-
-        {/* Contact */}
         <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '20px' }}>
           <div style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0', marginBottom: '16px' }}>Contact</div>
           <p style={fieldLabel}>Telefon</p><p style={fieldValue}>{pacient.telefon || '—'}</p>
@@ -268,6 +440,42 @@ export default function PacientDetalii({ pacient, onBack }) {
           <p style={fieldLabel}>Alergii</p>
           <p style={{ ...fieldValue, color: pacient.alergii ? '#fbbf24' : '#4b5563' }}>{pacient.alergii || 'Nicio alergie cunoscuta'}</p>
         </div>
+      </div>
+
+      {/* Retete */}
+      <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '20px', marginBottom: '14px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <span style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0' }}>
+            Rețete ({retete.length})
+          </span>
+          <button onClick={() => setShowReteta(true)}
+            style={{ padding: '7px 14px', fontSize: '12px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px' }}>
+            + Rețetă nouă
+          </button>
+        </div>
+
+        {loadingR && <p style={{ color: '#4b5563', fontSize: '13px' }}>Se încarcă...</p>}
+        {!loadingR && retete.length === 0 && (
+          <p style={{ color: '#4b5563', fontSize: '13px' }}>Nicio rețetă înregistrată.</p>
+        )}
+        {!loadingR && retete.map(r => (
+          <div key={r.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #1a2033', paddingBottom: '10px', marginBottom: '10px' }}>
+            <div>
+              <span style={{ fontWeight: '600', fontSize: '13px', color: '#60a5fa', marginRight: '10px' }}>{r.numar_reteta}</span>
+              <span style={{ fontSize: '12px', color: '#9ca3af' }}>{r.data_emiterii}</span>
+              {r.diagnostic && <span style={{ fontSize: '12px', color: '#6b7280', marginLeft: '10px' }}>— {r.diagnostic}</span>}
+              <span style={{ marginLeft: '10px', padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: r.gratuit === 'da' ? 'rgba(52,211,153,0.15)' : 'rgba(107,114,128,0.15)', color: r.gratuit === 'da' ? '#34d399' : '#9ca3af' }}>
+                {r.gratuit === 'da' ? 'Gratuit' : 'Cu plată'}
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <a href={`http://127.0.0.1:8000/api/retete/${r.id}/print/`} target="_blank" rel="noreferrer"
+                style={{ padding: '5px 12px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: '#9ca3af', fontSize: '12px', cursor: 'pointer', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                🖨️ Print
+              </a>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Consultatii */}
@@ -312,21 +520,39 @@ export default function PacientDetalii({ pacient, onBack }) {
           </form>
         )}
 
-        {loading && <p style={{ color: '#4b5563', fontSize: '13px' }}>Se incarca...</p>}
-        {!loading && consultatii.length === 0 && <p style={{ color: '#4b5563', fontSize: '13px' }}>Nicio consultatie inregistrata.</p>}
-        {!loading && consultatii.map(c => (
+        {loadingC && <p style={{ color: '#4b5563', fontSize: '13px' }}>Se incarca...</p>}
+        {!loadingC && consultatii.length === 0 && <p style={{ color: '#4b5563', fontSize: '13px' }}>Nicio consultatie inregistrata.</p>}
+        {!loadingC && consultatii.map(c => (
           <div key={c.id} style={{ borderBottom: '1px solid #1a2033', paddingBottom: '14px', marginBottom: '14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
               <span style={{ fontWeight: '600', fontSize: '13px', color: '#60a5fa' }}>
                 {new Date(c.data_ora).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' })}
               </span>
-              <span style={{ fontSize: '12px', color: '#4b5563' }}>Dr. {c.medic_nume}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '12px', color: '#4b5563' }}>Dr. {c.medic_nume}</span>
+                <button
+                  onClick={() => setShowReteta(true)}
+                  style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(58,123,213,0.1)', color: '#60a5fa', border: '1px solid #3a7bd5', borderRadius: '6px' }}>
+                  + Rețetă
+                </button>
+              </div>
             </div>
-            {c.simptome && <p style={{ fontSize: '13px', color: '#9ca3af', marginBottom: '4px' }}><span style={{ color: '#6b7280' }}>Simptome: </span>{c.simptome}</p>}
+            {c.simptome  && <p style={{ fontSize: '13px', color: '#9ca3af', marginBottom: '4px' }}><span style={{ color: '#6b7280' }}>Simptome: </span>{c.simptome}</p>}
             {c.tratament && <p style={{ fontSize: '13px', color: '#9ca3af' }}><span style={{ color: '#6b7280' }}>Tratament: </span>{c.tratament}</p>}
           </div>
         ))}
       </div>
+
+      {/* Modal reteta */}
+      {showReteta && (
+        <ModalReteta
+          pacientId={pacient.id}
+          medicId={pacient.medic}
+          consultatieId={null}
+          onClose={() => setShowReteta(false)}
+          onSaved={onRetetaSalvata}
+        />
+      )}
     </div>
   )
 }
