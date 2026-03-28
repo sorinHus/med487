@@ -16,6 +16,7 @@ const NAV_ITEMS = [
   { id: 'pacienti',    label: 'Pacienti',    icon: IconPacienti },
   { id: 'programari',  label: 'Programari',  icon: IconProgramari },
   { id: 'consultatii', label: 'Consultatii', icon: IconConsultatii },
+  { id: 'rapoarte',    label: 'Rapoarte',    icon: IconRapoarte },
 ]
 
 const PAGE_TITLES = {
@@ -23,6 +24,7 @@ const PAGE_TITLES = {
   pacienti:    () => 'Lista pacienti',
   programari:  () => 'Programari',
   consultatii: () => 'Consultatii',
+  rapoarte:    () => 'Rapoarte & Grafice',
 }
 
 export default function Layout({ children, activePage, onNavigate, onLogout, user }) {
@@ -42,8 +44,8 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
 
         {/* Logo */}
         <div style={{ padding: '16px', borderBottom: '1px solid #1e2535' }}>
-  <img src="/logo.png" alt="MED487" style={{ width: '100%', height: 'auto', display: 'block' }} />
-</div>
+          <img src="/logo.png" alt="MED487" style={{ width: '100%', height: 'auto', display: 'block' }} />
+        </div>
 
         {/* Nav */}
         <nav style={{ flex: 1, padding: '14px 10px' }}>
@@ -144,6 +146,13 @@ function IconConsultatii({ size = 16, color = 'currentColor' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
       <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+    </svg>
+  )
+}
+function IconRapoarte({ size = 16, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+      <path d="M3 3v18h18v-2H5V3H3zm4 10l3-3 3 3 4-4 1.5 1.5L13 16l-3-3-3 3L7 13z"/>
     </svg>
   )
 }

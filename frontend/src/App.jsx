@@ -6,7 +6,8 @@ import Layout from './components/Layout'
 import Dashboard from './components/Dashboard'
 import PacientList from './components/PacientList'
 import Programari from './components/Programari'
-import Consultatii from "./components/Consultatii";
+import Consultatii from './components/Consultatii'
+import Rapoarte from './components/Rapoarte'
 
 export default function App() {
   const [loggedIn, setLoggedIn]     = useState(!!getToken())
@@ -40,6 +41,7 @@ export default function App() {
       {activePage === 'pacienti'    && <PacientList />}
       {activePage === 'programari'  && <Programari />}
       {activePage === 'consultatii' && <Consultatii onNavigate={setActivePage} />}
+      {activePage === 'rapoarte'    && <Rapoarte />}
     </Layout>
   )
 }
