@@ -486,7 +486,11 @@
         })
       })
 
-      if (!res.ok) throw new Error('Server error')
+      if (!res.ok) {
+          const errData = await res.json().catch(() => ({}))
+          console.error('Server error:', res.status, errData)
+          throw new Error('Server error')
+}
 
       const d = new Date(state.selectedDate + 'T00:00:00')
       document.getElementById('success-detail').innerHTML =
