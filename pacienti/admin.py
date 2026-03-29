@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Pacient, Diagnostic, Consultatie, DiagnosticConsultatie
+from .models import CustomUser, Pacient, Diagnostic, Consultatie, DiagnosticConsultatie, Programare
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
@@ -29,3 +29,10 @@ class ConsulatieAdmin(admin.ModelAdmin):
 @admin.register(DiagnosticConsultatie)
 class DiagnosticConsulatieAdmin(admin.ModelAdmin):
     list_display = ['consultatie', 'diagnostic', 'tip']
+
+
+@admin.register(Programare)
+class ProgramareAdmin(admin.ModelAdmin):
+    list_display = ['data_ora', 'nume_pacient', 'telefon_pacient', 'status', 'medic']
+    list_filter = ['status', 'data_ora']
+    search_fields = ['nume_pacient', 'telefon_pacient']
