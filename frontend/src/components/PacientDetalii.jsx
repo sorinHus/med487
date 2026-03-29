@@ -667,7 +667,7 @@ export default function PacientDetalii({ pacient, onBack }) {
                 {r.gratuit === 'da' ? 'Gratuit' : 'Cu plată'}
               </span>
             </div>
-            <a href={`http://127.0.0.1:8000/api/retete/${r.id}/print/`} target="_blank" rel="noreferrer"
+            <a href={`https://web-production-26811.up.railway.app/api/retete/${r.id}/print/`} target="_blank" rel="noreferrer"
               style={{ padding: '5px 12px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: '#9ca3af', fontSize: '12px', textDecoration: 'none' }}>
               🖨️ Print
             </a>
@@ -699,11 +699,11 @@ export default function PacientDetalii({ pacient, onBack }) {
               {t.diagnostic && <span style={{ fontSize: '12px', color: '#6b7280', marginLeft: '10px' }}>— {t.diagnostic}</span>}
             </div>
             <div style={{ display: 'flex', gap: '6px' }}>
-              <a href={`http://127.0.0.1:8000/api/trimiteri/${t.id}/print/`} target="_blank" rel="noreferrer"
+              <a href={`https://web-production-26811.up.railway.app/api/trimiteri/${t.id}/print/`} target="_blank" rel="noreferrer"
                 style={{ padding: '5px 12px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: '#9ca3af', fontSize: '12px', textDecoration: 'none' }}>
                 🖨️ Simplu
               </a>
-              <a href={`http://127.0.0.1:8000/api/trimiteri/${t.id}/print/?tip=cnas`} target="_blank" rel="noreferrer"
+              <a href={`https://web-production-26811.up.railway.app/api/trimiteri/${t.id}/print/?tip=cnas`} target="_blank" rel="noreferrer"
                 style={{ padding: '5px 12px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: '#9ca3af', fontSize: '12px', textDecoration: 'none' }}>
                 🖨️ CNAS
               </a>
@@ -733,7 +733,7 @@ export default function PacientDetalii({ pacient, onBack }) {
               <span style={{ marginLeft: '6px', fontSize: '12px', color: '#6b7280' }}>{c.de_la} → {c.pana_la}</span>
               {c.cod_diagnostic && <span style={{ marginLeft: '8px', fontSize: '12px', color: '#4b5563' }}>({c.cod_diagnostic})</span>}
             </div>
-            <a href={`http://127.0.0.1:8000/api/concedii/${c.id}/print/`} target="_blank" rel="noreferrer"
+            <a href={`https://web-production-26811.up.railway.app/api/concedii/${c.id}/print/`} target="_blank" rel="noreferrer"
               style={{ padding: '5px 12px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: '#9ca3af', fontSize: '12px', textDecoration: 'none' }}>
               🖨️ Print
             </a>
