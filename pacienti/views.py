@@ -113,8 +113,11 @@ class ProgramareViewSet(viewsets.ModelViewSet):
         return qs
 
     def perform_create(self, serializer):
-        programare = serializer.save()
-        self._trimite_emailuri(programare)
+    import threading
+    programare = serializer.save()
+    t = threading.Thread(target=self._trimite_emailuri, args=(programare,))
+    t.daemon = True
+    t.start()
 
     def _trimite_emailuri(self, p):
         data = f"{p.data_ora.day} {LUNI_RO[p.data_ora.month - 1]} {p.data_ora.year}"
