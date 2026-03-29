@@ -23,4 +23,5 @@ urlpatterns = router.urls + [
     path('concedii/<int:pk>/print/', print_concediu, name='print-concediu'),
     path('retete/<int:pk>/print/', print_reteta, name='print-reteta'),
     path('trimiteri/<int:pk>/print/', print_trimitere, name='print-trimitere'),
+    path('test-email/', test_email, name='test-email'),
 ]
