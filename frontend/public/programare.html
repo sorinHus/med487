@@ -468,7 +468,7 @@
     btn.disabled = true
     btn.textContent = 'Se trimite...'
 
-    const dataOra = `${state.selectedDate}T${state.selectedSlot}:00`
+    const dataOra = `${state.selectedDate}T${state.selectedSlot}:00+03:00`
 
     try {
       const res = await fetch(`${API}/programari/`, {
