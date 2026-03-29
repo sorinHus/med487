@@ -801,7 +801,7 @@ export default function PacientDetalii({ pacient, onBack }) {
                 {new Date(c.data_ora).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' })}
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '12px', color: '#4b5563' }}>Dr. {c.medic_nume}</span>
+                <span style={{ fontSize: '12px', color: '#4b5563', marginRight: '8px', paddingRight: '8px', borderRight: '1px solid #1e2535' }}>Dr. {c.medic_nume}</span>
                 <button onClick={() => setShowReteta(true)}
                   style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(58,123,213,0.1)', color: '#60a5fa', border: '1px solid #3a7bd5', borderRadius: '6px' }}>
                   + Rețetă
