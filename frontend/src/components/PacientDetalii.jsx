@@ -89,7 +89,12 @@ function ModalReteta({ pacientId, medicId, consultatieId, onClose, onSaved }) {
         pacient: pacientId, medic: medicId,
         ...(consultatieId ? { consultatie: consultatieId } : {}),
         ...form,
-        linii: linii.filter(l => l.nume_medicament.trim()).map((l, i) => ({ ...l, ordine: i })),
+        linii: linii.map((l, i) => ({ 
+          ...l, 
+          ordine: i,
+          durata_zile: parseInt(l.durata_zile),
+          cantitate: parseInt(l.cantitate) || 1,
+      })),
       })
       onSaved && onSaved(res.data)
       onClose()
