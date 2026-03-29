@@ -167,6 +167,7 @@ class ProgramareViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny])
     def slots_libere(self, request):
         from datetime import datetime, time
+        import pytz
         data_str = request.query_params.get('data')
         if not data_str:
             return Response({'error': 'Parametrul data este obligatoriu.'}, status=400)
@@ -179,6 +180,7 @@ class ProgramareViewSet(viewsets.ModelViewSet):
         ora_start = time(8, 0)
         ora_end = time(17, 0)
         durata = 20
+        tz = pytz.timezone('Europe/Bucharest')
 
         programari_existente = Programare.objects.filter(
             data_ora__date=data,
@@ -186,7 +188,7 @@ class ProgramareViewSet(viewsets.ModelViewSet):
             status__in=['programat', 'confirmat']
         ).values_list('data_ora', flat=True)
 
-        ocupate = {p.strftime('%H:%M') for p in programari_existente}
+        ocupate = {p.astimezone(tz).strftime('%H:%M') for p in programari_existente}
 
         slots = []
         ora_curenta = datetime.combine(data, ora_start)
