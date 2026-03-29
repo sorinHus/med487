@@ -482,3 +482,22 @@ def print_trimitere(request, pk):
         return render(request, 'pacienti/trimitere_cnas_print.html', context)
 
     return render(request, 'pacienti/trimitere_simpla_print.html', context)
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+
+@require_GET
+def test_email(request):
+    from django.core.mail import send_mail
+    from django.conf import settings
+    try:
+        send_mail(
+            subject='Test email Railway',
+            message='Functioneaza!',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.EMAIL_CABINET],
+            fail_silently=False,
+        )
+        return JsonResponse({'ok': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

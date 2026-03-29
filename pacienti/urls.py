@@ -5,6 +5,7 @@ from .views import (LinieRetetaViewSet, PacientViewSet, ConsulatieViewSet,
                     ProgramareViewSet, ConfiguratieCabinetViewSet,
                     ConcediuMedicalViewSet, TrimitereViewSet)
 from .views import print_concediu, print_reteta, print_trimitere
+from .views import test_email
 
 router = DefaultRouter()
 router.register('pacienti', PacientViewSet, basename='pacient')
