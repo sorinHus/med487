@@ -75,7 +75,14 @@ function ModalReteta({ pacientId, medicId, consultatieId, onClose, onSaved }) {
 
   const salveaza = async (e) => {
     e.preventDefault()
-    if (!linii[0]?.nume_medicament.trim()) { setEroare('Adauga cel putin un medicament.'); return }
+    for (let i = 0; i < linii.length; i++) {
+  const l = linii[i]
+      if (!l.nume_medicament.trim()) { setEroare(`Medicament ${i+1}: denumirea este obligatorie.`); return }
+      if (!l.concentratie.trim()) { setEroare(`Medicament ${i+1}: concentratia este obligatorie.`); return }
+      if (!l.doza_frecventa.trim()) { setEroare(`Medicament ${i+1}: doza si frecventa sunt obligatorii.`); return }
+      if (!l.durata_zile) { setEroare(`Medicament ${i+1}: durata in zile este obligatorie.`); return }
+      if (!l.cantitate) { setEroare(`Medicament ${i+1}: cantitatea este obligatorie.`); return }
+}
     setSalvand(true); setEroare('')
     try {
       const res = await api.post('/retete/', {
