@@ -796,24 +796,26 @@ export default function PacientDetalii({ pacient, onBack }) {
         {!loadingC && consultatii.length === 0 && <p style={{ color: '#4b5563', fontSize: '13px' }}>Nicio consultatie inregistrata.</p>}
         {!loadingC && consultatii.map(c => (
           <div key={c.id} style={{ borderBottom: '1px solid #1a2033', paddingBottom: '14px', marginBottom: '14px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
               <span style={{ fontWeight: '600', fontSize: '13px', color: '#60a5fa' }}>
                 {new Date(c.data_ora).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' })}
               </span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '12px', color: '#4b5563', marginRight: '8px', paddingRight: '8px', borderRight: '1px solid #1e2535' }}>Dr. {c.medic_nume}</span>
-                <button onClick={() => setShowReteta(true)}
-                  style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(58,123,213,0.1)', color: '#60a5fa', border: '1px solid #3a7bd5', borderRadius: '6px' }}>
-                  + Rețetă
-                </button>
-                <button onClick={() => setShowTrimitere(true)}
-                  style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(52,211,153,0.1)', color: '#34d399', border: '1px solid #34d399', borderRadius: '6px' }}>
-                  + Trimitere
-                </button>
-                <button onClick={() => setShowConcediu(true)}
-                  style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(251,191,36,0.1)', color: '#fbbf24', border: '1px solid #fbbf24', borderRadius: '6px' }}>
-                  + Concediu
-                </button>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+                <span style={{ fontSize: '12px', color: '#4b5563' }}>Dr. {c.medic_nume || '—'}</span>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <button onClick={() => setShowReteta(true)}
+                    style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(58,123,213,0.1)', color: '#60a5fa', border: '1px solid #3a7bd5', borderRadius: '6px' }}>
+                    + Rețetă
+                  </button>
+                  <button onClick={() => setShowTrimitere(true)}
+                    style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(52,211,153,0.1)', color: '#34d399', border: '1px solid #34d399', borderRadius: '6px' }}>
+                    + Trimitere
+                  </button>
+                  <button onClick={() => setShowConcediu(true)}
+                    style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(251,191,36,0.1)', color: '#fbbf24', border: '1px solid #fbbf24', borderRadius: '6px' }}>
+                    + Concediu
+                  </button>
+                </div>
               </div>
             </div>
             {c.simptome  && <p style={{ fontSize: '13px', color: '#9ca3af', marginBottom: '4px' }}><span style={{ color: '#6b7280' }}>Simptome: </span>{c.simptome}</p>}
