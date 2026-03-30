@@ -25,7 +25,7 @@ export default function ProfilMedic({ onBack }) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token')
+    const token = localStorage.getItem('access')
     axios.get(`${API}/api/profil/`, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => setForm({
         first_name: r.data.first_name || '',
@@ -42,7 +42,7 @@ export default function ProfilMedic({ onBack }) {
     setLoading(true)
     setMsgProfil(null)
     try {
-      const token = localStorage.getItem('access_token')
+      const token = localStorage.getItem('access')
       await axios.patch(`${API}/api/profil/`, form, { headers: { Authorization: `Bearer ${token}` } })
       setMsgProfil({ ok: true, text: 'Profil salvat cu succes.' })
     } catch {
@@ -58,7 +58,7 @@ export default function ProfilMedic({ onBack }) {
       return
     }
     try {
-      const token = localStorage.getItem('access_token')
+      const token = localStorage.getItem('access')
       await axios.post(`${API}/api/profil/schimbare-parola/`, {
         parola_veche: parole.parola_veche,
         parola_noua: parole.parola_noua,
