@@ -101,7 +101,13 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
         <header style={{ height: '54px', background: '#161b27', borderBottom: '1px solid #1e2535', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0 }}>
           <span style={{ fontSize: '14px', fontWeight: '600', color: '#e2e8f0' }}>{title}</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '16px', color: '#4b5563' }}>{fullName}</span>
+            <span
+          onClick={() => onNavigate('profil')}
+          style={{ fontSize: '16px', color: '#4b5563', cursor: 'pointer', transition: 'color 0.15s' }}
+          onMouseEnter={e => e.currentTarget.style.color = '#60a5fa'}
+          onMouseLeave={e => e.currentTarget.style.color = '#4b5563'}
+          title="Profilul meu"
+          >{fullName}</span>
             <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: '#fff' }}>
               {initials}
             </div>

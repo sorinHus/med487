@@ -6,6 +6,7 @@ from .views import (LinieRetetaViewSet, PacientViewSet, ConsulatieViewSet,
                     ConcediuMedicalViewSet, TrimitereViewSet)
 from .views import print_concediu, print_reteta, print_trimitere
 from .views import test_email
+from .views import ProfilMedicView, SchimbareParolaView
 
 router = DefaultRouter()
 router.register('pacienti', PacientViewSet, basename='pacient')
@@ -19,9 +20,12 @@ router.register(r'linii-reteta', LinieRetetaViewSet, basename='linii-reteta')
 router.register(r'concedii', ConcediuMedicalViewSet, basename='concediu')
 router.register(r'trimiteri', TrimitereViewSet, basename='trimitere')
 
+
 urlpatterns = router.urls + [
     path('concedii/<int:pk>/print/', print_concediu, name='print-concediu'),
     path('retete/<int:pk>/print/', print_reteta, name='print-reteta'),
     path('trimiteri/<int:pk>/print/', print_trimitere, name='print-trimitere'),
     path('test-email/', test_email, name='test-email'),
+    path('api/profil/', ProfilMedicView.as_view(), name='profil-medic'),
+    path('api/profil/schimbare-parola/', SchimbareParolaView.as_view(), name='schimbare-parola'),
 ]

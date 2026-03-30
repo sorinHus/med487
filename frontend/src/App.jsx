@@ -8,6 +8,7 @@ import PacientList from './components/PacientList'
 import Programari from './components/Programari'
 import Consultatii from './components/Consultatii'
 import Rapoarte from './components/Rapoarte'
+import ProfilMedic from './components/ProfilMedic'
 
 export default function App() {
   const [loggedIn, setLoggedIn]     = useState(!!getToken())
@@ -42,6 +43,7 @@ export default function App() {
       {activePage === 'programari'  && <Programari />}
       {activePage === 'consultatii' && <Consultatii onNavigate={setActivePage} />}
       {activePage === 'rapoarte'    && <Rapoarte />}
+      if (activePage === 'profil') return <ProfilMedic onBack={() => setActivePage('dashboard')} />
     </Layout>
   )
 }

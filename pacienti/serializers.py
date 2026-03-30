@@ -171,3 +171,14 @@ class TrimitereSerializer(serializers.ModelSerializer):
         model = Trimitere
         fields = '__all__'
         read_only_fields = ['numar_trimitere', 'data_emiterii']
+
+class ProfilMedicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'telefon', 'parafa', 'cod_medic']
+        read_only_fields = ['id', 'username']
+
+
+class SchimbareParolaSerializer(serializers.Serializer):
+    parola_veche = serializers.CharField(required=True)
+    parola_noua = serializers.CharField(required=True, min_length=6)

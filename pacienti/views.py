@@ -11,12 +11,15 @@ from .serializers import (UserSerializer, PacientSerializer,
                           ProgramareSerializer, ConfiguratieCabinetSerializer,
                           RetetaSerializer, RetetaCreateSerializer,
                           LinieRetetaSerializer, ConcediuMedicalSerializer,
-                          TrimitereSerializer)
+                          TrimitereSerializer, ProfilMedicSerializer, SchimbareParolaSerializer)
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db.models import Max, Q
 from django.shortcuts import render, get_object_or_404
 from datetime import date, timedelta
+from rest_framework.views import APIView
+from rest_framework import status, generics
+from rest_framework.permissions import IsAuthenticated
 
 
 LUNI_RO = [
@@ -503,3 +506,25 @@ def test_email(request):
         return JsonResponse({'ok': True})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+class ProfilMedicView(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfilMedicSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+class SchimbareParolaView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = SchimbareParolaSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user = request.user
+        if not user.check_password(serializer.validated_data['parola_veche']):
+            return Response({'parola_veche': 'Parolă incorectă.'}, status=status.HTTP_400_BAD_REQUEST)
+        user.set_password(serializer.validated_data['parola_noua'])
+        user.save()
+        return Response({'detail': 'Parola a fost schimbată cu succes.'})
