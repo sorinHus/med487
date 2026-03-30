@@ -26,6 +26,6 @@ urlpatterns = router.urls + [
     path('retete/<int:pk>/print/', print_reteta, name='print-reteta'),
     path('trimiteri/<int:pk>/print/', print_trimitere, name='print-trimitere'),
     path('test-email/', test_email, name='test-email'),
-    path('api/profil/', ProfilMedicView.as_view(), name='profil-medic'),
-    path('api/profil/schimbare-parola/', SchimbareParolaView.as_view(), name='schimbare-parola'),
+    path('profil/', ProfilMedicView.as_view(), name='profil-medic'),
+    path('profil/schimbare-parola/', SchimbareParolaView.as_view(), name='schimbare-parola'),
 ]

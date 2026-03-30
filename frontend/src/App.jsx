@@ -31,6 +31,12 @@ export default function App() {
 
   if (!loggedIn) return <Login onLogin={() => setLoggedIn(true)} />
 
+  if (activePage === 'profil') return (
+    <Layout activePage={activePage} onNavigate={setActivePage} onLogout={handleLogout} user={user}>
+      <ProfilMedic onBack={() => setActivePage('dashboard')} />
+    </Layout>
+  )
+
   return (
     <Layout
       activePage={activePage}
@@ -43,7 +49,6 @@ export default function App() {
       {activePage === 'programari'  && <Programari />}
       {activePage === 'consultatii' && <Consultatii onNavigate={setActivePage} />}
       {activePage === 'rapoarte'    && <Rapoarte />}
-      if (activePage === 'profil') return <ProfilMedic onBack={() => setActivePage('dashboard')} />
     </Layout>
   )
 }
