@@ -45,7 +45,7 @@ export default function Login({ onLogin }) {
           <form onSubmit={handleLogin}>
             <label style={{ fontSize: '13px', color: '#6b7280', display: 'block', marginBottom: '6px' }}>Username</label>
             <input type="text" value={username} onChange={e => setUsername(e.target.value)}
-              placeholder="ex. sorin487" style={{ ...inputStyle, marginBottom: '14px' }}
+              placeholder="prenume.nume" style={{ ...inputStyle, marginBottom: '14px' }}
               onFocus={e => e.target.style.borderColor = '#3a7bd5'}
               onBlur={e => e.target.style.borderColor = '#1e2535'}
               autoComplete="username" />
