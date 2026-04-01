@@ -5,13 +5,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
-    DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical, Trimitere
+    DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical, Trimitere, \
+        ModuleUtilizator
 from .serializers import (UserSerializer, PacientSerializer,
                           DiagnosticSerializer, ConsulatieSerializer,
                           ProgramareSerializer, ConfiguratieCabinetSerializer,
                           RetetaSerializer, RetetaCreateSerializer,
                           LinieRetetaSerializer, ConcediuMedicalSerializer,
-                          TrimitereSerializer, ProfilMedicSerializer, SchimbareParolaSerializer)
+                          TrimitereSerializer, ProfilMedicSerializer, SchimbareParolaSerializer, ModuleUtilizatorSerializer)
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db.models import Max, Q
@@ -535,3 +536,16 @@ class SchimbareParolaView(APIView):
         user.set_password(serializer.validated_data['parola_noua'])
         user.save()
         return Response({'detail': 'Parola a fost schimbată cu succes.'})
+    
+class ModuleUtilizatorViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def retrieve(self, request, pk=None):
+        obj, _ = ModuleUtilizator.objects.get_or_create(user_id=pk)
+        return Response({'active': obj.active})
+
+    def update(self, request, pk=None):
+        obj, _ = ModuleUtilizator.objects.get_or_create(user_id=pk)
+        obj.active = request.data.get('active', [])
+        obj.save()
+        return Response({'active': obj.active})    

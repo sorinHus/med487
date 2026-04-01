@@ -333,3 +333,19 @@ class Trimitere(models.Model):
 
     def __str__(self):
         return f'{self.numar_trimitere} — {self.pacient} → {self.specialist}'
+    
+class ModuleUtilizator(models.Model):
+    MODULE_CHOICES = [
+        ('pacienti', 'Pacienți'),
+        ('consultatii', 'Consultații'),
+        ('programari', 'Programări'),
+        ('retete', 'Rețete'),
+        ('trimiteri', 'Trimiteri'),
+        ('concedii', 'Concedii'),
+        ('rapoarte', 'Rapoarte'),
+    ]
+    user   = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='module')
+    active = models.JSONField(default=list)
+
+    def __str__(self):
+        return f"Module {self.user.username}"

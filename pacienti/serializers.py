@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
-    DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical, Trimitere
+    DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical, Trimitere, \
+    ModuleUtilizator
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -200,3 +201,8 @@ class ProfilMedicSerializer(serializers.ModelSerializer):
 class SchimbareParolaSerializer(serializers.Serializer):
     parola_veche = serializers.CharField(required=True)
     parola_noua = serializers.CharField(required=True, min_length=6)
+
+class ModuleUtilizatorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModuleUtilizator
+        fields = ['user', 'active']

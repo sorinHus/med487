@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import (LinieRetetaViewSet, PacientViewSet, ConsulatieViewSet,
                     DiagnosticViewSet, RetetaViewSet, UserViewSet,
                     ProgramareViewSet, ConfiguratieCabinetViewSet,
-                    ConcediuMedicalViewSet, TrimitereViewSet)
+                    ConcediuMedicalViewSet, TrimitereViewSet,
+                    ModuleUtilizatorViewSet)
 from .views import print_concediu, print_reteta, print_trimitere
 from .views import test_email
 from .views import ProfilMedicView, SchimbareParolaView
@@ -20,7 +21,6 @@ router.register(r'linii-reteta', LinieRetetaViewSet, basename='linii-reteta')
 router.register(r'concedii', ConcediuMedicalViewSet, basename='concediu')
 router.register(r'trimiteri', TrimitereViewSet, basename='trimitere')
 
-
 urlpatterns = router.urls + [
     path('concedii/<int:pk>/print/', print_concediu, name='print-concediu'),
     path('retete/<int:pk>/print/', print_reteta, name='print-reteta'),
@@ -28,4 +28,5 @@ urlpatterns = router.urls + [
     path('test-email/', test_email, name='test-email'),
     path('profil/', ProfilMedicView.as_view(), name='profil-medic'),
     path('profil/schimbare-parola/', SchimbareParolaView.as_view(), name='schimbare-parola'),
+    path('module/<int:pk>/', ModuleUtilizatorViewSet.as_view({'get': 'retrieve', 'put': 'update'}), name='module-utilizator'),
 ]
