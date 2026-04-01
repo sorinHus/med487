@@ -8,6 +8,7 @@ D:.
 |   env.example
 |   manage.py
 |   netlify.toml
+|   populate_demo.py
 |   Procfile
 |   README.md
 |   requirements.txt
@@ -11233,6 +11234,7 @@ D:.
 |   +---public
 |   |       favicon.svg
 |   |       icons.svg
+|   |       index.html
 |   |       logo.png
 |   |       programare.html
 |   |       _redirects
@@ -19537,6 +19539,7 @@ D:.
     |       |   |   |   |   |   
     |       |   |   |   |   \---__pycache__
     |       |   |   |   |           dumpdata.cpython-314.pyc
+    |       |   |   |   |           loaddata.cpython-314.pyc
     |       |   |   |   |           makemigrations.cpython-314.pyc
     |       |   |   |   |           migrate.cpython-314.pyc
     |       |   |   |   |           runserver.cpython-314.pyc
@@ -23174,6 +23177,8 @@ D:.
     |       |   |   |   |   __init__.py
     |       |   |   |   |   
     |       |   |   |   \---__pycache__
+    |       |   |   |           __init__.cpython-314.pyc
+    |       |   |   |           
     |       |   |   +---Indian
     |       |   |   |   |   Antananarivo
     |       |   |   |   |   Chagos
