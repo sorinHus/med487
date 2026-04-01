@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cabinet Medical Dr. Maria Ionescu — Medicină de Familie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #faf8f4;
+    --white: #ffffff;
+    --blue-deep: #1a3557;
+    --blue-mid: #2563a8;
+    --blue-light: #dbeafe;
+    --blue-pale: #f0f6ff;
+    --gold: #b8892a;
+    --gold-light: #f5e9cc;
+    --text-dark: #1a2332;
+    --text-mid: #4a5568;
+    --text-light: #718096;
+    --border: #e2e8f0;
+    --shadow-sm: 0 2px 8px rgba(26,53,87,0.08);
+    --shadow-md: 0 8px 32px rgba(26,53,87,0.12);
+    --shadow-lg: 0 20px 60px rgba(26,53,87,0.16);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(250,248,244,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 3rem;
+    height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: var(--shadow-md); }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.75rem;
+    text-decoration: none;
+  }
+  .nav-logo-icon {
+    width: 38px; height: 38px;
+    background: var(--blue-deep);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 1.1rem;
+  }
+  .nav-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+  .nav-logo-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 600;
+    color: var(--blue-deep);
+  }
+  .nav-logo-sub { font-size: 0.7rem; color: var(--text-light); letter-spacing: .04em; }
+
+  .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--text-mid);
+    font-size: 0.88rem; font-weight: 500;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--blue-mid); }
+
+  .btn-nav {
+    background: var(--blue-deep); color: white !important;
+    padding: 0.5rem 1.25rem; border-radius: 8px;
+    font-size: 0.85rem !important; font-weight: 500 !important;
+    transition: background .2s, transform .15s !important;
+  }
+  .btn-nav:hover { background: var(--blue-mid) !important; transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 7rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--cream) 55%, var(--blue-pale) 100%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,168,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 1px; background: var(--border);
+  }
+
+  .hero-inner {
+    max-width: 1100px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--gold-light); color: var(--gold);
+    padding: 0.35rem 0.9rem; border-radius: 999px;
+    font-size: 0.78rem; font-weight: 500; letter-spacing: .04em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp .6s ease both;
+  }
+  .hero-badge::before { content: '✦'; font-size: 0.6rem; }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 600; line-height: 1.2;
+    color: var(--blue-deep);
+    margin-bottom: 1.25rem;
+    animation: fadeUp .6s .1s ease both;
+  }
+  .hero h1 em { font-style: italic; color: var(--blue-mid); }
+
+  .hero-desc {
+    font-size: 1.05rem; color: var(--text-mid);
+    font-weight: 300; line-height: 1.75;
+    margin-bottom: 2.25rem;
+    animation: fadeUp .6s .2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    animation: fadeUp .6s .3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--blue-deep); color: white;
+    padding: 0.85rem 1.75rem; border-radius: 10px;
+    text-decoration: none; font-weight: 500; font-size: 0.95rem;
+    box-shadow: var(--shadow-md);
+    transition: background .2s, transform .15s, box-shadow .2s;
+  }
+  .btn-primary:hover {
+    background: var(--blue-mid);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--white); color: var(--blue-deep);
+    padding: 0.85rem 1.75rem; border-radius: 10px;
+    text-decoration: none; font-weight: 500; font-size: 0.95rem;
+    border: 1.5px solid var(--border);
+    transition: border-color .2s, transform .15s;
+  }
+  .btn-secondary:hover { border-color: var(--blue-mid); transform: translateY(-2px); }
+
+  .hero-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    animation: fadeLeft .7s .2s ease both;
+    position: relative;
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute; top: -3px; left: 20px; right: 20px; height: 3px;
+    background: linear-gradient(90deg, var(--blue-deep), var(--blue-mid));
+    border-radius: 2px 2px 0 0;
+  }
+
+  .card-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.25rem;
+  }
+  .doctor-avatar {
+    width: 58px; height: 58px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 600; flex-shrink: 0;
+  }
+  .card-header-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; color: var(--blue-deep);
+  }
+  .card-header-info p { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
+
+  .card-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem; margin-bottom: 1.25rem;
+  }
+  .stat-item {
+    text-align: center; padding: 0.75rem 0.5rem;
+    background: var(--blue-pale); border-radius: 10px;
+  }
+  .stat-num {
+    font-size: 1.4rem; font-weight: 600;
+    color: var(--blue-deep); font-family: 'Playfair Display', serif;
+  }
+  .stat-label { font-size: 0.7rem; color: var(--text-light); margin-top: 2px; }
+
+  .card-schedule { display: flex; flex-direction: column; gap: 0.5rem; }
+  .schedule-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.45rem 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 0.85rem;
+  }
+  .schedule-row:last-child { border-bottom: none; }
+  .schedule-day { color: var(--text-mid); font-weight: 500; }
+  .schedule-hours { color: var(--blue-mid); font-weight: 500; }
+  .schedule-closed { color: var(--text-light); font-style: italic; }
+
+  /* SECTIONS */
+  section { padding: 5rem 3rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 0.75rem; font-weight: 500; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--blue-mid);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    color: var(--blue-deep); line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+  .section-desc {
+    font-size: 1rem; color: var(--text-mid);
+    font-weight: 300; max-width: 560px; line-height: 1.8;
+  }
+
+  /* DESPRE */
+  .despre { background: var(--white); }
+  .despre-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+  }
+  .despre-img-wrap { position: relative; }
+  .despre-img-placeholder {
+    background: linear-gradient(135deg, var(--blue-pale) 0%, var(--blue-light) 100%);
+    border-radius: 20px; height: 380px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem;
+    box-shadow: var(--shadow-md);
+  }
+  .despre-badge {
+    position: absolute; bottom: -16px; right: -16px;
+    background: var(--gold); color: white;
+    padding: 1rem 1.25rem; border-radius: 14px;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+  .despre-badge-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 600; line-height: 1;
+  }
+  .despre-badge-text { font-size: 0.72rem; opacity: .9; margin-top: 3px; }
+
+  .despre-features { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+  .feature-item {
+    display: flex; gap: 0.9rem; align-items: flex-start;
+    padding: 0.9rem 1rem; border-radius: 10px;
+    background: var(--blue-pale);
+    transition: transform .2s;
+  }
+  .feature-item:hover { transform: translateX(4px); }
+  .feature-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: var(--blue-deep); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 1rem;
+  }
+  .feature-text h4 { font-size: 0.9rem; font-weight: 500; color: var(--blue-deep); }
+  .feature-text p { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
+
+  /* SERVICII */
+  .servicii { background: var(--cream); }
+  .servicii-grid {
+    margin-top: 3rem;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+  }
+  .serviciu-card {
+    background: var(--white); border-radius: 16px;
+    padding: 1.75rem 1.5rem;
+    border: 1px solid var(--border);
+    transition: transform .2s, box-shadow .2s, border-color .2s;
+  }
+  .serviciu-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--blue-light);
+  }
+  .serviciu-icon {
+    font-size: 1.75rem;
+    width: 52px; height: 52px;
+    background: var(--blue-pale); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .serviciu-card h3 {
+    font-size: 1rem; font-weight: 500;
+    color: var(--blue-deep); margin-bottom: 0.5rem;
+  }
+  .serviciu-card p { font-size: 0.82rem; color: var(--text-light); line-height: 1.65; }
+
+  /* PROGRAM */
+  .program { background: var(--blue-deep); color: white; }
+  .program .section-tag { color: var(--gold); }
+  .program .section-title { color: white; }
+  .program .section-desc { color: rgba(255,255,255,0.65); }
+
+  .program-grid {
+    margin-top: 3rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
+  }
+
+  .program-table { width: 100%; border-collapse: collapse; }
+  .program-table tr { border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .program-table tr:last-child { border-bottom: none; }
+  .program-table td { padding: 0.9rem 0; font-size: 0.9rem; }
+  .program-table td:first-child { color: rgba(255,255,255,0.7); }
+  .program-table td:last-child { color: white; font-weight: 500; text-align: right; }
+  .program-table .closed { color: rgba(255,255,255,0.3); font-style: italic; }
+
+  .program-info-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 2rem;
+  }
+  .info-row {
+    display: flex; gap: 1rem; align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    background: rgba(255,255,255,0.1); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+  }
+  .info-text h4 { font-size: 0.85rem; font-weight: 500; color: white; margin-bottom: 3px; }
+  .info-text p { font-size: 0.8rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+  /* CONTACT */
+  .contact { background: var(--cream); }
+  .contact-grid {
+    margin-top: 3rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+  }
+  .contact-card {
+    background: var(--white); border-radius: 16px;
+    padding: 2rem; border: 1px solid var(--border);
+  }
+  .contact-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; color: var(--blue-deep); margin-bottom: 1.5rem;
+  }
+  .contact-item {
+    display: flex; gap: 0.9rem; align-items: flex-start;
+    margin-bottom: 1.1rem;
+  }
+  .contact-item:last-child { margin-bottom: 0; }
+  .contact-icon {
+    width: 38px; height: 38px; flex-shrink: 0;
+    background: var(--blue-pale); border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--blue-mid); font-size: 1rem;
+  }
+  .contact-label { font-size: 0.72rem; color: var(--text-light); letter-spacing: .04em; text-transform: uppercase; }
+  .contact-value { font-size: 0.9rem; color: var(--text-dark); font-weight: 500; margin-top: 1px; }
+
+  .programare-box {
+    background: var(--blue-deep); border-radius: 16px;
+    padding: 2.25rem; text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .programare-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem; color: white; margin-bottom: 0.75rem;
+  }
+  .programare-box p {
+    font-size: 0.85rem; color: rgba(255,255,255,0.6);
+    margin-bottom: 1.75rem; line-height: 1.6;
+  }
+  .btn-programare {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--gold); color: white;
+    padding: 0.9rem 2rem; border-radius: 10px;
+    text-decoration: none; font-weight: 500; font-size: 0.95rem;
+    box-shadow: 0 4px 20px rgba(184,137,42,0.35);
+    transition: background .2s, transform .15s;
+  }
+  .btn-programare:hover { background: #a07824; transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--blue-deep); color: white;
+    padding: 2rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; color: white; font-weight: 600;
+  }
+  .footer-logo span {
+    color: rgba(255,255,255,0.45); font-size: 0.75rem;
+    display: block; margin-top: 2px;
+    font-family: 'DM Sans', sans-serif; font-weight: 300;
+  }
+  footer p { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">✚</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">Cabinet Medical</span>
+      <span class="nav-logo-sub">Medicină de Familie</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#despre">Despre</a></li>
+    <li><a href="#servicii">Servicii</a></li>
+    <li><a href="#program">Program</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="programare.html" class="btn-nav">Programare online →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="acasa">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">Cabinet acreditat · Cluj-Napoca</div>
+      <h1>Îngrijire medicală <em>de încredere</em> pentru întreaga familie</h1>
+      <p class="hero-desc">
+        Oferim consultații complete, urmărire continuă a stării de sănătate și o relație medicală bazată pe respect și comunicare deschisă.
+      </p>
+      <div class="hero-actions">
+        <a href="programare.html" class="btn-primary">📅 Programare online</a>
+        <a href="#despre" class="btn-secondary">Află mai multe →</a>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <div class="card-header">
+        <div class="doctor-avatar">M</div>
+        <div class="card-header-info">
+          <h3>Dr. Maria Ionescu</h3>
+          <p>Medic de familie · Specialist în medicina preventivă</p>
+        </div>
+      </div>
+      <div class="card-stats">
+        <div class="stat-item">
+          <div class="stat-num">15+</div>
+          <div class="stat-label">Ani experiență</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">800+</div>
+          <div class="stat-label">Pacienți activi</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Recenzii</div>
+        </div>
+      </div>
+      <div class="card-schedule">
+        <div class="schedule-row">
+          <span class="schedule-day">Luni – Miercuri</span>
+          <span class="schedule-hours">08:00 – 16:00</span>
+        </div>
+        <div class="schedule-row">
+          <span class="schedule-day">Joi – Vineri</span>
+          <span class="schedule-hours">09:00 – 15:00</span>
+        </div>
+        <div class="schedule-row">
+          <span class="schedule-day">Sâmbătă – Duminică</span>
+          <span class="schedule-closed">Închis</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESPRE -->
+<section class="despre" id="despre">
+  <div class="section-inner">
+    <div class="despre-grid">
+      <div class="despre-img-wrap reveal">
+        <div class="despre-img-placeholder">🏥</div>
+        <div class="despre-badge">
+          <div class="despre-badge-num">2010</div>
+          <div class="despre-badge-text">Fondată în</div>
+        </div>
+      </div>
+      <div class="reveal">
+        <span class="section-tag">Despre noi</span>
+        <h2 class="section-title">Un cabinet modern, cu valori tradiționale</h2>
+        <p class="section-desc">
+          Medicina de familie înseamnă continuitate — cunoaștem istoricul fiecărui pacient și ne implicăm în sănătatea întregii familii, de la copii la vârstnici.
+        </p>
+        <div class="despre-features">
+          <div class="feature-item">
+            <div class="feature-icon">🩺</div>
+            <div class="feature-text">
+              <h4>Consultații complete</h4>
+              <p>Examinare clinică amănunțită, bilet de trimitere, rețete și concedii medicale</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">📋</div>
+            <div class="feature-text">
+              <h4>Gestionare dosar medical</h4>
+              <p>Istoricul complet al consultațiilor și investigațiilor disponibil oricând</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">💬</div>
+            <div class="feature-text">
+              <h4>Comunicare directă</h4>
+              <p>Răspunsuri rapide la întrebări, fără liste de așteptare interminabile</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICII -->
+<section class="servicii" id="servicii">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">Ce oferim</span>
+      <h2 class="section-title">Servicii medicale complete</h2>
+      <p class="section-desc">Acoperim toate nevoile medicale de bază ale familiei tale, cu trimiteri rapide către specialiști când este necesar.</p>
+    </div>
+    <div class="servicii-grid">
+      <div class="serviciu-card reveal">
+        <div class="serviciu-icon">🩺</div>
+        <h3>Consultații generale</h3>
+        <p>Evaluare clinică completă pentru adulți și copii, diagnostic și plan de tratament personalizat.</p>
+      </div>
+      <div class="serviciu-card reveal">
+        <div class="serviciu-icon">💉</div>
+        <h3>Vaccinări</h3>
+        <p>Schema completă de vaccinare conform calendarului național, pentru copii și adulți.</p>
+      </div>
+      <div class="serviciu-card reveal">
+        <div class="serviciu-icon">🔬</div>
+        <h3>Investigații</h3>
+        <p>Bilete de trimitere pentru analize, imagistică și consultații de specialitate.</p>
+      </div>
+      <div class="serviciu-card reveal">
+        <div class="serviciu-icon">📄</div>
+        <h3>Rețete și certificate</h3>
+        <p>Rețete compensate, certificate medicale și concedii medicale eliberate la consultație.</p>
+      </div>
+      <div class="serviciu-card reveal">
+        <div class="serviciu-icon">❤️</div>
+        <h3>Monitorizare boli cronice</h3>
+        <p>Urmărire periodică pentru hipertensiune, diabet, boli respiratorii și alte afecțiuni cronice.</p>
+      </div>
+      <div class="serviciu-card reveal">
+        <div class="serviciu-icon">🛡️</div>
+        <h3>Medicină preventivă</h3>
+        <p>Controale periodice, screening și sfaturi pentru un stil de viață sănătos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAM -->
+<section class="program" id="program">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">Orar</span>
+      <h2 class="section-title">Program de lucru</h2>
+      <p class="section-desc">Vă recomandăm programarea online pentru a evita timpul de așteptare.</p>
+    </div>
+    <div class="program-grid">
+      <div class="reveal">
+        <table class="program-table">
+          <tr><td>Luni</td><td>08:00 – 16:00</td></tr>
+          <tr><td>Marți</td><td>08:00 – 16:00</td></tr>
+          <tr><td>Miercuri</td><td>08:00 – 16:00</td></tr>
+          <tr><td>Joi</td><td>09:00 – 15:00</td></tr>
+          <tr><td>Vineri</td><td>09:00 – 15:00</td></tr>
+          <tr><td>Sâmbătă</td><td class="closed">Închis</td></tr>
+          <tr><td>Duminică</td><td class="closed">Închis</td></tr>
+        </table>
+      </div>
+      <div class="program-info-box reveal">
+        <div class="info-row">
+          <div class="info-icon">📍</div>
+          <div class="info-text">
+            <h4>Adresă cabinet</h4>
+            <p>Str. Exemplu nr. 10, Cluj-Napoca<br>Județul Cluj, România</p>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon">📞</div>
+          <div class="info-text">
+            <h4>Telefon</h4>
+            <p>0264 000 000<br>Luni–Vineri, 08:00–16:00</p>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon">✉️</div>
+          <div class="info-text">
+            <h4>Email</h4>
+            <p>contact@cabinetmedical.ro</p>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon">🌐</div>
+          <div class="info-text">
+            <h4>Programare online</h4>
+            <p>Disponibilă 24/7 prin formularul de pe site</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">Contact</span>
+      <h2 class="section-title">Luați legătura cu noi</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card reveal">
+        <h3>Informații de contact</h3>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-label">Adresă</div>
+            <div class="contact-value">Str. Exemplu nr. 10, Cluj-Napoca</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <div class="contact-label">Telefon</div>
+            <div class="contact-value">0264 000 000</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value">contact@cabinetmedical.ro</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div>
+            <div class="contact-label">Program</div>
+            <div class="contact-value">Luni–Miercuri 08–16, Joi–Vineri 09–15</div>
+          </div>
+        </div>
+      </div>
+      <div class="programare-box reveal">
+        <h3>Programează o consultație</h3>
+        <p>Alege data și ora convenabilă direct online, fără apeluri telefonice și fără timp de așteptare.</p>
+        <a href="programare.html" class="btn-programare">📅 Programare online</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    Cabinet Medical Dr. Maria Ionescu
+    <span>Medicină de Familie · Cluj-Napoca</span>
+  </div>
+  <p>© 2026 · Toate drepturile rezervate</p>
+</footer>
+
+<script>
+  // Nav scroll shadow
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
