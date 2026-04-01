@@ -84,13 +84,20 @@ class DiagnosticViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.all().order_by('id')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=False, methods=['get'])
     def me(self, request):
         return Response(UserSerializer(request.user).data)
+
+    @action(detail=True, methods=['post'])
+    def toggle_activ(self, request, pk=None):
+        user = self.get_object()
+        user.is_active = not user.is_active
+        user.save()
+        return Response({'is_active': user.is_active})
 
 
 class ProgramareViewSet(viewsets.ModelViewSet):

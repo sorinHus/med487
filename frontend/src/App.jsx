@@ -11,6 +11,7 @@ import Consultatii from './components/Consultatii'
 import Rapoarte from './components/Rapoarte'
 import ProfilMedic from './components/ProfilMedic'
 import SitePrezentare from './components/SitePrezentare'
+import SuperadminPanel from './components/SuperadminPanel'
 
 function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
@@ -88,7 +89,7 @@ function AppInterna() {
   if (!loggedIn) return <Login onLogin={() => setLoggedIn(true)} />
   if (loading)   return <div style={{ minHeight: '100vh', background: '#0f1117' }} />
 
-  if (user?.rol === 'superadmin') return <SuperadminPlaceholder onLogout={handleLogout} />
+  if (user?.rol === 'superadmin') return <SuperadminPanel onLogout={handleLogout} />
   if (user?.rol === 'pacient')    return <PortalPlaceholder onLogout={handleLogout} />
 
   return <AppMedic user={user} onLogout={handleLogout} />
