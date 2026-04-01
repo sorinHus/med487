@@ -30,7 +30,8 @@ const PAGE_TITLES = {
 export default function Layout({ children, activePage, onNavigate, onLogout, user }) {
   const firstName = user?.first_name || ''
   const lastName  = user?.last_name  || ''
-  const fullName  = `Dr. ${firstName} ${lastName}`.trim()
+  const prefix   = user?.rol === 'medic' ? 'Dr. ' : ''
+  const fullName = `${prefix}${firstName} ${lastName}`.trim()
   const initials  = getInitials(firstName, lastName)
   const avatarBg  = getAvatarColor(fullName)
   const rol       = user?.rol || 'medic'

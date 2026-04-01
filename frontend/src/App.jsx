@@ -66,6 +66,7 @@ function AppInterna() {
   useEffect(() => {
     if (loggedIn) {
       api.get('/useri/me/').then(res => {
+        console.log('user data:', res.data)
         setUser(res.data)
         setLoading(false)
       }).catch(() => {
