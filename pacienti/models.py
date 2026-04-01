@@ -120,15 +120,20 @@ class Programare(models.Model):
 
 
 class ConfiguratieCabinet(models.Model):
-    denumire_unitate = models.CharField(max_length=255, verbose_name='Denumire unitate sanitară')
-    localitate       = models.CharField(max_length=100, verbose_name='Localitatea')
-    judet            = models.CharField(max_length=50, verbose_name='Județul')
-    strada           = models.CharField(max_length=150, blank=True, verbose_name='Strada')
-    numar            = models.CharField(max_length=20, blank=True, verbose_name='Număr')
-    telefon          = models.CharField(max_length=20, blank=True)
-    email            = models.EmailField(blank=True)
-    cui              = models.CharField(max_length=20, blank=True, verbose_name='CUI')
-    cod_parafă       = models.CharField(max_length=20, blank=True, verbose_name='Cod parafă medic')
+    denumire_unitate    = models.CharField(max_length=255, verbose_name='Denumire unitate sanitară')
+    localitate          = models.CharField(max_length=100, verbose_name='Localitatea')
+    judet               = models.CharField(max_length=50, verbose_name='Județul')
+    strada              = models.CharField(max_length=150, blank=True, verbose_name='Strada')
+    numar               = models.CharField(max_length=20, blank=True, verbose_name='Număr')
+    telefon             = models.CharField(max_length=20, blank=True)
+    email               = models.EmailField(blank=True)
+    cui                 = models.CharField(max_length=20, blank=True, verbose_name='CUI')
+    cod_parafă          = models.CharField(max_length=20, blank=True, verbose_name='Cod parafă medic')
+    # Setări globale
+    email_contact       = models.EmailField(blank=True, verbose_name='Email contact support')
+    durata_slot         = models.PositiveIntegerField(default=30, verbose_name='Durată slot programare (min)')
+    max_programari_zi   = models.PositiveIntegerField(default=20, verbose_name='Max programări per zi')
+    mod_mentenanta      = models.BooleanField(default=False, verbose_name='Mod mentenanță')
 
     class Meta:
         verbose_name = 'Configurație cabinet'

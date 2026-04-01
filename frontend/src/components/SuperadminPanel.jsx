@@ -67,6 +67,9 @@ export default function SuperadminPanel({ onLogout }) {
   const [saving, setSaving]       = useState(false)
   const [module, setModule]       = useState({}) // { userId: ['pacienti', ...] }
   const [savingModule, setSavingModule] = useState({})
+  const [setari, setSetari]         = useState(null)
+  const [savingSetari, setSavingSetari] = useState(false)
+  const [setariSaved, setSetariSaved]   = useState(false)
 
   const fetchUseri = () => {
     api.get('/useri/').then(res => {
@@ -83,6 +86,11 @@ export default function SuperadminPanel({ onLogout }) {
   }
 
   useEffect(() => { fetchUseri() }, [])
+  useEffect(() => {
+    if (tab === 'setari' && !setari) {
+      api.get('/configuratie/1/').then(res => setSetari(res.data))
+    }
+  }, [tab])
 
   useEffect(() => {
     if (tab === 'module') {
@@ -134,6 +142,13 @@ export default function SuperadminPanel({ onLogout }) {
   const f = (field, val) => setForm(prev => ({ ...prev, [field]: val }))
 
   const useriMedici = useri.filter(u => u.rol === 'medic' || u.rol === 'asistent')
+  const handleSaveSetari = async () => {
+    setSavingSetari(true)
+    await api.patch('/configuratie/1/', setari)
+    setSavingSetari(false)
+    setSetariSaved(true)
+    setTimeout(() => setSetariSaved(false), 2500)
+  }
 
   return (
     <div style={s.root}>
@@ -150,6 +165,7 @@ export default function SuperadminPanel({ onLogout }) {
         <div style={s.tabs}>
           <button style={s.tab(tab === 'useri')} onClick={() => setTab('useri')}>Utilizatori</button>
           <button style={s.tab(tab === 'module')} onClick={() => setTab('module')}>Module</button>
+          <button style={s.tab(tab === 'setari')} onClick={() => setTab('setari')}>Setări globale</button>
         </div>
 
         {/* TAB USERI */}
@@ -189,6 +205,67 @@ export default function SuperadminPanel({ onLogout }) {
           )}
         </>}
 
+        {/* TAB SETARI */}
+        {tab === 'setari' && <>
+          <div style={s.topBar}>
+            <div style={s.pageTitle}>Setări globale</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              {setariSaved && <span style={{ fontSize: '0.82rem', color: '#34d399' }}>✓ Salvat</span>}
+              <button style={s.btnAdd} onClick={handleSaveSetari} disabled={savingSetari}>
+                {savingSetari ? 'Se salvează...' : 'Salvează'}
+              </button>
+            </div>
+          </div>
+          {!setari ? <div style={{ color: '#4b5563' }}>Se încarcă...</div> : (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+              <div style={s.moduleCard}>
+                <div style={{ fontSize: '0.8rem', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '1rem' }}>Identitate cabinet</div>
+                <label style={s.label}>Denumire unitate</label>
+                <input style={s.input} value={setari.denumire_unitate || ''} onChange={e => setSetari(p => ({ ...p, denumire_unitate: e.target.value }))} />
+                <label style={s.label}>Localitate</label>
+                <input style={s.input} value={setari.localitate || ''} onChange={e => setSetari(p => ({ ...p, localitate: e.target.value }))} />
+                <label style={s.label}>Județ</label>
+                <input style={s.input} value={setari.judet || ''} onChange={e => setSetari(p => ({ ...p, judet: e.target.value }))} />
+                <label style={s.label}>Stradă</label>
+                <input style={s.input} value={setari.strada || ''} onChange={e => setSetari(p => ({ ...p, strada: e.target.value }))} />
+                <label style={s.label}>Număr</label>
+                <input style={s.input} value={setari.numar || ''} onChange={e => setSetari(p => ({ ...p, numar: e.target.value }))} />
+                <label style={s.label}>Telefon</label>
+                <input style={s.input} value={setari.telefon || ''} onChange={e => setSetari(p => ({ ...p, telefon: e.target.value }))} />
+                <label style={s.label}>Email cabinet</label>
+                <input style={s.input} value={setari.email || ''} onChange={e => setSetari(p => ({ ...p, email: e.target.value }))} />
+                <label style={s.label}>CUI</label>
+                <input style={s.input} value={setari.cui || ''} onChange={e => setSetari(p => ({ ...p, cui: e.target.value }))} />
+                <label style={s.label}>Cod parafă medic</label>
+                <input style={s.input} value={setari['cod_parafă'] || ''} onChange={e => setSetari(p => ({ ...p, 'cod_parafă': e.target.value }))} />
+              </div>
+              <div>
+                <div style={{ ...s.moduleCard, marginBottom: '1rem' }}>
+                  <div style={{ fontSize: '0.8rem', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '1rem' }}>Programări</div>
+                  <label style={s.label}>Durată slot (minute)</label>
+                  <input style={s.input} type="number" min="5" max="120" value={setari.durata_slot || 30} onChange={e => setSetari(p => ({ ...p, durata_slot: parseInt(e.target.value) }))} />
+                  <label style={s.label}>Max programări per zi</label>
+                  <input style={s.input} type="number" min="1" max="100" value={setari.max_programari_zi || 20} onChange={e => setSetari(p => ({ ...p, max_programari_zi: parseInt(e.target.value) }))} />
+                </div>
+                <div style={s.moduleCard}>
+                  <div style={{ fontSize: '0.8rem', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '1rem' }}>Sistem</div>
+                  <label style={s.label}>Email contact support</label>
+                  <input style={s.input} value={setari.email_contact || ''} onChange={e => setSetari(p => ({ ...p, email_contact: e.target.value }))} />
+                  <label style={s.label}>Mod mentenanță</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                    <div onClick={() => setSetari(p => ({ ...p, mod_mentenanta: !p.mod_mentenanta }))}
+                      style={{ width: '44px', height: '24px', borderRadius: '999px', background: setari.mod_mentenanta ? '#ef4444' : '#1e2535', cursor: 'pointer', position: 'relative', transition: 'background .2s' }}>
+                      <div style={{ position: 'absolute', top: '3px', left: setari.mod_mentenanta ? '22px' : '3px', width: '18px', height: '18px', borderRadius: '50%', background: 'white', transition: 'left .2s' }} />
+                    </div>
+                    <span style={{ fontSize: '0.85rem', color: setari.mod_mentenanta ? '#f87171' : '#4b5563' }}>
+                      {setari.mod_mentenanta ? 'Activ — utilizatorii nu pot accesa aplicația' : 'Inactiv'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </>}
         {/* TAB MODULE */}
         {tab === 'module' && <>
           <div style={s.topBar}>

@@ -111,7 +111,8 @@ class ConfiguratieCabinetSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConfiguratieCabinet
         fields = ['id', 'denumire_unitate', 'localitate', 'judet',
-                  'strada', 'numar', 'telefon', 'email', 'cui', 'cod_parafă']
+                  'strada', 'numar', 'telefon', 'email', 'cui', 'cod_parafă',
+                  'email_contact', 'durata_slot', 'max_programari_zi', 'mod_mentenanta']
 
 
 class LinieRetetaSerializer(serializers.ModelSerializer):
