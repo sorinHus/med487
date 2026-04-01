@@ -323,6 +323,7 @@ export default function SitePrezentare() {
           <li><a href="#program">Program</a></li>
           <li><a href="#contact">Contact</a></li>
           <li><a href="/programare.html" className="sp-btn-nav">Programare online →</a></li>
+          <li><a href="/app" className="sp-btn-nav" style={{background: '#2563a8', color: 'white', border: 'none'}}>Login</a></li>
         </ul>
       </nav>
 
