@@ -12,14 +12,69 @@ import Rapoarte from './components/Rapoarte'
 import ProfilMedic from './components/ProfilMedic'
 import SitePrezentare from './components/SitePrezentare'
 
-function AppInterna() {
-  const [loggedIn, setLoggedIn]     = useState(!!getToken())
+function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
-  const [user, setUser]             = useState(null)
+
+  if (activePage === 'profil') return (
+    <Layout activePage={activePage} onNavigate={setActivePage} onLogout={onLogout} user={user}>
+      <ProfilMedic onBack={() => setActivePage('dashboard')} />
+    </Layout>
+  )
+
+  return (
+    <Layout activePage={activePage} onNavigate={setActivePage} onLogout={onLogout} user={user}>
+      {activePage === 'dashboard'   && <Dashboard onNavigate={setActivePage} />}
+      {activePage === 'pacienti'    && <PacientList />}
+      {activePage === 'programari'  && <Programari />}
+      {activePage === 'consultatii' && <Consultatii onNavigate={setActivePage} />}
+      {activePage === 'rapoarte'    && <Rapoarte />}
+    </Layout>
+  )
+}
+
+function PortalPlaceholder({ onLogout }) {
+  return (
+    <div style={{ minHeight: '100vh', background: '#0f1117', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ color: '#60a5fa', fontSize: '3rem' }}>🏥</div>
+      <h2 style={{ color: '#e2e8f0', fontFamily: 'serif' }}>Portal Pacient</h2>
+      <p style={{ color: '#9ca3af' }}>În curând — portalul pentru pacienți este în dezvoltare.</p>
+      <button onClick={onLogout} style={{ marginTop: '1rem', padding: '0.5rem 1.5rem', background: '#1e2535', color: '#e2e8f0', border: '1px solid #1e2535', borderRadius: '8px', cursor: 'pointer' }}>
+        Deconectare
+      </button>
+    </div>
+  )
+}
+
+function SuperadminPlaceholder({ onLogout }) {
+  return (
+    <div style={{ minHeight: '100vh', background: '#0f1117', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ color: '#60a5fa', fontSize: '3rem' }}>⚙️</div>
+      <h2 style={{ color: '#e2e8f0', fontFamily: 'serif' }}>Panou Administrare</h2>
+      <p style={{ color: '#9ca3af' }}>În curând — panoul de administrare este în dezvoltare.</p>
+      <button onClick={onLogout} style={{ marginTop: '1rem', padding: '0.5rem 1.5rem', background: '#1e2535', color: '#e2e8f0', border: '1px solid #1e2535', borderRadius: '8px', cursor: 'pointer' }}>
+        Deconectare
+      </button>
+    </div>
+  )
+}
+
+function AppInterna() {
+  const [loggedIn, setLoggedIn] = useState(!!getToken())
+  const [user, setUser]         = useState(null)
+  const [loading, setLoading]   = useState(true)
 
   useEffect(() => {
     if (loggedIn) {
-      api.get('/useri/me/').then(res => setUser(res.data)).catch(() => {})
+      api.get('/useri/me/').then(res => {
+        setUser(res.data)
+        setLoading(false)
+      }).catch(() => {
+        logout()
+        setLoggedIn(false)
+        setLoading(false)
+      })
+    } else {
+      setLoading(false)
     }
   }, [loggedIn])
 
@@ -30,31 +85,21 @@ function AppInterna() {
   }
 
   if (!loggedIn) return <Login onLogin={() => setLoggedIn(true)} />
+  if (loading)   return <div style={{ minHeight: '100vh', background: '#0f1117' }} />
 
-  if (activePage === 'profil') return (
-    <Layout activePage={activePage} onNavigate={setActivePage} onLogout={handleLogout} user={user}>
-      <ProfilMedic onBack={() => setActivePage('dashboard')} />
-    </Layout>
-  )
+  if (user?.rol === 'superadmin') return <SuperadminPlaceholder onLogout={handleLogout} />
+  if (user?.rol === 'pacient')    return <PortalPlaceholder onLogout={handleLogout} />
 
-  return (
-    <Layout activePage={activePage} onNavigate={setActivePage} onLogout={handleLogout} user={user}>
-      {activePage === 'dashboard'   && <Dashboard onNavigate={setActivePage} />}
-      {activePage === 'pacienti'    && <PacientList />}
-      {activePage === 'programari'  && <Programari />}
-      {activePage === 'consultatii' && <Consultatii onNavigate={setActivePage} />}
-      {activePage === 'rapoarte'    && <Rapoarte />}
-    </Layout>
-  )
+  return <AppMedic user={user} onLogout={handleLogout} />
 }
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/"     element={<SitePrezentare />} />
-        <Route path="/app"  element={<AppInterna />} />
-        <Route path="*"     element={<Navigate to="/" replace />} />
+        <Route path="/"    element={<SitePrezentare />} />
+        <Route path="/app" element={<AppInterna />} />
+        <Route path="*"    element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )

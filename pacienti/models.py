@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 class CustomUser(AbstractUser):
-    ROL_CHOICES = [('medic', 'Medic'), ('asistenta', 'Asistenta')]
+    ROL_CHOICES = [('medic', 'Medic'), ('asistent', 'Asistent'), ('superadmin', 'Superadmin'), ('pacient', 'Pacient')]
     rol = models.CharField(max_length=20, choices=ROL_CHOICES, default='medic')
     telefon = models.CharField(max_length=20, blank=True, default='')
     parafa = models.CharField(max_length=20, blank=True, default='')
