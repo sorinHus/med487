@@ -548,15 +548,15 @@
   let zileSarbatoare = new Set()
 
   async function loadSarbatori() {
-    console.log('Sarbatori:', [...zileSarbatoare].slice(0, 5))
     const years = [new Date().getFullYear(), new Date().getFullYear() + 1]
     for (const year of years) {
       try {
-        const res = await fetch(`https://zilelibere.webventure.ro/api/${year}`)
+        const res = await fetch(`${API}/zile-libere/?year=${year}`)
         const data = await res.json()
         data.forEach(s => s.date.forEach(d => zileSarbatoare.add(d.date.replace(/\//g, '-'))))
       } catch { /* ignoram eroarea */ }
     }
+    console.log('Sarbatori:', [...zileSarbatoare].slice(0, 5))
     renderCalendar()
   }
 
