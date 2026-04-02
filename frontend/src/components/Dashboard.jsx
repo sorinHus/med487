@@ -244,6 +244,16 @@ function SectiuneRaport() {
 }
 
 // ── Component principal ───────────────────────────────────────────────────────
+
+function Row({ label, value }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+      <span style={{ fontSize: '12px', color: '#6b7280' }}>{label}</span>
+      <span style={{ fontSize: '12px', color: '#cbd5e1', textAlign: 'right' }}>{value}</span>
+    </div>
+  )
+}
+
 export default function Dashboard({ onNavigate }) {
   const [stats, setStats]                     = useState({ pacienti: null, programariAzi: null, programariRamase: null, consultatiiLuna: null, consultatiiLunaTrecuta: null })
   const [programariAzi, setProgramariAzi]     = useState([])
@@ -361,12 +371,13 @@ export default function Dashboard({ onNavigate }) {
               {programariAzi.map(p => {
                 const nume = p.pacient_nume_complet || p.nume_pacient || '—'
                 const ora = new Date(p.data_ora).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })
-                {programariAzi.map(p => {
-                const nume = p.pacient_nume_complet || p.nume_pacient || '—'
-                const ora = new Date(p.data_ora).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })
-                console.log('programare:', p)
                 return (
-                  <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div key={p.id}
+                    style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '4px 6px', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.12s' }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    onClick={() => setModalProgramare(p)}
+                  >
                     <span style={{ fontSize: '12px', color: '#6b7280', width: '36px', flexShrink: 0 }}>{ora}</span>
                     <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
                       {getInitials(nume)}
@@ -382,6 +393,54 @@ export default function Dashboard({ onNavigate }) {
             </div>
           )}
         </div>
+
+        {/* Modal detalii programare */}
+        {modalProgramare && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
+            onClick={() => setModalProgramare(null)}>
+            <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '14px', padding: '28px', minWidth: '320px', maxWidth: '420px', width: '90%' }}
+              onClick={e => e.stopPropagation()}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <span style={{ fontSize: '15px', fontWeight: '600', color: '#e2e8f0' }}>Detalii programare</span>
+                <button onClick={() => setModalProgramare(null)}
+                  style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '18px', lineHeight: 1 }}>✕</button>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: getAvatarColor(modalProgramare.pacient_nume_complet || ''), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
+                    {getInitials(modalProgramare.pacient_nume_complet || '')}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '14px', fontWeight: '600', color: '#e2e8f0' }}>{modalProgramare.pacient_nume_complet || '—'}</div>
+                    <Badge status={modalProgramare.status} />
+                  </div>
+                </div>
+                <div style={{ background: '#0f1117', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <Row label="Ora" value={new Date(modalProgramare.data_ora).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })} />
+                  <Row label="Durata" value={`${modalProgramare.durata_min} min`} />
+                  {modalProgramare.motiv && <Row label="Motiv" value={modalProgramare.motiv} />}
+                  {modalProgramare.telefon_pacient && <Row label="Telefon" value={modalProgramare.telefon_pacient} />}
+                </div>
+              </div>
+              {modalProgramare.pacient && (
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await api.get(`/pacienti/${modalProgramare.pacient}/`)
+                      const pacient = res.data
+                      setModalProgramare(null)
+                      onNavigate('pacienti', { pacient })
+                    } catch {
+                      alert('Eroare la incarcarea fisiei pacientului.')
+                    }
+                  }}
+                  style={{ marginTop: '20px', width: '100%', padding: '10px', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
+                  Deschide fișă pacient
+                </button>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Acces rapid pacienti */}
         <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '18px 20px' }}>
