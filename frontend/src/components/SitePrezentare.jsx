@@ -282,7 +282,7 @@ export default function SitePrezentare() {
       .then(r => r.json())
       .then(data => setConfig(Array.isArray(data) ? data[0] : data))
       .catch(() => {})
-  }, [])
+  }, [] )
 
   const ZILE_NUME = { luni: 'Luni', marti: 'Marți', miercuri: 'Miercuri', joi: 'Joi', vineri: 'Vineri', sambata: 'Sâmbătă', duminica: 'Duminică' }
   const orar = config?.orar_saptamanal || {}
