@@ -95,6 +95,8 @@ function SectiuneRaport() {
   const [exportand, setExportand]         = useState(false)
   const [cautata, setCautata]             = useState(false)
 
+  const [modalProgramare, setModalProgramare] = useState(null)
+
   const fetchRaport = useCallback(async () => {
     setLoading(true); setCautata(true)
     try {
