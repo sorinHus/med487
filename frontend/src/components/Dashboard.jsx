@@ -310,6 +310,7 @@ function Row({ label, value }) {
   )
 }
 
+
 export default function Dashboard({ onNavigate }) {
   const [stats, setStats]                     = useState({ pacienti: null, programariAzi: null, programariRamase: null, consultatiiLuna: null, consultatiiLunaTrecuta: null })
   const [programariAzi, setProgramariAzi]     = useState([])
