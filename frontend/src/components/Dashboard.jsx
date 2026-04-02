@@ -361,6 +361,10 @@ export default function Dashboard({ onNavigate }) {
               {programariAzi.map(p => {
                 const nume = p.pacient_nume_complet || p.nume_pacient || '—'
                 const ora = new Date(p.data_ora).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })
+                {programariAzi.map(p => {
+                const nume = p.pacient_nume_complet || p.nume_pacient || '—'
+                const ora = new Date(p.data_ora).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })
+                console.log('programare:', p)
                 return (
                   <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <span style={{ fontSize: '12px', color: '#6b7280', width: '36px', flexShrink: 0 }}>{ora}</span>
@@ -373,7 +377,6 @@ export default function Dashboard({ onNavigate }) {
                     </div>
                     <Badge status={p.status} />
                   </div>
-                  console.log('programare:', p)
                 )
               })}
             </div>
