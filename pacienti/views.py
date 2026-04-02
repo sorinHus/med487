@@ -6,7 +6,7 @@ from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
     DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical, Trimitere, \
-        ModuleUtilizator
+    ModuleUtilizator
 from .serializers import (UserSerializer, PacientSerializer,
                           DiagnosticSerializer, ConsulatieSerializer,
                           ProgramareSerializer, ConfiguratieCabinetSerializer,
@@ -69,6 +69,19 @@ class ConsulatieViewSet(viewsets.ModelViewSet):
         if data_inainte:
             qs = qs.filter(data_ora__date__lte=data_inainte)
         return qs
+    
+    def perform_create(self, serializer):
+        consultatie = serializer.save()
+        try:
+            from django.utils import timezone
+            azi = timezone.localdate()
+            Programare.objects.filter(
+                pacient=consultatie.pacient,
+                data_ora__date=azi,
+                status__in=['programat', 'confirmat']
+            ).update(status='finalizat')
+        except Exception:
+            pass
 
 
 class DiagnosticViewSet(viewsets.ModelViewSet):
