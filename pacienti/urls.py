@@ -7,7 +7,7 @@ from .views import (LinieRetetaViewSet, PacientViewSet, ConsulatieViewSet,
                     ModuleUtilizatorViewSet)
 from .views import print_concediu, print_reteta, print_trimitere
 from .views import test_email
-from .views import ProfilMedicView, SchimbareParolaView
+from .views import ProfilMedicView, SchimbareParolaView, zile_libere_view
 
 router = DefaultRouter()
 router.register('pacienti', PacientViewSet, basename='pacient')
@@ -29,4 +29,5 @@ urlpatterns = router.urls + [
     path('profil/', ProfilMedicView.as_view(), name='profil-medic'),
     path('profil/schimbare-parola/', SchimbareParolaView.as_view(), name='schimbare-parola'),
     path('module/<int:pk>/', ModuleUtilizatorViewSet.as_view({'get': 'retrieve', 'put': 'update'}), name='module-utilizator'),
+    path('zile-libere/', zile_libere_view, name='zile_libere'),
 ]

@@ -561,4 +561,20 @@ class ModuleUtilizatorViewSet(viewsets.ViewSet):
         obj, _ = ModuleUtilizator.objects.get_or_create(user_id=pk)
         obj.active = request.data.get('active', [])
         obj.save()
-        return Response({'active': obj.active})    
+        return Response({'active': obj.active})  
+
+from django.http import JsonResponse
+import urllib.request
+import json as json_module
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def zile_libere_view(request):
+    year = request.GET.get('year', '2026')
+    try:
+        url = f'https://zilelibere.webventure.ro/api/{year}'
+        with urllib.request.urlopen(url, timeout=5) as resp:
+            data = json_module.loads(resp.read())
+        return JsonResponse(data, safe=False)
+    except Exception:
+        return JsonResponse([], safe=False)
