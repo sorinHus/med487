@@ -92,6 +92,9 @@ export default function PacientList({ pacientInitial }) {
   const [search, setSearch]                   = useState('')
   const [showForm, setShowForm]               = useState(false)
   const [pacientSelectat, setPacientSelectat] = useState(pacientInitial || null)
+  useEffect(() => {
+    if (pacientInitial) setPacientSelectat(pacientInitial)
+  }, [pacientInitial])
   const [exportand, setExportand]             = useState(false)
 
   useEffect(() => {
