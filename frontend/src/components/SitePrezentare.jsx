@@ -346,7 +346,7 @@ export default function SitePrezentare() {
             <div className="sp-card-header">
               <div className="sp-doctor-avatar">M</div>
               <div className="sp-card-header-info">
-                <h3>Dr. Maria Ionescu</h3>
+                <h3>Dr. Ion Popescu</h3>
                 <p>Medic de familie · Specialist în medicina preventivă</p>
               </div>
             </div>
@@ -484,7 +484,7 @@ export default function SitePrezentare() {
       {/* FOOTER */}
       <footer className="sp-footer">
         <div className="sp-footer-logo">
-          Cabinet Medical Dr. Maria Ionescu
+          Cabinet Medical Dr. Ion Popescu
           <span>Medicină de Familie · Cluj-Napoca</span>
         </div>
         <p>© 2026 · Toate drepturile rezervate</p>
