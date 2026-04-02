@@ -20,6 +20,7 @@ function AppMedic({ user, onLogout }) {
   const [moduleActive, setModuleActive] = useState([])
 
   useEffect(() => {
+    console.log('user in AppMedic:', user)
     if (user?.id) {
       api.get(`/module/${user.id}/`).then(res => {
         setModuleActive(res.data.active || [])
