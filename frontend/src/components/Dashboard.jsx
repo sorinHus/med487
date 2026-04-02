@@ -428,7 +428,9 @@ export default function Dashboard({ onNavigate }) {
                 {modalProgramare.status === 'programat' && (
                   <button onClick={async () => {
                     await api.patch(`/programari/${modalProgramare.id}/`, { status: 'confirmat' })
-                    setModalProgramare({ ...modalProgramare, status: 'confirmat' })
+                    const updated = { ...modalProgramare, status: 'confirmat' }
+                    setModalProgramare(updated)
+                    setProgramariAzi(prev => prev.map(p => p.id === updated.id ? updated : p))
                   }} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid rgba(46,204,143,0.3)', background: 'rgba(46,204,143,0.08)', color: '#34d399', cursor: 'pointer', fontSize: '13px' }}>
                     ✓ Confirmă
                   </button>
@@ -436,7 +438,9 @@ export default function Dashboard({ onNavigate }) {
                 {['programat', 'confirmat'].includes(modalProgramare.status) && (
                   <button onClick={async () => {
                     await api.patch(`/programari/${modalProgramare.id}/`, { status: 'anulat' })
-                    setModalProgramare({ ...modalProgramare, status: 'anulat' })
+                    const updated = { ...modalProgramare, status: 'anulat' }
+                    setModalProgramare(updated)
+                    setProgramariAzi(prev => prev.map(p => p.id === updated.id ? updated : p))
                   }} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer', fontSize: '13px' }}>
                     ✕ Anulează
                   </button>
@@ -444,7 +448,9 @@ export default function Dashboard({ onNavigate }) {
                 {modalProgramare.status === 'confirmat' && (
                   <button onClick={async () => {
                     await api.patch(`/programari/${modalProgramare.id}/`, { status: 'finalizat' })
-                    setModalProgramare({ ...modalProgramare, status: 'finalizat' })
+                    const updated = { ...modalProgramare, status: 'finalizat' }
+                    setModalProgramare(updated)
+                    setProgramariAzi(prev => prev.map(p => p.id === updated.id ? updated : p))
                   }} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid rgba(107,114,128,0.3)', background: 'rgba(107,114,128,0.08)', color: '#9ca3af', cursor: 'pointer', fontSize: '13px' }}>
                     ✔✔ Finalizează
                   </button>
