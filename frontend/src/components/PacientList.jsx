@@ -85,7 +85,7 @@ async function exportExcel(pacienti) {
 }
 
 // ── Component principal ───────────────────────────────────────────────────────
-export default function PacientList({ pacientInitial }) {
+export default function PacientList({ pacientInitial, moduleActive = [] }) {
   const [pacienti, setPacienti]               = useState([])
   const [totiPacienti, setTotiPacienti]       = useState([])
   const [loading, setLoading]                 = useState(true)
@@ -140,6 +140,7 @@ export default function PacientList({ pacientInitial }) {
     <PacientDetalii
       pacient={pacientSelectat}
       onBack={() => { setPacientSelectat(null); fetchPacienti() }}
+      moduleActive={moduleActive}
     />
   )
 

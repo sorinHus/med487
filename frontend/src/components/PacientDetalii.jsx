@@ -461,7 +461,7 @@ const STATUS_OPTS = [
 const LUNI = ['','Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec']
 
 // ── Component principal ───────────────────────────────────────────────────────
-export default function PacientDetalii({ pacient, onBack }) {
+export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
   const [consultatii, setConsultatii]       = useState([])
   const [retete, setRetete]                 = useState([])
   const [trimiteri, setTrimiteri]           = useState([])
@@ -663,9 +663,11 @@ export default function PacientDetalii({ pacient, onBack }) {
       <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '20px', marginBottom: '14px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <span style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0' }}>Rețete ({retete.length})</span>
-          <button onClick={() => setShowReteta(true)} style={{ padding: '7px 14px', fontSize: '12px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px' }}>
-            + Rețetă nouă
-          </button>
+          {moduleActive.includes('retete') && (
+            <button onClick={() => setShowReteta(true)} style={{ padding: '7px 14px', fontSize: '12px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px' }}>
+              + Rețetă nouă
+            </button>
+          )}
         </div>
         {loadingR && <p style={{ color: '#4b5563', fontSize: '13px' }}>Se încarcă...</p>}
         {!loadingR && retete.length === 0 && <p style={{ color: '#4b5563', fontSize: '13px' }}>Nicio rețetă înregistrată.</p>}
@@ -728,9 +730,11 @@ export default function PacientDetalii({ pacient, onBack }) {
       <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '20px', marginBottom: '14px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <span style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0' }}>Concedii medicale ({concedii.length})</span>
-          <button onClick={() => setShowConcediu(true)} style={{ padding: '7px 14px', fontSize: '12px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px' }}>
-            + Concediu nou
-          </button>
+          {moduleActive.includes('concedii') && (
+            <button onClick={() => setShowConcediu(true)} style={{ padding: '7px 14px', fontSize: '12px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px' }}>
+              + Concediu nou
+            </button>
+          )}
         </div>
         {loadingCo && <p style={{ color: '#4b5563', fontSize: '13px' }}>Se încarcă...</p>}
         {!loadingCo && concedii.length === 0 && <p style={{ color: '#4b5563', fontSize: '13px' }}>Niciun concediu înregistrat.</p>}
