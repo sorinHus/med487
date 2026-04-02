@@ -693,9 +693,11 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
       <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '20px', marginBottom: '14px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <span style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0' }}>Trimiteri ({trimiteri.length})</span>
-          <button onClick={() => setShowTrimitere(true)} style={{ padding: '7px 14px', fontSize: '12px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px' }}>
-            + Trimitere nouă
-          </button>
+          {moduleActive.includes('trimiteri') && (
+            <button onClick={() => setShowTrimitere(true)} style={{ padding: '7px 14px', fontSize: '12px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px' }}>
+              + Trimitere nouă
+            </button>
+          )}
         </div>
         {loadingT && <p style={{ color: '#4b5563', fontSize: '13px' }}>Se încarcă...</p>}
         {!loadingT && trimiteri.length === 0 && <p style={{ color: '#4b5563', fontSize: '13px' }}>Nicio trimitere înregistrată.</p>}
@@ -807,18 +809,24 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
                 <span style={{ fontSize: '12px', color: '#4b5563' }}>Dr. {c.medic_nume || '—'}</span>
                 <div style={{ display: 'flex', gap: '6px' }}>
-                  <button onClick={() => setShowReteta(true)}
-                    style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(58,123,213,0.1)', color: '#60a5fa', border: '1px solid #3a7bd5', borderRadius: '6px' }}>
-                    + Rețetă
-                  </button>
-                  <button onClick={() => setShowTrimitere(true)}
-                    style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(52,211,153,0.1)', color: '#34d399', border: '1px solid #34d399', borderRadius: '6px' }}>
-                    + Trimitere
-                  </button>
-                  <button onClick={() => setShowConcediu(true)}
-                    style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(251,191,36,0.1)', color: '#fbbf24', border: '1px solid #fbbf24', borderRadius: '6px' }}>
-                    + Concediu
-                  </button>
+                  {moduleActive.includes('retete') && (
+                    <button onClick={() => setShowReteta(true)}
+                      style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(58,123,213,0.1)', color: '#60a5fa', border: '1px solid #3a7bd5', borderRadius: '6px' }}>
+                      + Rețetă
+                    </button>
+                  )}
+                  {moduleActive.includes('trimiteri') && (
+                    <button onClick={() => setShowTrimitere(true)}
+                      style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(52,211,153,0.1)', color: '#34d399', border: '1px solid #34d399', borderRadius: '6px' }}>
+                      + Trimitere
+                    </button>
+                  )}
+                  {moduleActive.includes('concedii') && (
+                    <button onClick={() => setShowConcediu(true)}
+                      style={{ padding: '3px 10px', fontSize: '11px', cursor: 'pointer', background: 'rgba(251,191,36,0.1)', color: '#fbbf24', border: '1px solid #fbbf24', borderRadius: '6px' }}>
+                      + Concediu
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
