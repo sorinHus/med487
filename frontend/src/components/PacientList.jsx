@@ -204,6 +204,7 @@ export default function PacientList({ pacientInitial }) {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
           <thead>
             <tr>
+              <th style={{...thStyle, width: '40px'}}>#</th>
               <th style={thStyle}>Pacient</th>
               <th style={thStyle}>CNP</th>
               <th style={thStyle}>Varsta</th>
@@ -215,16 +216,16 @@ export default function PacientList({ pacientInitial }) {
           </thead>
           <tbody>
             {loading && (
-              <tr><td colSpan="7" style={{ padding: '40px', textAlign: 'center', color: '#4b5563' }}>
+              <tr><td colSpan="8" style={{ padding: '40px', textAlign: 'center', color: '#4b5563' }}>
                 Se incarca...
               </td></tr>
             )}
             {!loading && pacienti.length === 0 && (
-              <tr><td colSpan="7" style={{ padding: '40px', textAlign: 'center', color: '#4b5563' }}>
+              <tr><td colSpan="8" style={{ padding: '40px', textAlign: 'center', color: '#4b5563' }}>
                 {search ? 'Niciun pacient gasit.' : 'Nu exista pacienti inregistrati.'}
               </td></tr>
             )}
-            {!loading && pacienti.map(p => {
+            {!loading && pacienti.map((p, index) => {
               const nume = `${p.nume} ${p.prenume}`
               const st = STATUS_STYLE[p.status] || STATUS_STYLE.inactiv
               return (
@@ -234,6 +235,7 @@ export default function PacientList({ pacientInitial }) {
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >
+                  <td style={{ padding: '12px 14px', color: '#4b5563', textAlign: 'center', fontSize: '12px' }}>{index + 1}</td>
                   <td style={{ padding: '12px 14px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
