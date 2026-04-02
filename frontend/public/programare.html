@@ -338,18 +338,20 @@
 
       const isToday = date.toDateString() === today.toDateString()
       const isPast  = date < new Date(today.getFullYear(), today.getMonth(), today.getDate())
+      const isSat   = date.getDay() === 6
       const isSun   = date.getDay() === 0
       const dateStr = formatDate(date)
       const isSel   = selectedDate === dateStr
+      const isSarb  = zileSarbatoare.has(dateStr)
 
       let cls = 'cal-day'
-      if (isSel)          cls += ' selected'
-      else if (isToday)   cls += ' today'
-      if (isPast || isSun) cls += ' disabled'
+      if (isSel)                        cls += ' selected'
+      else if (isToday)                 cls += ' today'
+      if (isPast || isSun || isSat || isSarb) cls += ' disabled'
 
       el.className = cls
 
-      if (!isPast && !isSun) {
+      if (!isPast && !isSun && !isSat && !isSarb) {
         el.onclick = () => selectDate(dateStr)
       }
       grid.appendChild(el)
@@ -539,8 +541,23 @@
     return `${y}-${m}-${d}`
   }
 
+  // ── Zile libere ──
+  let zileSarbatoare = new Set()
+
+  async function loadSarbatori() {
+    const years = [new Date().getFullYear(), new Date().getFullYear() + 1]
+    for (const year of years) {
+      try {
+        const res = await fetch(`https://zilelibere.webventure.ro/api/${year}`)
+        const data = await res.json()
+        data.forEach(s => s.date.forEach(d => zileSarbatoare.add(d.date.replace(/\//g, '-'))))
+      } catch { /* ignoram eroarea */ }
+    }
+    renderCalendar()
+  }
+
   // Init
-  renderCalendar()
+  loadSarbatori()
 </script>
 </body>
 </html>
