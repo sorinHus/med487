@@ -215,10 +215,10 @@ function SectiuneRaport() {
                 </thead>
                 <tbody>
                   {consultatii.map(c => (
-                    <tr key={c.id} style={{ borderBottom: '1px solid #1a2033' }}
+                    <tr key={c.id} style={{ borderBottom: '1px solid #1a2033', cursor: 'pointer' }}
                       onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                      onClick={() => onNavigate('pacienti')}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      onClick={() => onNavigate('pacienti')}>
                       <td style={{ padding: '9px 12px', color: '#9ca3af', whiteSpace: 'nowrap' }}>
                         {new Date(c.data_ora).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                       </td>
@@ -383,7 +383,7 @@ export default function Dashboard({ onNavigate }) {
         <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '18px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0' }}>Acces rapid pacienti</span>
-            <button onClick={() => onNavigate('pacienti')}
+            <button onClick={() => { onNavigate && onNavigate('pacienti') }}
               style={{ fontSize: '12px', color: '#3a7bd5', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
               Toti pacientii
             </button>
@@ -407,6 +407,7 @@ export default function Dashboard({ onNavigate }) {
                   style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 8px', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.12s' }}
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  onClick={() => onNavigate('pacienti')}
                 >
                   <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
                     {getInitials(nume)}
