@@ -218,7 +218,7 @@ function SectiuneRaport() {
                     <tr key={c.id} style={{ borderBottom: '1px solid #1a2033' }}
                       onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
                       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      onClick={() => onNavigate('pacienti')}
                       <td style={{ padding: '9px 12px', color: '#9ca3af', whiteSpace: 'nowrap' }}>
                         {new Date(c.data_ora).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                       </td>
