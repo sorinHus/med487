@@ -277,12 +277,12 @@ export default function SitePrezentare() {
   const [config, setConfig] = useState(null)
 
   useEffect(() => {
-    const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
+    const API = 'https://web-production-26811.up.railway.app/api'
     fetch(`${API}/configuratie/`)
       .then(r => r.json())
       .then(data => setConfig(Array.isArray(data) ? data[0] : data))
       .catch(() => {})
-  }, [] )
+  }, [])
 
   const ZILE_NUME = { luni: 'Luni', marti: 'Marți', miercuri: 'Miercuri', joi: 'Joi', vineri: 'Vineri', sambata: 'Sâmbătă', duminica: 'Duminică' }
   const orar = config?.orar_saptamanal || {}
