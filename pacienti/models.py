@@ -120,9 +120,9 @@ class Programare(models.Model):
 
 
 class ConfiguratieCabinet(models.Model):
-    denumire_unitate    = models.CharField(max_length=255, verbose_name='Denumire unitate sanitară')
-    localitate          = models.CharField(max_length=100, verbose_name='Localitatea')
-    judet               = models.CharField(max_length=50, verbose_name='Județul')
+    denumire_unitate    = models.CharField(max_length=255, blank=True, verbose_name='Denumire unitate sanitară')
+    localitate          = models.CharField(max_length=100, blank=True, verbose_name='Localitatea')
+    judet               = models.CharField(max_length=50, blank=True, verbose_name='Județul')
     strada              = models.CharField(max_length=150, blank=True, verbose_name='Strada')
     numar               = models.CharField(max_length=20, blank=True, verbose_name='Număr')
     telefon             = models.CharField(max_length=20, blank=True)
@@ -134,6 +134,12 @@ class ConfiguratieCabinet(models.Model):
     durata_slot         = models.PositiveIntegerField(default=30, verbose_name='Durată slot programare (min)')
     max_programari_zi   = models.PositiveIntegerField(default=20, verbose_name='Max programări per zi')
     mod_mentenanta      = models.BooleanField(default=False, verbose_name='Mod mentenanță')
+
+    orar_saptamanal = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Orar per zi: {luni: {activ, intervale: [{start, end}]}}"
+    )
 
     class Meta:
         verbose_name = 'Configurație cabinet'

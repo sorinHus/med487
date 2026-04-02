@@ -108,11 +108,15 @@ class ProgramareSerializer(serializers.ModelSerializer):
 
 
 class ConfiguratieCabinetSerializer(serializers.ModelSerializer):
+    denumire_unitate = serializers.CharField(required=False, allow_blank=True, default='')
+    localitate = serializers.CharField(required=False, allow_blank=True, default='')
+    judet = serializers.CharField(required=False, allow_blank=True, default='')
+
     class Meta:
         model = ConfiguratieCabinet
         fields = ['id', 'denumire_unitate', 'localitate', 'judet',
                   'strada', 'numar', 'telefon', 'email', 'cui', 'cod_parafă',
-                  'email_contact', 'durata_slot', 'max_programari_zi', 'mod_mentenanta']
+                  'email_contact', 'durata_slot', 'max_programari_zi', 'mod_mentenanta', 'orar_saptamanal']
 
 
 class LinieRetetaSerializer(serializers.ModelSerializer):

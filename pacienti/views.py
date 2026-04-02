@@ -201,10 +201,39 @@ class ProgramareViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Format data invalid. Folositi YYYY-MM-DD.'}, status=400)
 
         medic_id = request.query_params.get('medic', 1)
-        ora_start = time(8, 0)
-        ora_end = time(17, 0)
         durata = 20
         tz = pytz.timezone('Europe/Bucharest')
+
+        # Citeste orarul din ConfiguratieCabinet
+        ZILE_MAP = {0: 'luni', 1: 'marti', 2: 'miercuri', 3: 'joi', 4: 'vineri', 5: 'sambata', 6: 'duminica'}
+        zi_nume = ZILE_MAP[data.weekday()]
+
+        orar_default = {
+            'luni':     {'activ': True,  'intervale': [{'start': '13:00', 'end': '18:00'}]},
+            'marti':    {'activ': True,  'intervale': [{'start': '08:00', 'end': '13:00'}]},
+            'miercuri': {'activ': True,  'intervale': [{'start': '13:00', 'end': '18:00'}]},
+            'joi':      {'activ': True,  'intervale': [{'start': '08:00', 'end': '13:00'}]},
+            'vineri':   {'activ': True,  'intervale': [{'start': '13:00', 'end': '18:00'}]},
+            'sambata':  {'activ': False, 'intervale': []},
+            'duminica': {'activ': False, 'intervale': []},
+        }
+
+        try:
+            config = ConfiguratieCabinet.objects.first()
+            orar = config.orar_saptamanal if config and config.orar_saptamanal else orar_default
+        except Exception:
+            orar = orar_default
+
+        zi_config = orar.get(zi_nume, {'activ': False, 'intervale': []})
+
+        if not zi_config.get('activ', False):
+            return Response([])
+
+        try:
+            config_durata = config.durata_slot if config else 20
+            durata = int(config_durata) if config_durata else 20
+        except Exception:
+            durata = 20
 
         programari_existente = Programare.objects.filter(
             data_ora__date=data,
@@ -215,16 +244,21 @@ class ProgramareViewSet(viewsets.ModelViewSet):
         ocupate = {p.astimezone(tz).strftime('%H:%M') for p in programari_existente}
 
         slots = []
-        ora_curenta = datetime.combine(data, ora_start)
-        ora_limita = datetime.combine(data, ora_end)
-
-        while ora_curenta < ora_limita:
-            slot_str = ora_curenta.strftime('%H:%M')
-            slots.append({
-                'ora': slot_str,
-                'liber': slot_str not in ocupate
-            })
-            ora_curenta += timedelta(minutes=durata)
+        for interval in zi_config.get('intervale', []):
+            try:
+                ora_start = datetime.strptime(interval['start'], '%H:%M').time()
+                ora_end = datetime.strptime(interval['end'], '%H:%M').time()
+            except Exception:
+                continue
+            ora_curenta = datetime.combine(data, ora_start)
+            ora_limita = datetime.combine(data, ora_end)
+            while ora_curenta < ora_limita:
+                slot_str = ora_curenta.strftime('%H:%M')
+                slots.append({
+                    'ora': slot_str,
+                    'liber': slot_str not in ocupate
+                })
+                ora_curenta += timedelta(minutes=durata)
 
         return Response(slots)
 

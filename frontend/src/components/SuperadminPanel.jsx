@@ -144,10 +144,16 @@ export default function SuperadminPanel({ onLogout }) {
   const useriMedici = useri.filter(u => u.rol === 'medic' || u.rol === 'asistent')
   const handleSaveSetari = async () => {
     setSavingSetari(true)
-    await api.patch('/configuratie/1/', setari)
-    setSavingSetari(false)
-    setSetariSaved(true)
-    setTimeout(() => setSetariSaved(false), 2500)
+    try {
+      await api.patch('/configuratie/1/', setari)
+      setSetariSaved(true)
+      setTimeout(() => setSetariSaved(false), 2500)
+    } catch (err) {
+      console.error('Eroare salvare setari:', err.response?.data || err.message)
+      alert('Eroare la salvare. Vezi consola pentru detalii.')
+    } finally {
+      setSavingSetari(false)
+    }
   }
 
   return (
@@ -239,7 +245,7 @@ export default function SuperadminPanel({ onLogout }) {
                 <label style={s.label}>Cod parafă medic</label>
                 <input style={s.input} value={setari['cod_parafă'] || ''} onChange={e => setSetari(p => ({ ...p, 'cod_parafă': e.target.value }))} />
               </div>
-              <div>
+             <div>
                 <div style={{ ...s.moduleCard, marginBottom: '1rem' }}>
                   <div style={{ fontSize: '0.8rem', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '1rem' }}>Programări</div>
                   <label style={s.label}>Durată slot (minute)</label>
@@ -247,6 +253,66 @@ export default function SuperadminPanel({ onLogout }) {
                   <label style={s.label}>Max programări per zi</label>
                   <input style={s.input} type="number" min="1" max="100" value={setari.max_programari_zi || 20} onChange={e => setSetari(p => ({ ...p, max_programari_zi: parseInt(e.target.value) }))} />
                 </div>
+
+                <div style={{ ...s.moduleCard, marginBottom: '1rem' }}>
+                  <div style={{ fontSize: '0.8rem', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '1rem' }}>Orar cabinet</div>
+                  {['luni','marti','miercuri','joi','vineri','sambata','duminica'].map(zi => {
+                    const orar = setari.orar_saptamanal || {};
+                    const ziConfig = orar[zi] || { activ: false, intervale: [] };
+                    const intervale = ziConfig.intervale || [];
+
+                    const updateZi = (nou) => {
+                      setSetari(p => ({
+                        ...p,
+                        orar_saptamanal: { ...( p.orar_saptamanal || {}), [zi]: nou }
+                      }));
+                    };
+
+                    const toggleActiv = () => updateZi({ ...ziConfig, activ: !ziConfig.activ });
+
+                    const updateInterval = (idx, camp, val) => {
+                      const nouIntervale = intervale.map((iv, i) => i === idx ? { ...iv, [camp]: val } : iv);
+                      updateZi({ ...ziConfig, intervale: nouIntervale });
+                    };
+
+                    const adaugaInterval = () => updateZi({ ...ziConfig, intervale: [...intervale, { start: '08:00', end: '13:00' }] });
+
+                    const stergeInterval = (idx) => updateZi({ ...ziConfig, intervale: intervale.filter((_, i) => i !== idx) });
+
+                    return (
+                      <div key={zi} style={{ marginBottom: '0.75rem', paddingBottom: '0.75rem', borderBottom: '1px solid #1e2535' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: ziConfig.activ ? '0.5rem' : 0 }}>
+                          <div onClick={toggleActiv}
+                            style={{ width: '36px', height: '20px', borderRadius: '999px', background: ziConfig.activ ? '#3a7bd5' : '#1e2535', cursor: 'pointer', position: 'relative', transition: 'background .2s', flexShrink: 0 }}>
+                            <div style={{ position: 'absolute', top: '2px', left: ziConfig.activ ? '18px' : '2px', width: '16px', height: '16px', borderRadius: '50%', background: 'white', transition: 'left .2s' }} />
+                          </div>
+                          <span style={{ fontSize: '0.9rem', color: ziConfig.activ ? '#e2e8f0' : '#4b5563', textTransform: 'capitalize', width: '80px' }}>{zi}</span>
+                          {ziConfig.activ && (
+                            <button onClick={adaugaInterval}
+                              style={{ fontSize: '0.75rem', color: '#3a7bd5', background: 'none', border: '1px solid #3a7bd5', borderRadius: '4px', padding: '2px 8px', cursor: 'pointer' }}>
+                              + interval
+                            </button>
+                          )}
+                        </div>
+                        {ziConfig.activ && intervale.map((iv, idx) => (
+                          <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '52px', marginBottom: '0.35rem' }}>
+                            <input type="time" value={iv.start} onChange={e => updateInterval(idx, 'start', e.target.value)}
+                              style={{ ...s.input, width: '100px', marginBottom: 0, padding: '4px 8px' }} />
+                            <span style={{ color: '#4b5563' }}>—</span>
+                            <input type="time" value={iv.end} onChange={e => updateInterval(idx, 'end', e.target.value)}
+                              style={{ ...s.input, width: '100px', marginBottom: 0, padding: '4px 8px' }} />
+                            <button onClick={() => stergeInterval(idx)}
+                              style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '1rem', lineHeight: 1 }}>×</button>
+                          </div>
+                        ))}
+                        {ziConfig.activ && intervale.length === 0 && (
+                          <div style={{ marginLeft: '52px', fontSize: '0.8rem', color: '#4b5563' }}>Niciun interval — adaugă unul</div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
                 <div style={s.moduleCard}>
                   <div style={{ fontSize: '0.8rem', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '1rem' }}>Sistem</div>
                   <label style={s.label}>Email contact support</label>
