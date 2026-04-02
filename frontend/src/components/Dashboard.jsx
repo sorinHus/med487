@@ -424,22 +424,45 @@ export default function Dashboard({ onNavigate }) {
                   {modalProgramare.telefon_pacient && <Row label="Telefon" value={modalProgramare.telefon_pacient} />}
                 </div>
               </div>
-              {modalProgramare.pacient && (
-                <button
-                  onClick={async () => {
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '20px' }}>
+                {modalProgramare.status === 'programat' && (
+                  <button onClick={async () => {
+                    await api.patch(`/programari/${modalProgramare.id}/`, { status: 'confirmat' })
+                    setModalProgramare({ ...modalProgramare, status: 'confirmat' })
+                  }} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid rgba(46,204,143,0.3)', background: 'rgba(46,204,143,0.08)', color: '#34d399', cursor: 'pointer', fontSize: '13px' }}>
+                    ✓ Confirmă
+                  </button>
+                )}
+                {['programat', 'confirmat'].includes(modalProgramare.status) && (
+                  <button onClick={async () => {
+                    await api.patch(`/programari/${modalProgramare.id}/`, { status: 'anulat' })
+                    setModalProgramare({ ...modalProgramare, status: 'anulat' })
+                  }} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer', fontSize: '13px' }}>
+                    ✕ Anulează
+                  </button>
+                )}
+                {modalProgramare.status === 'confirmat' && (
+                  <button onClick={async () => {
+                    await api.patch(`/programari/${modalProgramare.id}/`, { status: 'finalizat' })
+                    setModalProgramare({ ...modalProgramare, status: 'finalizat' })
+                  }} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid rgba(107,114,128,0.3)', background: 'rgba(107,114,128,0.08)', color: '#9ca3af', cursor: 'pointer', fontSize: '13px' }}>
+                    ✔✔ Finalizează
+                  </button>
+                )}
+                {modalProgramare.pacient && (
+                  <button onClick={async () => {
                     try {
                       const res = await api.get(`/pacienti/${modalProgramare.pacient}/`)
-                      const pacient = res.data
                       setModalProgramare(null)
-                      onNavigate('pacienti', { pacient })
+                      onNavigate('pacienti', { pacient: res.data })
                     } catch {
                       alert('Eroare la incarcarea fisiei pacientului.')
                     }
-                  }}
-                  style={{ marginTop: '20px', width: '100%', padding: '10px', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
-                  Deschide fișă pacient
-                </button>
-              )}
+                  }} style={{ width: '100%', padding: '10px', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
+                    Deschide fișă pacient
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}
