@@ -27,7 +27,7 @@ const PAGE_TITLES = {
   rapoarte:    () => 'Rapoarte & Grafice',
 }
 
-export default function Layout({ children, activePage, onNavigate, onLogout, user }) {
+export default function Layout({ children, activePage, onNavigate, onLogout, user, moduleActive = [] }) {
   const firstName = user?.first_name || ''
   const lastName  = user?.last_name  || ''
   const prefix   = user?.rol === 'medic' ? 'Dr. ' : ''
@@ -50,7 +50,7 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
 
         {/* Nav */}
         <nav style={{ flex: 1, padding: '14px 10px' }}>
-          {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
+          {NAV_ITEMS.filter(item => item.id === 'dashboard' || moduleActive.length === 0 || moduleActive.includes(item.id)).map(({ id, label, icon: Icon }) => {
             const active = activePage === id
             return (
               <button key={id} onClick={() => onNavigate(id)}

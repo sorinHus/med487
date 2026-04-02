@@ -12,10 +12,22 @@ import Rapoarte from './components/Rapoarte'
 import ProfilMedic from './components/ProfilMedic'
 import SitePrezentare from './components/SitePrezentare'
 import SuperadminPanel from './components/SuperadminPanel'
+import { useState, useEffect } from 'react'
 
 function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
   const [pacientInitial, setPacientInitial] = useState(null)
+  const [moduleActive, setModuleActive] = useState([])
+
+  useEffect(() => {
+    if (user?.id) {
+      api.get(`/module/${user.id}/`).then(res => {
+        setModuleActive(res.data.active || [])
+      }).catch(() => {
+        setModuleActive([])
+      })
+    }
+  }, [user])
 
   const handleNavigate = (page, data = null) => {
     setPacientInitial(null)
@@ -26,13 +38,13 @@ function AppMedic({ user, onLogout }) {
   }
 
   if (activePage === 'profil') return (
-    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user}>
+    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive}>
       <ProfilMedic onBack={() => setActivePage('dashboard')} />
     </Layout>
   )
 
   return (
-    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user}>
+    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive}>
       {activePage === 'dashboard'   && <Dashboard onNavigate={handleNavigate} />}
       {activePage === 'pacienti'    && <PacientList pacientInitial={pacientInitial} />}
       {activePage === 'programari'  && <Programari />}
