@@ -85,7 +85,7 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
               <div style={{ fontSize: '14px', color: '#4b5563', textTransform: 'capitalize' }}>{rol}</div>
             </div>
           </div>
-          <button onClick={onLogout}
+          <button onClick={() => { if (window.confirm('Ești sigur că vrei să te deconectezi?')) onLogout() }}
             style={{ width: '100%', padding: '7px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: '#6b7280', fontSize: '15px', cursor: 'pointer', transition: 'all 0.15s' }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#f87171'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#6b7280'; e.currentTarget.style.borderColor = '#1e2535' }}
