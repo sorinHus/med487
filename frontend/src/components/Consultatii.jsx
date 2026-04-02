@@ -248,6 +248,7 @@ export default function Consultatii({ onNavigate }) {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
           <thead>
             <tr>
+              <th style={{...thStyle, width: '40px'}}>#</th>
               <th style={thStyle}>Data</th>
               <th style={thStyle}>Pacient</th>
               <th style={thStyle}>Medic</th>
@@ -258,18 +259,19 @@ export default function Consultatii({ onNavigate }) {
           </thead>
           <tbody>
             {loading && (
-              <tr><td colSpan="6" style={{ padding: '40px', textAlign: 'center', color: '#4b5563' }}>Se încarcă...</td></tr>
+              <tr><td colSpan="7" style={{ padding: '40px', textAlign: 'center', color: '#4b5563' }}>Se încarcă...</td></tr>
             )}
             {!loading && consultatii.length === 0 && (
-              <tr><td colSpan="6" style={{ padding: '40px', textAlign: 'center', color: '#4b5563' }}>
+              <tr><td colSpan="7" style={{ padding: '40px', textAlign: 'center', color: '#4b5563' }}>
                 {search ? 'Nicio consultație găsită.' : 'Nu există consultații înregistrate.'}
               </td></tr>
             )}
-            {!loading && consultatii.map(c => (
+            {!loading && consultatii.map((c, index) => (
               <tr key={c.id}
                 style={{ borderBottom: '1px solid #1a2033', transition: 'background 0.12s' }}
                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                <td style={{ ...tdStyle, color: '#4b5563', textAlign: 'center', fontSize: '12px' }}>{index + 1}</td>
                 <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>{formatData(c.data_ora)}</td>
                 <td style={tdStyle}>
                   <button onClick={() => onNavigate && onNavigate('pacienti')}
