@@ -568,6 +568,7 @@ import urllib.request
 import json as json_module
 
 @api_view(['GET'])
+@permission_classes([permissions.AllowAny])
 def zile_libere_view(request):
     year = request.GET.get('year', '2026')
     try:
