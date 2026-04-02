@@ -17,6 +17,14 @@ function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
   const [pacientInitial, setPacientInitial] = useState(null)
 
+  const handleNavigate = (page, data = null) => {
+    setPacientInitial(null)
+    if (page === 'pacienti' && data?.pacient) {
+      setPacientInitial(data.pacient)
+    }
+    setActivePage(page)
+  }
+
   if (activePage === 'profil') return (
     <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user}>
       <ProfilMedic onBack={() => setActivePage('dashboard')} />
@@ -47,19 +55,6 @@ function PortalPlaceholder({ onLogout }) {
   )
 }
 
-function SuperadminPlaceholder({ onLogout }) {
-  return (
-    <div style={{ minHeight: '100vh', background: '#0f1117', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
-      <div style={{ color: '#60a5fa', fontSize: '3rem' }}>⚙️</div>
-      <h2 style={{ color: '#e2e8f0', fontFamily: 'serif' }}>Panou Administrare</h2>
-      <p style={{ color: '#9ca3af' }}>În curând — panoul de administrare este în dezvoltare.</p>
-      <button onClick={onLogout} style={{ marginTop: '1rem', padding: '0.5rem 1.5rem', background: '#1e2535', color: '#e2e8f0', border: '1px solid #1e2535', borderRadius: '8px', cursor: 'pointer' }}>
-        Deconectare
-      </button>
-    </div>
-  )
-}
-
 function AppInterna() {
   const [loggedIn, setLoggedIn] = useState(!!getToken())
   const [user, setUser]         = useState(null)
@@ -68,7 +63,6 @@ function AppInterna() {
   useEffect(() => {
     if (loggedIn) {
       api.get('/useri/me/').then(res => {
-        console.log('user data:', res.data)
         setUser(res.data)
         setLoading(false)
       }).catch(() => {
@@ -81,14 +75,6 @@ function AppInterna() {
     }
   }, [loggedIn])
 
-  const handleNavigate = (page, data = null) => {
-    setPacientInitial(null)
-    if (page === 'pacienti' && data?.pacient) {
-      setPacientInitial(data.pacient)
-    }
-    setActivePage(page)
-  }
-  
   const handleLogout = () => {
     logout()
     setLoggedIn(false)
