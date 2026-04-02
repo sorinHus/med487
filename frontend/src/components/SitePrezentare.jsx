@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
@@ -274,6 +274,18 @@ const styles = `
 
 export default function SitePrezentare() {
   const navRef = useRef(null)
+  const [config, setConfig] = useState(null)
+
+  useEffect(() => {
+    const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
+    fetch(`${API}/configuratie/`)
+      .then(r => r.json())
+      .then(data => setConfig(Array.isArray(data) ? data[0] : data))
+      .catch(() => {})
+  }, [])
+
+  const ZILE_NUME = { luni: 'Luni', marti: 'Marți', miercuri: 'Miercuri', joi: 'Joi', vineri: 'Vineri', sambata: 'Sâmbătă', duminica: 'Duminică' }
+  const orar = config?.orar_saptamanal || {}
 
   useEffect(() => {
     // Inject styles
@@ -437,20 +449,28 @@ export default function SitePrezentare() {
             <div className="sp-reveal">
               <table className="sp-program-table">
                 <tbody>
-                  <tr><td>Luni</td><td>08:00 – 16:00</td></tr>
-                  <tr><td>Marți</td><td>08:00 – 16:00</td></tr>
-                  <tr><td>Miercuri</td><td>08:00 – 16:00</td></tr>
-                  <tr><td>Joi</td><td>09:00 – 15:00</td></tr>
-                  <tr><td>Vineri</td><td>09:00 – 15:00</td></tr>
-                  <tr><td>Sâmbătă</td><td className="sp-closed">Închis</td></tr>
-                  <tr><td>Duminică</td><td className="sp-closed">Închis</td></tr>
+                  {['luni','marti','miercuri','joi','vineri','sambata','duminica'].map(zi => {
+                    const ziConfig = orar[zi]
+                    const activ = ziConfig?.activ
+                    const intervale = ziConfig?.intervale || []
+                    return (
+                      <tr key={zi}>
+                        <td>{ZILE_NUME[zi]}</td>
+                        <td className={activ ? '' : 'sp-closed'}>
+                          {activ && intervale.length > 0
+                            ? intervale.map((iv, i) => <span key={i}>{iv.start} – {iv.end}{i < intervale.length - 1 ? ', ' : ''}</span>)
+                            : activ ? '–' : 'Închis'}
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
             <div className="sp-program-info-box sp-reveal">
-              <div className="sp-info-row"><div className="sp-info-icon">📍</div><div className="sp-info-text"><h4>Adresă cabinet</h4><p>Str. Exemplu nr. 10, Cluj-Napoca<br/>Județul Cluj, România</p></div></div>
-              <div className="sp-info-row"><div className="sp-info-icon">📞</div><div className="sp-info-text"><h4>Telefon</h4><p>0264 000 000<br/>Luni–Vineri, 08:00–16:00</p></div></div>
-              <div className="sp-info-row"><div className="sp-info-icon">✉️</div><div className="sp-info-text"><h4>Email</h4><p>contact@cabinetmedical.ro</p></div></div>
+              <div className="sp-info-row"><div className="sp-info-icon">📍</div><div className="sp-info-text"><h4>Adresă cabinet</h4><p>{config?.strada ? `${config.strada} nr. ${config.numar}, ` : ''}{config?.localitate || 'Cluj-Napoca'}<br/>{config?.judet ? `Județul ${config.judet}, ` : ''}România</p></div></div>
+              <div className="sp-info-row"><div className="sp-info-icon">📞</div><div className="sp-info-text"><h4>Telefon</h4><p>{config?.telefon || '–'}</p></div></div>
+              <div className="sp-info-row"><div className="sp-info-icon">✉️</div><div className="sp-info-text"><h4>Email</h4><p>{config?.email_contact || config?.email || '–'}</p></div></div>
               <div className="sp-info-row"><div className="sp-info-icon">🌐</div><div className="sp-info-text"><h4>Programare online</h4><p>Disponibilă 24/7 prin formularul de pe site</p></div></div>
             </div>
           </div>
