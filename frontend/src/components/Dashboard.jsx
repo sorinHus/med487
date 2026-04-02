@@ -373,6 +373,7 @@ export default function Dashboard({ onNavigate }) {
                     </div>
                     <Badge status={p.status} />
                   </div>
+                  console.log('programare:', p)
                 )
               })}
             </div>
