@@ -85,13 +85,13 @@ async function exportExcel(pacienti) {
 }
 
 // ── Component principal ───────────────────────────────────────────────────────
-export default function PacientList() {
+export default function PacientList({ pacientInitial }) {
   const [pacienti, setPacienti]               = useState([])
   const [totiPacienti, setTotiPacienti]       = useState([])
   const [loading, setLoading]                 = useState(true)
   const [search, setSearch]                   = useState('')
   const [showForm, setShowForm]               = useState(false)
-  const [pacientSelectat, setPacientSelectat] = useState(null)
+  const [pacientSelectat, setPacientSelectat] = useState(pacientInitial || null)
   const [exportand, setExportand]             = useState(false)
 
   useEffect(() => {

@@ -407,7 +407,7 @@ export default function Dashboard({ onNavigate }) {
                   style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 8px', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.12s' }}
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  onClick={() => onNavigate('pacienti')}
+                  onClick={() => onNavigate('pacienti', { pacient: p })}
                 >
                   <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
                     {getInitials(nume)}

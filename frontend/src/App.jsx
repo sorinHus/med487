@@ -15,19 +15,20 @@ import SuperadminPanel from './components/SuperadminPanel'
 
 function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
+  const [pacientInitial, setPacientInitial] = useState(null)
 
   if (activePage === 'profil') return (
-    <Layout activePage={activePage} onNavigate={setActivePage} onLogout={onLogout} user={user}>
+    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user}>
       <ProfilMedic onBack={() => setActivePage('dashboard')} />
     </Layout>
   )
 
   return (
-    <Layout activePage={activePage} onNavigate={setActivePage} onLogout={onLogout} user={user}>
-      {activePage === 'dashboard'   && <Dashboard onNavigate={setActivePage} />}
-      {activePage === 'pacienti'    && <PacientList />}
+    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user}>
+      {activePage === 'dashboard'   && <Dashboard onNavigate={handleNavigate} />}
+      {activePage === 'pacienti'    && <PacientList pacientInitial={pacientInitial} />}
       {activePage === 'programari'  && <Programari />}
-      {activePage === 'consultatii' && <Consultatii onNavigate={setActivePage} />}
+      {activePage === 'consultatii' && <Consultatii onNavigate={handleNavigate} />}
       {activePage === 'rapoarte'    && <Rapoarte />}
     </Layout>
   )
@@ -80,6 +81,14 @@ function AppInterna() {
     }
   }, [loggedIn])
 
+  const handleNavigate = (page, data = null) => {
+    setPacientInitial(null)
+    if (page === 'pacienti' && data?.pacient) {
+      setPacientInitial(data.pacient)
+    }
+    setActivePage(page)
+  }
+  
   const handleLogout = () => {
     logout()
     setLoggedIn(false)
