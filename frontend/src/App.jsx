@@ -12,7 +12,6 @@ import Rapoarte from './components/Rapoarte'
 import ProfilMedic from './components/ProfilMedic'
 import SitePrezentare from './components/SitePrezentare'
 import SuperadminPanel from './components/SuperadminPanel'
-import { useState, useEffect } from 'react'
 
 function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
