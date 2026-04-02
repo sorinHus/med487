@@ -94,6 +94,7 @@ function SectiuneRaport({ onNavigate }) {
   const [loading, setLoading]             = useState(false)
   const [exportand, setExportand]         = useState(false)
   const [cautata, setCautata]             = useState(false)
+  const [modalConsultatie, setModalConsultatie] = useState(null)
 
   
   const fetchRaport = useCallback(async () => {
@@ -219,14 +220,7 @@ function SectiuneRaport({ onNavigate }) {
                     <tr key={c.id} style={{ borderBottom: '1px solid #1a2033', cursor: 'pointer' }}
                       onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
                       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                      onClick={async () => {
-                      try {
-                        const res = await api.get(`/pacienti/${c.pacient}/`)
-                        onNavigate('pacienti', { pacient: res.data })
-                      } catch {
-                        alert('Eroare la incarcarea fisiei pacientului.')
-                      }
-                    }}>
+                      onClick={() => setModalConsultatie(c)}>
                       <td style={{ padding: '9px 12px', color: '#9ca3af', whiteSpace: 'nowrap' }}>
                         {new Date(c.data_ora).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                       </td>
@@ -246,6 +240,60 @@ function SectiuneRaport({ onNavigate }) {
             </div>
           )}
         </>
+      )}
+    
+  {/* Modal detalii consultatie */}
+      {modalConsultatie && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
+          onClick={() => setModalConsultatie(null)}>
+          <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '14px', padding: '28px', minWidth: '340px', maxWidth: '480px', width: '90%' }}
+            onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <span style={{ fontSize: '15px', fontWeight: '600', color: '#e2e8f0' }}>Detalii consultație</span>
+              <button onClick={() => setModalConsultatie(null)}
+                style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '18px', lineHeight: 1 }}>✕</button>
+            </div>
+            <div style={{ background: '#0f1117', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+              <Row label="Pacient"  value={modalConsultatie.pacient_nume || '—'} />
+              <Row label="Medic"    value={modalConsultatie.medic_nume || '—'} />
+              <Row label="Data"     value={new Date(modalConsultatie.data_ora).toLocaleDateString('ro-RO', { day: '2-digit', month: 'long', year: 'numeric' })} />
+              <Row label="Ora"      value={new Date(modalConsultatie.data_ora).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })} />
+            </div>
+            {modalConsultatie.simptome && (
+              <div style={{ marginBottom: '10px' }}>
+                <div style={{ fontSize: '11px', color: '#4b5563', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Simptome</div>
+                <div style={{ fontSize: '13px', color: '#9ca3af' }}>{modalConsultatie.simptome}</div>
+              </div>
+            )}
+            {modalConsultatie.tratament && (
+              <div style={{ marginBottom: '10px' }}>
+                <div style={{ fontSize: '11px', color: '#4b5563', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tratament</div>
+                <div style={{ fontSize: '13px', color: '#9ca3af' }}>{modalConsultatie.tratament}</div>
+              </div>
+            )}
+            {modalConsultatie.diagnostice?.length > 0 && (
+              <div style={{ marginBottom: '16px' }}>
+                <div style={{ fontSize: '11px', color: '#4b5563', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Diagnostice</div>
+                {modalConsultatie.diagnostice.map(d => (
+                  <span key={d.id} style={{ display: 'inline-block', marginRight: '6px', marginBottom: '4px', padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: 'rgba(58,123,213,0.15)', color: '#60a5fa' }}>
+                    {d.diagnostic.cod_icd10} — {d.diagnostic.denumire}
+                  </span>
+                ))}
+              </div>
+            )}
+            <button onClick={async () => {
+              try {
+                const res = await api.get(`/pacienti/${modalConsultatie.pacient}/`)
+                setModalConsultatie(null)
+                onNavigate('pacienti', { pacient: res.data })
+              } catch {
+                alert('Eroare la incarcarea fisiei pacientului.')
+              }
+            }} style={{ width: '100%', padding: '10px', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
+              Deschide fișă pacient
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )
