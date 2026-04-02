@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { getToken, logout } from './auth'
 import api from './api'
@@ -12,6 +12,8 @@ import Rapoarte from './components/Rapoarte'
 import ProfilMedic from './components/ProfilMedic'
 import SitePrezentare from './components/SitePrezentare'
 import SuperadminPanel from './components/SuperadminPanel'
+
+const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000 // 2 ore in ms
 
 function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
@@ -70,6 +72,31 @@ function AppInterna() {
   const [loggedIn, setLoggedIn] = useState(!!getToken())
   const [user, setUser]         = useState(null)
   const [loading, setLoading]   = useState(true)
+  const timerRef                = useRef(null)
+
+  const handleLogout = () => {
+    logout()
+    setLoggedIn(false)
+    setUser(null)
+  }
+
+  const resetTimer = () => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => {
+      handleLogout()
+    }, INACTIVITY_LIMIT)
+  }
+
+  useEffect(() => {
+    if (!loggedIn) return
+    const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll']
+    events.forEach(e => window.addEventListener(e, resetTimer, { passive: true }))
+    resetTimer()
+    return () => {
+      events.forEach(e => window.removeEventListener(e, resetTimer))
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [loggedIn])
 
   useEffect(() => {
     if (loggedIn) {
@@ -85,12 +112,6 @@ function AppInterna() {
       setLoading(false)
     }
   }, [loggedIn])
-
-  const handleLogout = () => {
-    logout()
-    setLoggedIn(false)
-    setUser(null)
-  }
 
   if (!loggedIn) return <Login onLogin={() => setLoggedIn(true)} />
   if (loading)   return <div style={{ minHeight: '100vh', background: '#0f1117' }} />
