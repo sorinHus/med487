@@ -181,7 +181,7 @@ function ModalProgramare({ onClose, onSaved, defaultData }) {
 }
 
 // ── Rand programare ──
-function RandProgramare({ p, onStatusChange }) {
+function RandProgramare({ p, onStatusChange, index }) {
   const nume = p.pacient_nume_complet || p.nume_pacient || '—'
   const ora = formatOra(p.data_ora)
   const avatarBg = getAvatarColor(nume)
@@ -201,7 +201,8 @@ function RandProgramare({ p, onStatusChange }) {
       onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
     >
-      {/* Ora */}
+      {/* Nr + Ora */}
+      <span style={{ fontSize: '11px', color: '#4b5563', width: '18px', textAlign: 'center', flexShrink: 0 }}>{index + 1}</span>
       <span style={{ fontSize: '13px', fontWeight: '600', color: '#60a5fa', width: '42px', flexShrink: 0 }}>{ora}</span>
 
       {/* Avatar */}
@@ -361,8 +362,8 @@ export default function Programari() {
                 {/* Programarile zilei */}
                 {prog.length > 0 && (
                   <div>
-                    {prog.map(p => (
-                      <RandProgramare key={p.id} p={p} onStatusChange={fetchProgramari} />
+                    {prog.map((p, index) => (
+                      <RandProgramare key={p.id} p={p} onStatusChange={fetchProgramari} index={index} />
                     ))}
                   </div>
                 )}
