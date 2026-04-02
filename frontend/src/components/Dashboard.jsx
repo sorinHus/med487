@@ -77,7 +77,7 @@ async function exportRaportExcel(consultatii, totalPeMedic, perioada) {
 }
 
 // ── Sectiune Raport ──────────────────────────────────────────────────────────
-function SectiuneRaport() {
+function SectiuneRaport({ onNavigate }) {
   const inputStyle = { padding: '8px 12px', fontSize: '13px', background: '#0f1117', border: '1px solid #1e2535', borderRadius: '8px', color: '#e2e8f0', outline: 'none' }
   const labelStyle = { fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }
 
@@ -219,7 +219,14 @@ function SectiuneRaport() {
                     <tr key={c.id} style={{ borderBottom: '1px solid #1a2033', cursor: 'pointer' }}
                       onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
                       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                      onClick={() => onNavigate('pacienti')}>
+                      onClick={async () => {
+                      try {
+                        const res = await api.get(`/pacienti/${c.pacient}/`)
+                        onNavigate('pacienti', { pacient: res.data })
+                      } catch {
+                        alert('Eroare la incarcarea fisiei pacientului.')
+                      }
+                    }}>
                       <td style={{ padding: '9px 12px', color: '#9ca3af', whiteSpace: 'nowrap' }}>
                         {new Date(c.data_ora).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                       </td>
@@ -528,7 +535,7 @@ export default function Dashboard({ onNavigate }) {
       </div>
 
       {/* Raport consultatii */}
-      <SectiuneRaport />
+      <SectiuneRaport onNavigate={onNavigate} />
 
     </div>
   )
