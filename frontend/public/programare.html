@@ -337,7 +337,10 @@
       el.textContent = d
 
       const isToday = date.toDateString() === today.toDateString()
-      const isPast  = date < new Date(today.getFullYear(), today.getMonth(), today.getDate())
+      const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+      const maxDate = new Date(todayStart)
+      maxDate.setDate(maxDate.getDate() + 30)
+      const isPast  = date < todayStart || date > maxDate
       const isSat   = date.getDay() === 6
       const isSun   = date.getDay() === 0
       const dateStr = formatDate(date)
@@ -545,6 +548,7 @@
   let zileSarbatoare = new Set()
 
   async function loadSarbatori() {
+    console.log('Sarbatori:', [...zileSarbatoare].slice(0, 5))
     const years = [new Date().getFullYear(), new Date().getFullYear() + 1]
     for (const year of years) {
       try {
