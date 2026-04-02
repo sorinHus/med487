@@ -95,8 +95,7 @@ function SectiuneRaport() {
   const [exportand, setExportand]         = useState(false)
   const [cautata, setCautata]             = useState(false)
 
-  const [modalProgramare, setModalProgramare] = useState(null)
-
+  
   const fetchRaport = useCallback(async () => {
     setLoading(true); setCautata(true)
     try {
@@ -264,6 +263,7 @@ export default function Dashboard({ onNavigate }) {
   const [searchResults, setSearchResults]     = useState([])
   const [loadingSearch, setLoadingSearch]     = useState(false)
   const [loading, setLoading]                 = useState(true)
+  const [modalProgramare, setModalProgramare] = useState(null)
 
   const azi = new Date().toISOString().slice(0, 10)
 
