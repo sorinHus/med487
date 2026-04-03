@@ -21,6 +21,7 @@ from datetime import date, timedelta
 from rest_framework.views import APIView
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.hashers import make_password
 
 
 LUNI_RO = [
@@ -616,3 +617,107 @@ def zile_libere_view(request):
         return JsonResponse(data, safe=False)
     except Exception:
         return JsonResponse([], safe=False)
+
+
+class VerificareCNPView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        cnp = request.data.get('cnp', '').strip()
+        if not cnp:
+            return Response({'error': 'CNP lipsă'}, status=400)
+        pacient = Pacient.objects.filter(cnp=cnp).first()
+        if pacient:
+            return Response({
+                'gasit': True,
+                'nume': pacient.nume,
+                'prenume': pacient.prenume,
+                'localitate': pacient.localitate or '',
+                'judet': pacient.judet or '',
+            })
+        return Response({'gasit': False})
+
+
+class InregistrarePacientView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        data = request.data
+        cnp = data.get('cnp', '').strip()
+        email = data.get('email', '').strip()
+        username = email
+
+        if CustomUser.objects.filter(username=username).exists():
+            return Response({'error': 'Există deja un cont cu acest email.'}, status=400)
+        if CustomUser.objects.filter(email=email).exists():
+            return Response({'error': 'Există deja un cont cu acest email.'}, status=400)
+
+        user = CustomUser.objects.create(
+            username=username,
+            email=email,
+            first_name=data.get('prenume', ''),
+            last_name=data.get('nume', ''),
+            telefon=data.get('telefon', ''),
+            rol='pacient',
+            aprobat=False,
+            is_active=True,
+            password=make_password(data.get('parola', '')),
+        )
+
+        pacient = Pacient.objects.filter(cnp=cnp).first()
+        if pacient:
+            if not pacient.user:
+                pacient.user = user
+                pacient.save()
+        else:
+            Pacient.objects.create(
+                user=user,
+                nume=data.get('nume', ''),
+                prenume=data.get('prenume', ''),
+                cnp=cnp,
+                telefon=data.get('telefon', ''),
+                email=email,
+                judet=data.get('judet', ''),
+                localitate=data.get('localitate', ''),
+                strada=data.get('strada', ''),
+                numar=data.get('numar', ''),
+            )
+
+        return Response({'ok': True})
+
+
+class AprobarePacientView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        if request.user.rol not in ['medic', 'asistent']:
+            return Response({'error': 'Acces interzis'}, status=403)
+        user = CustomUser.objects.filter(pk=pk, rol='pacient', aprobat=False).first()
+        if not user:
+            return Response({'error': 'Cerere negăsită'}, status=404)
+        user.aprobat = True
+        user.save()
+
+        # Email confirmare
+        try:
+            from django.core.mail import send_mail
+            send_mail(
+                subject='Cont aprobat — Cabinet Medical',
+                message=f'Bună ziua, {user.first_name}!\n\nContul dumneavoastră a fost aprobat. Vă puteți loga la https://med487.pages.dev/app\n\nCu stimă,\nCabinet Medical',
+                from_email=None,
+                recipient_list=[user.email],
+                fail_silently=True,
+            )
+        except Exception:
+            pass
+
+        return Response({'ok': True})
+
+    def delete(self, request, pk):
+        if request.user.rol not in ['medic', 'asistent']:
+            return Response({'error': 'Acces interzis'}, status=403)
+        user = CustomUser.objects.filter(pk=pk, rol='pacient', aprobat=False).first()
+        if not user:
+            return Response({'error': 'Cerere negăsită'}, status=404)
+        user.delete()
+        return Response({'ok': True})        

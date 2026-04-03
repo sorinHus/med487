@@ -30,4 +30,7 @@ urlpatterns = router.urls + [
     path('profil/schimbare-parola/', SchimbareParolaView.as_view(), name='schimbare-parola'),
     path('module/<int:pk>/', ModuleUtilizatorViewSet.as_view({'get': 'retrieve', 'put': 'update'}), name='module-utilizator'),
     path('zile-libere/', zile_libere_view, name='zile_libere'),
+    path('inregistrare/verifica-cnp/', VerificareCNPView.as_view()),
+    path('inregistrare/', InregistrarePacientView.as_view()),
+    path('cereri/<int:pk>/aprobare/', AprobarePacientView.as_view()),
 ]

@@ -25,6 +25,7 @@ class Pacient(models.Model):
         ('transferat', 'Transferat la alt medic'),
         ('inactiv', 'Inactiv'),
     ]
+    user = models.OneToOneField(CustomUser, null=True, blank=True, on_delete=models.SET_NULL, related_name='pacient_profil')
 
     cnp               = models.CharField(max_length=13, unique=True)
     nume              = models.CharField(max_length=100)
