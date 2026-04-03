@@ -1,7 +1,4 @@
-/* ============================================================
-   MED487 — Theme System
-   ============================================================ */
-
+/* Dark mode — default (fără JS necesar) */
 :root {
   --bg-main: #0f1117;
   --bg-card: #161b27;
@@ -24,7 +21,8 @@
   --shadow: rgba(0, 0, 0, 0.4);
 }
 
-[data-theme="light"] {
+/* Light mode — activ doar cand <html data-theme="light"> */
+html[data-theme="light"] {
   --bg-main: #f1f5f9;
   --bg-card: #ffffff;
   --bg-input: #f8fafc;

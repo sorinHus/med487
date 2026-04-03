@@ -19,6 +19,12 @@ function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
 
+  // Aplica tema salvata imediat la mount
+  useEffect(() => {
+    const saved = localStorage.getItem('theme') || 'dark'
+    document.documentElement.setAttribute('data-theme', saved)
+  }, [])
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
