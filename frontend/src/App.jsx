@@ -17,6 +17,14 @@ const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000 // 2 ore in ms
 
 function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
   const [pacientInitial, setPacientInitial] = useState(null)
   const [moduleActive, setModuleActive] = useState([])
 
@@ -39,21 +47,20 @@ function AppMedic({ user, onLogout }) {
   }
 
   if (activePage === 'profil') return (
-    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive}>
+    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme}>
       <ProfilMedic onBack={() => setActivePage('dashboard')} />
     </Layout>
   )
 
   return (
-    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive}>
+    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme}>
       {activePage === 'dashboard'   && <Dashboard onNavigate={handleNavigate} />}
-      {activePage === 'pacienti'    && <PacientList pacientInitial={pacientInitial} />}
+      {activePage === 'pacienti'    && <PacientList pacientInitial={pacientInitial} moduleActive={moduleActive} />}
       {activePage === 'programari'  && <Programari />}
       {activePage === 'consultatii' && <Consultatii onNavigate={handleNavigate} />}
       {activePage === 'rapoarte'    && <Rapoarte />}
     </Layout>
   )
-}
 
 function PortalPlaceholder({ onLogout }) {
   return (

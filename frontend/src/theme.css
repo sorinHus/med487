@@ -1,0 +1,51 @@
+/* ============================================================
+   MED487 — Theme System
+   ============================================================ */
+
+:root {
+  --bg-main: #0f1117;
+  --bg-card: #161b27;
+  --bg-input: #1a2035;
+  --bg-hover: #1e2840;
+  --border: #1e2535;
+  --border-light: #2a3550;
+  --text-primary: #e2e8f0;
+  --text-muted: #9ca3af;
+  --text-dim: #4b5563;
+  --accent: #3a7bd5;
+  --accent-light: #60a5fa;
+  --accent-hover: #2d62b0;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --success: #22c55e;
+  --success-hover: #16a34a;
+  --warning: #f59e0b;
+  --warning-hover: #d97706;
+  --shadow: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="light"] {
+  --bg-main: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-input: #f8fafc;
+  --bg-hover: #e2e8f0;
+  --border: #cbd5e1;
+  --border-light: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #94a3b8;
+  --accent: #3a7bd5;
+  --accent-light: #2563eb;
+  --accent-hover: #1d4ed8;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --success: #16a34a;
+  --success-hover: #15803d;
+  --warning: #d97706;
+  --warning-hover: #b45309;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}

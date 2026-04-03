@@ -27,7 +27,7 @@ const PAGE_TITLES = {
   rapoarte:    () => 'Rapoarte & Grafice',
 }
 
-export default function Layout({ children, activePage, onNavigate, onLogout, user, moduleActive = [] }) {
+export default function Layout({ children, activePage, onNavigate, onLogout, user, moduleActive = [], theme = 'dark', onToggleTheme }) {
   const firstName = user?.first_name || ''
   const lastName  = user?.last_name  || ''
   const prefix   = user?.rol === 'medic' ? 'Dr. ' : ''
@@ -38,13 +38,13 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
   const title     = PAGE_TITLES[activePage]?.() || ''
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: '#0f1117', color: '#e2e8f0', fontFamily: "'DM Sans', 'Segoe UI', system-ui, sans-serif", overflow: 'hidden' }}>
+    <div style={{ display: 'flex', height: '100vh', background: 'var(--bg-main)', color: 'var(--text-primary)', fontFamily: "'DM Sans', 'Segoe UI', system-ui, sans-serif", overflow: 'hidden' }}>
 
       {/* ── Sidebar ── */}
-      <aside style={{ width: '210px', minWidth: '210px', background: '#161b27', borderRight: '1px solid #1e2535', display: 'flex', flexDirection: 'column' }}>
+      <aside style={{ width: '210px', minWidth: '210px', background: 'var(--bg-card)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}>
 
         {/* Logo */}
-        <div style={{ padding: '16px', borderBottom: '1px solid #1e2535' }}>
+        <div style={{ padding: '16px', borderBottom: '1px solid var(--border)' }}>
           <img src="/logo.png" alt="MED487" style={{ width: '100%', height: 'auto', display: 'block' }} />
         </div>
 
@@ -59,15 +59,15 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
                   padding: '9px 10px', borderRadius: '8px', border: 'none', cursor: 'pointer',
                   marginBottom: '2px', textAlign: 'left',
                   background: active ? 'rgba(58,123,213,0.15)' : 'transparent',
-                  color: active ? '#60a5fa' : '#7a8499',
+                  color: active ? 'var(--accent-light)' : 'var(--text-muted)',
                   fontSize: '16px', fontWeight: active ? '600' : '400',
                   transition: 'background 0.15s, color 0.15s',
-                  borderLeft: active ? '3px solid #3a7bd5' : '3px solid transparent',
+                  borderLeft: active ? '3px solid var(--accent)' : '3px solid transparent',
                 }}
-                onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = '#c0c8d8' } }}
-                onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#7a8499' } }}
+                onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)' } }}
+                onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' } }}
               >
-                <Icon size={15} color={active ? '#60a5fa' : '#4b5563'} />
+                <Icon size={15} color={active ? 'var(--accent-light)' : 'var(--text-dim)'} />
                 {label}
               </button>
             )
@@ -75,20 +75,30 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
         </nav>
 
         {/* User + Logout */}
-        <div style={{ padding: '15px 14px', borderTop: '1px solid #1e2535' }}>
+        <div style={{ padding: '15px 14px', borderTop: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '9px', marginBottom: '10px' }}>
             <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
               {initials}
             </div>
             <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: '15px', fontWeight: '500', color: '#cbd5e1', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{fullName}</div>
-              <div style={{ fontSize: '14px', color: '#4b5563', textTransform: 'capitalize' }}>{rol}</div>
+              <div style={{ fontSize: '15px', fontWeight: '500', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{fullName}</div>
+              <div style={{ fontSize: '14px', color: 'var(--text-dim)', textTransform: 'capitalize' }}>{rol}</div>
             </div>
           </div>
+
+          {/* Toggle dark/light */}
+          <button onClick={onToggleTheme}
+            style={{ width: '100%', padding: '7px', borderRadius: '7px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-muted)', fontSize: '14px', cursor: 'pointer', marginBottom: '6px', transition: 'all 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' }}
+          >
+            {theme === 'dark' ? '☀️ Mod luminos' : '🌙 Mod întunecat'}
+          </button>
+
           <button onClick={() => { if (window.confirm('Ești sigur că vrei să te deconectezi?')) onLogout() }}
-            style={{ width: '100%', padding: '7px', borderRadius: '7px', border: '1px solid #1e2535', background: 'transparent', color: '#6b7280', fontSize: '15px', cursor: 'pointer', transition: 'all 0.15s' }}
+            style={{ width: '100%', padding: '7px', borderRadius: '7px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-muted)', fontSize: '15px', cursor: 'pointer', transition: 'all 0.15s' }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#f87171'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#6b7280'; e.currentTarget.style.borderColor = '#1e2535' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'var(--border)' }}
           >
             Deconectare
           </button>
@@ -99,16 +109,16 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
         {/* Header */}
-        <header style={{ height: '54px', background: '#161b27', borderBottom: '1px solid #1e2535', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0 }}>
-          <span style={{ fontSize: '14px', fontWeight: '600', color: '#e2e8f0' }}>{title}</span>
+        <header style={{ height: '54px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0 }}>
+          <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>{title}</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span
-          onClick={() => onNavigate('profil')}
-          style={{ fontSize: '16px', color: '#4b5563', cursor: 'pointer', transition: 'color 0.15s' }}
-          onMouseEnter={e => e.currentTarget.style.color = '#60a5fa'}
-          onMouseLeave={e => e.currentTarget.style.color = '#4b5563'}
-          title="Profilul meu"
-          >{fullName}</span>
+              onClick={() => onNavigate('profil')}
+              style={{ fontSize: '16px', color: 'var(--text-dim)', cursor: 'pointer', transition: 'color 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-light)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
+              title="Profilul meu"
+            >{fullName}</span>
             <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: '#fff' }}>
               {initials}
             </div>
