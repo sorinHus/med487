@@ -17,7 +17,7 @@ const NAV_ITEMS = [
   { id: 'programari',      label: 'Programari',  icon: IconProgramari },
   { id: 'consultatii',     label: 'Consultatii', icon: IconConsultatii },
   { id: 'rapoarte',        label: 'Rapoarte',    icon: IconRapoarte },
-  { id: 'cereri-pacienti', label: 'Cereri pacienți', icon: IconCereri, roluri: ['medic', 'asistent'] },
+  { id: 'cereri-pacienti', label: 'Cereri pacienți', icon: IconCereri },
 ]
 
 const PAGE_TITLES = {
@@ -51,10 +51,7 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
 
         {/* Nav */}
         <nav style={{ flex: 1, padding: '14px 10px' }}>
-          {NAV_ITEMS.filter(item => {
-          if (item.roluri && !item.roluri.includes(rol)) return false
-          return item.id === 'dashboard' || moduleActive.length === 0 || moduleActive.includes(item.id)
-          }).map(({ id, label, icon: Icon }) => {
+          {NAV_ITEMS.filter(item => item.id === 'dashboard' || moduleActive.length === 0 || moduleActive.includes(item.id)).map(({ id, label, icon: Icon }) => {
             const active = activePage === id
             return (
               <button key={id} onClick={() => onNavigate(id)}
