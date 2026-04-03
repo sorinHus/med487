@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     telefon = models.CharField(max_length=20, blank=True, default='')
     parafa = models.CharField(max_length=20, blank=True, default='')
     cod_medic = models.CharField(max_length=30, blank=True, default='')
+    aprobat = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.get_full_name()} ({self.rol})"
