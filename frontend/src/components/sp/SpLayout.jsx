@@ -66,8 +66,10 @@ export default function SpLayout({ children }) {
                 Cont ▾
                 </button>
                 <div className="sp-dropdown-menu">
-                <Link to="/app">🔑 Login</Link>
-                <a href="/inregistrare.html">📋 Înregistrare</a>
+                    <div className="sp-dropdown-menu-inner">
+                        <Link to="/app">🔑 Login</Link>
+                        <a href="/inregistrare.html">📋 Înregistrare</a>
+                    </div>
                 </div>
             </li>
         </ul>
