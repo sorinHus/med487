@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Înregistrare pacient</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #faf8f4;
+      color: #1a2332;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: rgba(250,248,244,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 0.65rem; text-decoration: none; }
+    .logo-icon {
+      width: 34px; height: 34px; background: #1a3557; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;
+    }
+    .logo-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: #1a3557; }
+    .back-link { font-size: 0.85rem; color: #4a5568; text-decoration: none; }
+    .back-link:hover { color: #2563a8; }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 20px 60px rgba(26,53,87,0.12);
+      position: relative;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: -3px; left: 20px; right: 20px; height: 3px;
+      background: linear-gradient(90deg, #1a3557, #2563a8);
+      border-radius: 2px 2px 0 0;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; color: #1a3557; margin-bottom: 0.35rem;
+    }
+    .subtitle { font-size: 0.85rem; color: #718096; margin-bottom: 2rem; }
+
+    /* STEPS */
+    .steps {
+      display: flex; gap: 0; margin-bottom: 2rem;
+      border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0;
+    }
+    .step {
+      flex: 1; text-align: center; padding: 0.65rem;
+      font-size: 0.8rem; color: #718096; background: #f8fafc;
+      border-right: 1px solid #e2e8f0; transition: all .2s;
+    }
+    .step:last-child { border-right: none; }
+    .step.active { background: #1a3557; color: white; font-weight: 500; }
+    .step.done { background: #f0f6ff; color: #2563a8; }
+
+    /* FORM */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; font-size: 0.78rem; font-weight: 500; color: #4a5568; margin-bottom: 0.35rem; letter-spacing: .03em; text-transform: uppercase; }
+    input, select {
+      width: 100%; padding: 0.65rem 0.85rem;
+      border: 1.5px solid #e2e8f0; border-radius: 8px;
+      font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+      background: #f8fafc; color: #1a2332;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: #2563a8; box-shadow: 0 0 0 3px rgba(37,99,168,0.08); background: white; }
+    input.error { border-color: #e53e3e; }
+
+    .cnp-row { display: flex; gap: 0.75rem; align-items: flex-end; }
+    .cnp-row input { flex: 1; }
+    .btn-verify {
+      padding: 0.65rem 1.1rem; background: #f0f6ff; color: #2563a8;
+      border: 1.5px solid #dbeafe; border-radius: 8px; font-size: 0.85rem;
+      font-weight: 500; cursor: pointer; white-space: nowrap;
+      transition: background .2s; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-verify:hover { background: #dbeafe; }
+    .btn-verify:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .found-box {
+      background: #f0fdf4; border: 1px solid #bbf7d0;
+      border-radius: 10px; padding: 0.85rem 1rem;
+      font-size: 0.85rem; color: #166534; margin-bottom: 1rem;
+      display: none;
+    }
+    .found-box.show { display: block; }
+    .not-found-box {
+      background: #fffbeb; border: 1px solid #fde68a;
+      border-radius: 10px; padding: 0.85rem 1rem;
+      font-size: 0.85rem; color: #92400e; margin-bottom: 1rem;
+      display: none;
+    }
+    .not-found-box.show { display: block; }
+
+    .address-section { display: none; }
+    .address-section.show { display: block; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 500; color: #2563a8;
+      text-transform: uppercase; letter-spacing: .06em;
+      margin: 1.25rem 0 0.75rem; padding-bottom: 0.4rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .btn-primary {
+      width: 100%; padding: 0.85rem;
+      background: #1a3557; color: white;
+      border: none; border-radius: 10px;
+      font-size: 0.95rem; font-weight: 500;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: background .2s; margin-top: 0.5rem;
+    }
+    .btn-primary:hover { background: #2563a8; }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-back {
+      width: 100%; padding: 0.75rem;
+      background: transparent; color: #4a5568;
+      border: 1.5px solid #e2e8f0; border-radius: 10px;
+      font-size: 0.9rem; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color .2s; margin-top: 0.5rem;
+    }
+    .btn-back:hover { border-color: #2563a8; color: #2563a8; }
+
+    .error-msg { font-size: 0.8rem; color: #e53e3e; margin-top: 0.35rem; display: none; }
+    .error-msg.show { display: block; }
+
+    .success-card { text-align: center; padding: 1rem 0; display: none; }
+    .success-card.show { display: block; }
+    .success-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .success-card h2 { font-family: 'Playfair Display', serif; color: #1a3557; margin-bottom: 0.5rem; }
+    .success-card p { font-size: 0.88rem; color: #718096; line-height: 1.6; }
+
+    .login-link { text-align: center; margin-top: 1.5rem; font-size: 0.83rem; color: #718096; }
+    .login-link a { color: #2563a8; text-decoration: none; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="logo">
+      <div class="logo-icon">✚</div>
+      <span class="logo-name">Cabinet Medical</span>
+    </a>
+    <a href="/" class="back-link">← Înapoi la site</a>
+  </header>
+
+  <main>
+    <div class="card">
+      <!-- SUCCESS -->
+      <div class="success-card" id="successCard">
+        <div class="success-icon">✅</div>
+        <h2>Cerere trimisă!</h2>
+        <p>Contul dumneavoastră a fost creat și așteaptă aprobarea cabinetului.<br/>Veți primi un email de confirmare după aprobare.</p>
+        <div style="margin-top:1.5rem">
+          <a href="/app" class="btn-primary" style="display:inline-block;text-decoration:none;padding:0.75rem 2rem;width:auto">Mergi la login</a>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div id="formContent">
+        <h1>Înregistrare pacient</h1>
+        <p class="subtitle">Creați un cont pentru a accesa portalul pacienților</p>
+
+        <div class="steps">
+          <div class="step active" id="step1label">1. Date personale</div>
+          <div class="step" id="step2label">2. Verificare CNP</div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div id="step1">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nume *</label>
+              <input type="text" id="nume" placeholder="Popescu" />
+              <div class="error-msg" id="err-nume">Câmp obligatoriu</div>
+            </div>
+            <div class="form-group">
+              <label>Prenume *</label>
+              <input type="text" id="prenume" placeholder="Ion" />
+              <div class="error-msg" id="err-prenume">Câmp obligatoriu</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="email" placeholder="ion.popescu@email.com" />
+            <div class="error-msg" id="err-email">Email invalid</div>
+          </div>
+          <div class="form-group">
+            <label>Telefon *</label>
+            <input type="tel" id="telefon" placeholder="07xx xxx xxx" />
+            <div class="error-msg" id="err-telefon">Câmp obligatoriu</div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Parolă *</label>
+              <input type="password" id="parola" placeholder="Minim 6 caractere" />
+              <div class="error-msg" id="err-parola">Minim 6 caractere</div>
+            </div>
+            <div class="form-group">
+              <label>Confirmare parolă *</label>
+              <input type="password" id="parola2" placeholder="Repetă parola" />
+              <div class="error-msg" id="err-parola2">Parolele nu coincid</div>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="goStep2()">Continuă →</button>
+          <div class="login-link">Aveți deja cont? <a href="/app">Autentificați-vă</a></div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="step2" style="display:none">
+          <div class="form-group">
+            <label>CNP *</label>
+            <div class="cnp-row">
+              <input type="text" id="cnp" maxlength="13" placeholder="1234567890123" />
+              <button class="btn-verify" id="btnVerify" onclick="verificaCNP()">Verifică</button>
+            </div>
+            <div class="error-msg" id="err-cnp">CNP invalid (13 cifre)</div>
+          </div>
+
+          <div class="found-box" id="foundBox"></div>
+          <div class="not-found-box" id="notFoundBox">
+            Nu există o fișă cu acest CNP. Va fi creată o fișă nouă — completați adresa de mai jos.
+          </div>
+
+          <div class="address-section" id="addressSection">
+            <div class="section-label">Adresă</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Județ</label>
+                <input type="text" id="judet" placeholder="Cluj" />
+              </div>
+              <div class="form-group">
+                <label>Localitate</label>
+                <input type="text" id="localitate" placeholder="Cluj-Napoca" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Stradă</label>
+                <input type="text" id="strada" placeholder="Str. Exemplu" />
+              </div>
+              <div class="form-group">
+                <label>Număr</label>
+                <input type="text" id="numar" placeholder="10" />
+              </div>
+            </div>
+          </div>
+
+          <div class="error-msg show" id="err-global" style="display:none;margin-bottom:0.75rem"></div>
+
+          <button class="btn-primary" id="btnSubmit" onclick="submitForm()" disabled>Trimite cererea</button>
+          <button class="btn-back" onclick="goBack()">← Înapoi</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API = 'https://web-production-26811.up.railway.app/api'
+    let cnpVerificat = false
+
+    function goStep2() {
+      let ok = true
+      const nume = document.getElementById('nume').value.trim()
+      const prenume = document.getElementById('prenume').value.trim()
+      const email = document.getElementById('email').value.trim()
+      const telefon = document.getElementById('telefon').value.trim()
+      const parola = document.getElementById('parola').value
+      const parola2 = document.getElementById('parola2').value
+
+      if (!nume) { showErr('err-nume', true); ok = false } else showErr('err-nume', false)
+      if (!prenume) { showErr('err-prenume', true); ok = false } else showErr('err-prenume', false)
+      if (!email || !email.includes('@')) { showErr('err-email', true); ok = false } else showErr('err-email', false)
+      if (!telefon) { showErr('err-telefon', true); ok = false } else showErr('err-telefon', false)
+      if (parola.length < 6) { showErr('err-parola', true); ok = false } else showErr('err-parola', false)
+      if (parola !== parola2) { showErr('err-parola2', true); ok = false } else showErr('err-parola2', false)
+
+      if (!ok) return
+      document.getElementById('step1').style.display = 'none'
+      document.getElementById('step2').style.display = 'block'
+      document.getElementById('step1label').className = 'step done'
+      document.getElementById('step2label').className = 'step active'
+    }
+
+    function goBack() {
+      document.getElementById('step1').style.display = 'block'
+      document.getElementById('step2').style.display = 'none'
+      document.getElementById('step1label').className = 'step active'
+      document.getElementById('step2label').className = 'step'
+    }
+
+    document.getElementById('cnp').addEventListener('input', function() {
+      cnpVerificat = false
+      document.getElementById('btnSubmit').disabled = true
+      document.getElementById('foundBox').className = 'found-box'
+      document.getElementById('notFoundBox').className = 'not-found-box'
+      document.getElementById('addressSection').className = 'address-section'
+    })
+
+    async function verificaCNP() {
+      const cnp = document.getElementById('cnp').value.trim()
+      if (cnp.length !== 13 || !/^\d+$/.test(cnp)) {
+        showErr('err-cnp', true)
+        return
+      }
+      showErr('err-cnp', false)
+      const btn = document.getElementById('btnVerify')
+      btn.disabled = true
+      btn.textContent = '...'
+      try {
+        const r = await fetch(`${API}/inregistrare/verifica-cnp/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cnp })
+        })
+        const data = await r.json()
+        if (data.gasit) {
+          document.getElementById('foundBox').innerHTML = `✅ Fișă găsită: <strong>${data.prenume} ${data.nume}</strong>${data.localitate ? ', ' + data.localitate : ''}`
+          document.getElementById('foundBox').className = 'found-box show'
+          document.getElementById('notFoundBox').className = 'not-found-box'
+          document.getElementById('addressSection').className = 'address-section'
+        } else {
+          document.getElementById('notFoundBox').className = 'not-found-box show'
+          document.getElementById('foundBox').className = 'found-box'
+          document.getElementById('addressSection').className = 'address-section show'
+        }
+        cnpVerificat = true
+        document.getElementById('btnSubmit').disabled = false
+      } catch(e) {
+        document.getElementById('notFoundBox').textContent = 'Eroare la verificare. Încearcă din nou.'
+        document.getElementById('notFoundBox').className = 'not-found-box show'
+      } finally {
+        btn.disabled = false
+        btn.textContent = 'Verifică'
+      }
+    }
+
+    async function submitForm() {
+      if (!cnpVerificat) return
+      const btn = document.getElementById('btnSubmit')
+      btn.disabled = true
+      btn.textContent = 'Se trimite...'
+      const errGlobal = document.getElementById('err-global')
+      errGlobal.style.display = 'none'
+
+      const body = {
+        nume: document.getElementById('nume').value.trim(),
+        prenume: document.getElementById('prenume').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        telefon: document.getElementById('telefon').value.trim(),
+        parola: document.getElementById('parola').value,
+        cnp: document.getElementById('cnp').value.trim(),
+        judet: document.getElementById('judet').value.trim(),
+        localitate: document.getElementById('localitate').value.trim(),
+        strada: document.getElementById('strada').value.trim(),
+        numar: document.getElementById('numar').value.trim(),
+      }
+
+      try {
+        const r = await fetch(`${API}/inregistrare/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        })
+        const data = await r.json()
+        if (data.ok) {
+          document.getElementById('formContent').style.display = 'none'
+          document.getElementById('successCard').className = 'success-card show'
+        } else {
+          errGlobal.textContent = data.error || 'Eroare la înregistrare.'
+          errGlobal.style.display = 'block'
+          btn.disabled = false
+          btn.textContent = 'Trimite cererea'
+        }
+      } catch(e) {
+        errGlobal.textContent = 'Eroare de conexiune. Încearcă din nou.'
+        errGlobal.style.display = 'block'
+        btn.disabled = false
+        btn.textContent = 'Trimite cererea'
+      }
+    }
+
+    function showErr(id, show) {
+      document.getElementById(id).className = 'error-msg' + (show ? ' show' : '')
+    }
+  </script>
+</body>
+</html>
