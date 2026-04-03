@@ -45,10 +45,7 @@ export default function ProgramContactPage() {
                 })}
               </tbody>
             </table>
-            <div style={{marginTop: '2rem'}}>
-              <a href="/programare.html" className="sp-btn-programare">📅 Programare online</a>
-            </div>
-          </div>
+        </div>
 
           <div className="sp-info-box sp-reveal">
             <div className="sp-info-row"><div className="sp-info-icon">📍</div><div className="sp-info-text"><h4>Adresă cabinet</h4><p>{config?.strada ? `${config.strada} nr. ${config.numar}, ` : ''}{config?.localitate || 'Cluj-Napoca'}<br/>{config?.judet ? `Județul ${config.judet}, ` : ''}România</p></div></div>
