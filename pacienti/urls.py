@@ -9,6 +9,7 @@ from .views import print_concediu, print_reteta, print_trimitere
 from .views import test_email
 from .views import ProfilMedicView, SchimbareParolaView, zile_libere_view
 from .views import VerificareCNPView, InregistrarePacientView, AprobarePacientView
+from .views import PortalPacientView
 
 router = DefaultRouter()
 router.register('pacienti', PacientViewSet, basename='pacient')
@@ -34,4 +35,5 @@ urlpatterns = router.urls + [
     path('inregistrare/verifica-cnp/', VerificareCNPView.as_view()),
     path('inregistrare/', InregistrarePacientView.as_view()),
     path('cereri/<int:pk>/aprobare/', AprobarePacientView.as_view()),
+    path('portal-pacient/', PortalPacientView.as_view()),
 ]

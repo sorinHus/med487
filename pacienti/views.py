@@ -720,4 +720,50 @@ class AprobarePacientView(APIView):
         if not user:
             return Response({'error': 'Cerere negăsită'}, status=404)
         user.delete()
-        return Response({'ok': True})        
+        return Response({'ok': True})   
+
+class PortalPacientView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        if user.rol != 'pacient':
+            return Response({'error': 'Acces interzis'}, status=403)
+        try:
+            pacient = user.pacient_profil
+        except Exception:
+            return Response({'programari': [], 'consultatii': [], 'retete': []})
+
+        programari = Programare.objects.filter(pacient=pacient).order_by('-data_ora')[:20]
+        consultatii = Consultatie.objects.filter(pacient=pacient).order_by('-data_ora')[:30]
+        retete = Reteta.objects.filter(pacient=pacient).order_by('-data_prescriere')[:30]
+
+        return Response({
+            'programari': [
+                {
+                    'id': p.id,
+                    'data_ora': p.data_ora,
+                    'motiv': p.motiv or '—',
+                    'status': p.status,
+                }
+                for p in programari
+            ],
+            'consultatii': [
+                {
+                    'id': c.id,
+                    'data_ora': c.data_ora,
+                    'simptome': c.simptome or '—',
+                    'tratament': c.tratament or '—',
+                    'medic': c.medic.get_full_name() or c.medic.username,
+                }
+                for c in consultatii
+            ],
+            'retete': [
+                {
+                    'id': r.id,
+                    'numar': r.numar,
+                    'data_prescriere': r.data_prescriere,
+                }
+                for r in retete
+            ],
+        })         
