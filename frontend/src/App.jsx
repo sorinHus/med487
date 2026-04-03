@@ -13,6 +13,7 @@ import ProfilMedic from './components/ProfilMedic'
 import SitePrezentare from './components/SitePrezentare'
 import SuperadminPanel from './components/SuperadminPanel'
 import CereriPacienti from './components/CereriPacienti'
+import PortalPacient from './components/PortalPacient'
 
 const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000
 
@@ -127,7 +128,7 @@ function AppInterna() {
   if (loading)   return <div style={{ minHeight: '100vh', background: '#0f1117' }} />
 
   if (user?.rol === 'superadmin') return <SuperadminPanel onLogout={handleLogout} />
-  if (user?.rol === 'pacient')    return <PortalPlaceholder onLogout={handleLogout} />
+  if (user?.rol === 'pacient')    return <PortalPacient user={user} onLogout={handleLogout} />
 
   return <AppMedic user={user} onLogout={handleLogout} />
 }
