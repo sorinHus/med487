@@ -134,7 +134,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/"    element={<SitePrezentare />} />
+        <Route path="/*" element={<SitePrezentare />} />
         <Route path="/app" element={<AppInterna />} />
         <Route path="*"    element={<Navigate to="/" replace />} />
       </Routes>
