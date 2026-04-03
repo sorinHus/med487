@@ -690,6 +690,7 @@ class InregistrarePacientView(APIView):
 
                 Pacient.objects.create(
                     user=user,
+                    medic=CustomUser.objects.filter(rol='medic').first(),
                     nume=data.get('nume', ''),
                     prenume=data.get('prenume', ''),
                     cnp=cnp,
