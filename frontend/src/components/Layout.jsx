@@ -86,15 +86,6 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
             </div>
           </div>
 
-          {/* Toggle dark/light */}
-          <button onClick={onToggleTheme}
-            style={{ width: '100%', padding: '7px', borderRadius: '7px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-muted)', fontSize: '14px', cursor: 'pointer', marginBottom: '6px', transition: 'all 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' }}
-          >
-            {theme === 'dark' ? '☀️ Mod luminos' : '🌙 Mod întunecat'}
-          </button>
-
           <button onClick={() => { if (window.confirm('Ești sigur că vrei să te deconectezi?')) onLogout() }}
             style={{ width: '100%', padding: '7px', borderRadius: '7px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-muted)', fontSize: '15px', cursor: 'pointer', transition: 'all 0.15s' }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#f87171'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)' }}
@@ -108,22 +99,32 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
       {/* ── Main ── */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
-        {/* Header */}
-        <header style={{ height: '54px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0 }}>
-          <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>{title}</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span
-              onClick={() => onNavigate('profil')}
-              style={{ fontSize: '16px', color: 'var(--text-dim)', cursor: 'pointer', transition: 'color 0.15s' }}
-              onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-light)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
-              title="Profilul meu"
-            >{fullName}</span>
-            <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: '#fff' }}>
-              {initials}
-            </div>
+      {/* Header */}
+      <header style={{ height: '54px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0 }}>
+        <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>{title}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <button onClick={onToggleTheme} title={theme === 'dark' ? 'Mod luminos' : 'Mod întunecat'}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--text-dim)', display: 'flex', alignItems: 'center', transition: 'color 0.15s' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-light)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
+          >
+            {theme === 'dark'
+              ? <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-12.37l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0zM7.05 18.36l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0z"/></svg>
+              : <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+            }
+          </button>
+          <span
+            onClick={() => onNavigate('profil')}
+            style={{ fontSize: '16px', color: 'var(--text-dim)', cursor: 'pointer', transition: 'color 0.15s' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-light)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
+            title="Profilul meu"
+          >{fullName}</span>
+          <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: '#fff' }}>
+            {initials}
           </div>
-        </header>
+        </div>
+      </header>
 
         {/* Page content */}
         <main style={{ flex: 1, overflow: 'auto', padding: '24px' }}>
