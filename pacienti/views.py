@@ -642,6 +642,7 @@ class InregistrarePacientView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        import traceback
         data = request.data
         cnp = data.get('cnp', '').strip()
         email = data.get('email', '').strip()
@@ -654,36 +655,38 @@ class InregistrarePacientView(APIView):
         if pacient_existent and pacient_existent.user is not None:
             return Response({'error': 'Există deja un cont asociat acestui CNP.'}, status=400)
 
-        user = CustomUser.objects.create(
-            username=username,
-            email=email,
-            first_name=data.get('prenume', ''),
-            last_name=data.get('nume', ''),
-            telefon=data.get('telefon', ''),
-            rol='pacient',
-            aprobat=False,
-            is_active=True,
-            password=make_password(data.get('parola', '')),
-        )
-
-        if pacient_existent:
-            pacient_existent.user = user
-            pacient_existent.save()
-        else:
-            Pacient.objects.create(
-                user=user,
-                nume=data.get('nume', ''),
-                prenume=data.get('prenume', ''),
-                cnp=cnp,
-                telefon=data.get('telefon', ''),
+        try:
+            user = CustomUser.objects.create(
+                username=username,
                 email=email,
-                judet=data.get('judet', ''),
-                localitate=data.get('localitate', ''),
-                strada=data.get('strada', ''),
-                numar=data.get('numar', ''),
+                first_name=data.get('prenume', ''),
+                last_name=data.get('nume', ''),
+                telefon=data.get('telefon', ''),
+                rol='pacient',
+                aprobat=False,
+                is_active=True,
+                password=make_password(data.get('parola', '')),
             )
 
-        return Response({'ok': True})
+            if pacient_existent:
+                pacient_existent.user = user
+                pacient_existent.save()
+            else:
+                Pacient.objects.create(
+                    user=user,
+                    nume=data.get('nume', ''),
+                    prenume=data.get('prenume', ''),
+                    cnp=cnp,
+                    telefon=data.get('telefon', ''),
+                    email=email,
+                    judet=data.get('judet', ''),
+                    localitate=data.get('localitate', ''),
+                    strada=data.get('strada', ''),
+                    numar=data.get('numar', ''),
+                )
+            return Response({'ok': True})
+        except Exception as e:
+            return Response({'error': str(e), 'trace': traceback.format_exc()}, status=500)
 
 
 class AprobarePacientView(APIView):
