@@ -686,7 +686,7 @@ class InregistrarePacientView(APIView):
                 try:
                     dn = date(an, int(luna), int(zi))
                 except Exception:
-                    dn = None
+                    dn = date(2000, 1, 1)
 
                 Pacient.objects.create(
                     user=user,
