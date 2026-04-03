@@ -17,7 +17,7 @@ const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000 // 2 ore in ms
 
 function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
