@@ -682,7 +682,7 @@ class InregistrarePacientView(APIView):
                     judet=data.get('judet', ''),
                     localitate=data.get('localitate', ''),
                     strada=data.get('strada', ''),
-                    numar=data.get('numar', ''),
+                    numar_strada=data.get('numar', ''),
                 )
             return Response({'ok': True})
         except Exception as e:
