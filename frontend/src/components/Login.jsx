@@ -64,6 +64,9 @@ export default function Login({ onLogin }) {
           </form>
         </div>
         <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '12px', color: 'var(--text-dim)' }}>MED487 — Gestiune Medicala</div>
+        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <a href="/" style={{ fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none' }}>← Înapoi la site</a>
+        </div>
       </div>
     </div>
   )
