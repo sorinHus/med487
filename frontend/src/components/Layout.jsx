@@ -103,10 +103,10 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
       <header style={{ height: '54px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0 }}>
         <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>{title}</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <a href="/" style={{ fontSize: '13px', color: 'var(--text-dim)', textDecoration: 'none', transition: 'color 0.15s' }}
+          <a href="/" style={{ fontSize: '13px', color: 'var(--text-dim)', textDecoration: 'none', transition: 'color 0.15s', paddingRight: '6px' }}
             onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-light)'}
             onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
-          >← Site</a>
+          >← Site principal</a>
           <button onClick={onToggleTheme} title={theme === 'dark' ? 'Mod luminos' : 'Mod întunecat'}
             style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--text-dim)', display: 'flex', alignItems: 'center', transition: 'color 0.15s' }}
             onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-light)'}
