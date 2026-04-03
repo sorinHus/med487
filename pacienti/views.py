@@ -649,8 +649,10 @@ class InregistrarePacientView(APIView):
 
         if CustomUser.objects.filter(username=username).exists():
             return Response({'error': 'Există deja un cont cu acest email.'}, status=400)
-        if CustomUser.objects.filter(email=email).exists():
-            return Response({'error': 'Există deja un cont cu acest email.'}, status=400)
+
+        pacient_existent = Pacient.objects.filter(cnp=cnp).first()
+        if pacient_existent and pacient_existent.user is not None:
+            return Response({'error': 'Există deja un cont asociat acestui CNP.'}, status=400)
 
         user = CustomUser.objects.create(
             username=username,
@@ -664,11 +666,10 @@ class InregistrarePacientView(APIView):
             password=make_password(data.get('parola', '')),
         )
 
-        pacient = Pacient.objects.filter(cnp=cnp).first()
-        if pacient:
-            if not pacient.user:
-                pacient.user = user
-                pacient.save()
+        if pacient_existent:
+            if not pacient_existent.user:
+                pacient_existent.user = user
+                pacient_existent.save()
         else:
             Pacient.objects.create(
                 user=user,
