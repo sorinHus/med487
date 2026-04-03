@@ -12,11 +12,12 @@ function getAvatarColor(name) {
 }
 
 const NAV_ITEMS = [
-  { id: 'dashboard',   label: 'Dashboard',   icon: IconDashboard },
-  { id: 'pacienti',    label: 'Pacienti',    icon: IconPacienti },
-  { id: 'programari',  label: 'Programari',  icon: IconProgramari },
-  { id: 'consultatii', label: 'Consultatii', icon: IconConsultatii },
-  { id: 'rapoarte',    label: 'Rapoarte',    icon: IconRapoarte },
+  { id: 'dashboard',       label: 'Dashboard',   icon: IconDashboard },
+  { id: 'pacienti',        label: 'Pacienti',    icon: IconPacienti },
+  { id: 'programari',      label: 'Programari',  icon: IconProgramari },
+  { id: 'consultatii',     label: 'Consultatii', icon: IconConsultatii },
+  { id: 'rapoarte',        label: 'Rapoarte',    icon: IconRapoarte },
+  { id: 'cereri-pacienti', label: 'Cereri pacienți', icon: IconCereri, roluri: ['medic', 'asistent'] },
 ]
 
 const PAGE_TITLES = {
@@ -50,7 +51,10 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
 
         {/* Nav */}
         <nav style={{ flex: 1, padding: '14px 10px' }}>
-          {NAV_ITEMS.filter(item => item.id === 'dashboard' || moduleActive.length === 0 || moduleActive.includes(item.id)).map(({ id, label, icon: Icon }) => {
+          {NAV_ITEMS.filter(item => {
+          if (item.roluri && !item.roluri.includes(rol)) return false
+          return item.id === 'dashboard' || moduleActive.length === 0 || moduleActive.includes(item.id)
+          }).map(({ id, label, icon: Icon }) => {
             const active = activePage === id
             return (
               <button key={id} onClick={() => onNavigate(id)}
@@ -175,6 +179,14 @@ function IconRapoarte({ size = 16, color = 'currentColor' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
       <path d="M3 3v18h18v-2H5V3H3zm4 10l3-3 3 3 4-4 1.5 1.5L13 16l-3-3-3 3L7 13z"/>
+    </svg>
+  )
+}
+
+function IconCereri({ size = 16, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
     </svg>
   )
 }

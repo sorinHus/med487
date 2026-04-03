@@ -12,6 +12,7 @@ import Rapoarte from './components/Rapoarte'
 import ProfilMedic from './components/ProfilMedic'
 import SitePrezentare from './components/SitePrezentare'
 import SuperadminPanel from './components/SuperadminPanel'
+import CereriPacienti from './components/CereriPacienti'
 
 const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000
 
@@ -59,6 +60,7 @@ function AppMedic({ user, onLogout }) {
       {activePage === 'programari'  && <Programari />}
       {activePage === 'consultatii' && <Consultatii onNavigate={handleNavigate} />}
       {activePage === 'rapoarte'    && <Rapoarte />}
+      {activePage === 'cereri-pacienti' && <CereriPacienti />}
     </Layout>
   )
 }
