@@ -672,11 +672,28 @@ class InregistrarePacientView(APIView):
                 pacient_existent.user = user
                 pacient_existent.save()
             else:
+                from datetime import date
+                an2 = cnp[1:3]
+                luna = cnp[3:5]
+                zi = cnp[5:7]
+                s = cnp[0]
+                if s in ('1', '2'):
+                    an = int('19' + an2)
+                elif s in ('5', '6'):
+                    an = int('20' + an2)
+                else:
+                    an = int('19' + an2)
+                try:
+                    dn = date(an, int(luna), int(zi))
+                except Exception:
+                    dn = None
+
                 Pacient.objects.create(
                     user=user,
                     nume=data.get('nume', ''),
                     prenume=data.get('prenume', ''),
                     cnp=cnp,
+                    data_nastere=dn,
                     telefon=data.get('telefon', ''),
                     email=email,
                     judet=data.get('judet', ''),
