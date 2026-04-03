@@ -200,34 +200,7 @@ export const spStyles = `
   .sp-program-table td:last-child { color: white; font-weight: 500; text-align: right; }
   .sp-program-table .sp-closed { color: rgba(255,255,255,0.3); font-style: italic; }
 
-  /* CONTACT */
-  .sp-contact-page { background: #faf8f4; }
-  .sp-contact-grid { margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
-  .sp-contact-card { background: white; border-radius: 16px; padding: 2rem; border: 1px solid #e2e8f0; }
-  .sp-contact-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #1a3557; margin-bottom: 1.5rem; }
-  .sp-contact-item { display: flex; gap: 0.9rem; align-items: flex-start; margin-bottom: 1.1rem; }
-  .sp-contact-item:last-child { margin-bottom: 0; }
-  .sp-contact-icon {
-    width: 38px; height: 38px; flex-shrink: 0; background: #f0f6ff;
-    border-radius: 9px; display: flex; align-items: center; justify-content: center;
-    color: #2563a8; font-size: 1rem;
-  }
-  .sp-contact-label { font-size: 0.72rem; color: #718096; letter-spacing: .04em; text-transform: uppercase; }
-  .sp-contact-value { font-size: 0.9rem; color: #1a2332; font-weight: 500; margin-top: 1px; }
-  .sp-programare-box {
-    background: #1a3557; border-radius: 16px; padding: 2.25rem; text-align: center;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-  }
-  .sp-programare-box h3 { font-family: 'Playfair Display', serif; font-size: 1.35rem; color: white; margin-bottom: 0.75rem; }
-  .sp-programare-box p { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 1.75rem; line-height: 1.6; }
-  .sp-btn-programare {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: #b8892a; color: white; padding: 0.9rem 2rem; border-radius: 10px;
-    text-decoration: none; font-weight: 500; font-size: 0.95rem;
-    box-shadow: 0 4px 20px rgba(184,137,42,0.35); transition: background .2s, transform .15s;
-  }
-  .sp-btn-programare:hover { background: #a07824; transform: translateY(-2px); }
-
+  
   /* INFO BOX (folosit in Program si Contact) */
   .sp-info-box {
     background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
