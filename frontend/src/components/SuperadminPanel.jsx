@@ -51,6 +51,7 @@ const TOATE_MODULELE = [
   { key: 'trimiteri', label: 'Trimiteri' },
   { key: 'concedii', label: 'Concedii' },
   { key: 'rapoarte', label: 'Rapoarte' },
+  { key: 'cereri-pacienti', label: 'Cereri pacienți' },
 ]
 
 const ROL_LABELS = { medic: 'Medic', asistent: 'Asistent', superadmin: 'Superadmin', pacient: 'Pacient' }
