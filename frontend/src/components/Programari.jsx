@@ -22,21 +22,10 @@ function getMondayOf(date) {
   d.setHours(0, 0, 0, 0)
   return d
 }
-
-function addDays(date, n) {
-  const d = new Date(date)
-  d.setDate(d.getDate() + n)
-  return d
-}
-
+function addDays(date, n) { const d = new Date(date); d.setDate(d.getDate() + n); return d }
 function formatDate(date) {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`
 }
-
-
 function formatOra(dataOra) {
   return new Date(dataOra).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })
 }
@@ -61,116 +50,76 @@ function Badge({ status }) {
   )
 }
 
-// ── Modal programare noua ──
 function ModalProgramare({ onClose, onSaved, defaultData }) {
   const [form, setForm] = useState({
     data_ora: defaultData?.data_ora || new Date().toISOString().slice(0, 16),
-    durata_min: 20,
-    motiv: '',
-    nume_pacient: '',
-    telefon_pacient: '',
-    email_pacient: '',
-    medic: 1,
-    status: 'programat',
-    ...defaultData,
+    durata_min: 20, motiv: '', nume_pacient: '', telefon_pacient: '',
+    email_pacient: '', medic: 1, status: 'programat', ...defaultData,
   })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
-  const inputStyle = {
-    width: '100%', padding: '8px 12px', fontSize: '13px',
-    background: '#0f1117', border: '1px solid #1e2535', borderRadius: '8px',
-    color: '#e2e8f0', boxSizing: 'border-box', marginBottom: '12px', outline: 'none',
-  }
-  const labelStyle = { fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }
+  const inputStyle = { width: '100%', padding: '8px 12px', fontSize: '13px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)', boxSizing: 'border-box', marginBottom: '12px', outline: 'none' }
+  const labelStyle = { fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }
 
   const handleSubmit = async (e) => {
-  e.preventDefault()
-  setSaving(true)
-  setError(null)
-  try {
-    await api.post('/programari/', form)
-    setSaving(false)
-    onSaved()
-  // eslint-disable-next-line no-unused-vars
-  } catch (err) {
-    setError('Eroare la salvare. Verificati datele.')
-    setSaving(false)
+    e.preventDefault(); setSaving(true); setError(null)
+    try { await api.post('/programari/', form); setSaving(false); onSaved() }
+    // eslint-disable-next-line no-unused-vars
+    catch (err) { setError('Eroare la salvare. Verificati datele.'); setSaving(false) }
   }
-}
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-      <div style={{ background: '#161b27', border: '1px solid #1e2535', borderRadius: '14px', padding: '24px', width: '460px', maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto' }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '24px', width: '460px', maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <span style={{ fontSize: '15px', fontWeight: '600', color: '#e2e8f0' }}>Programare noua</span>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '22px', lineHeight: 1, padding: '0 4px' }}>×</button>
+          <span style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)' }}>Programare noua</span>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '22px', lineHeight: 1, padding: '0 4px' }}>×</button>
         </div>
-
         {error && (
           <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', padding: '10px 14px', color: '#f87171', fontSize: '13px', marginBottom: '14px' }}>
             {error}
           </div>
         )}
-
         <form onSubmit={handleSubmit}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 14px' }}>
             <div>
               <label style={labelStyle}>Data si ora *</label>
-              <input type="datetime-local" value={form.data_ora}
-                onChange={e => setForm(p => ({ ...p, data_ora: e.target.value }))}
-                required style={inputStyle} />
+              <input type="datetime-local" value={form.data_ora} onChange={e => setForm(p => ({ ...p, data_ora: e.target.value }))} required style={inputStyle} />
             </div>
             <div>
               <label style={labelStyle}>Durata (min)</label>
-              <select value={form.durata_min}
-                onChange={e => setForm(p => ({ ...p, durata_min: parseInt(e.target.value) }))}
-                style={inputStyle}>
-                {[10, 15, 20, 30, 45, 60].map(d => <option key={d} value={d}>{d} min</option>)}
+              <select value={form.durata_min} onChange={e => setForm(p => ({ ...p, durata_min: parseInt(e.target.value) }))} style={inputStyle}>
+                {[10,15,20,30,45,60].map(d => <option key={d} value={d}>{d} min</option>)}
               </select>
             </div>
           </div>
-
           <label style={labelStyle}>Nume pacient *</label>
-          <input value={form.nume_pacient}
-            onChange={e => setForm(p => ({ ...p, nume_pacient: e.target.value }))}
-            required placeholder="Nume si prenume" style={inputStyle} />
-
+          <input value={form.nume_pacient} onChange={e => setForm(p => ({ ...p, nume_pacient: e.target.value }))} required placeholder="Nume si prenume" style={inputStyle} />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 14px' }}>
             <div>
               <label style={labelStyle}>Telefon</label>
-              <input value={form.telefon_pacient}
-                onChange={e => setForm(p => ({ ...p, telefon_pacient: e.target.value }))}
-                placeholder="07xx xxx xxx" style={inputStyle} />
+              <input value={form.telefon_pacient} onChange={e => setForm(p => ({ ...p, telefon_pacient: e.target.value }))} placeholder="07xx xxx xxx" style={inputStyle} />
             </div>
             <div>
               <label style={labelStyle}>Email</label>
-              <input type="email" value={form.email_pacient}
-                onChange={e => setForm(p => ({ ...p, email_pacient: e.target.value }))}
-                style={inputStyle} />
+              <input type="email" value={form.email_pacient} onChange={e => setForm(p => ({ ...p, email_pacient: e.target.value }))} style={inputStyle} />
             </div>
           </div>
-
           <label style={labelStyle}>Motiv consultatie</label>
-          <input value={form.motiv}
-            onChange={e => setForm(p => ({ ...p, motiv: e.target.value }))}
-            placeholder="ex. Control periodic, Reinnoire reteta..." style={inputStyle} />
-
+          <input value={form.motiv} onChange={e => setForm(p => ({ ...p, motiv: e.target.value }))} placeholder="ex. Control periodic, Reinnoire reteta..." style={inputStyle} />
           <label style={labelStyle}>Status</label>
-          <select value={form.status}
-            onChange={e => setForm(p => ({ ...p, status: e.target.value }))}
-            style={inputStyle}>
+          <select value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value }))} style={inputStyle}>
             <option value="programat">Programat</option>
             <option value="confirmat">Confirmat</option>
           </select>
-
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '4px' }}>
             <button type="button" onClick={onClose}
-              style={{ padding: '9px 20px', fontSize: '13px', cursor: 'pointer', border: '1px solid #1e2535', borderRadius: '8px', background: 'transparent', color: '#9ca3af' }}>
+              style={{ padding: '9px 20px', fontSize: '13px', cursor: 'pointer', border: '1px solid var(--border)', borderRadius: '8px', background: 'transparent', color: 'var(--text-muted)' }}>
               Anuleaza
             </button>
             <button type="submit" disabled={saving}
-              style={{ padding: '9px 20px', fontSize: '13px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', opacity: saving ? 0.6 : 1 }}>
+              style={{ padding: '9px 20px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', opacity: saving ? 0.6 : 1 }}>
               {saving ? 'Se salveaza...' : 'Salveaza'}
             </button>
           </div>
@@ -180,74 +129,49 @@ function ModalProgramare({ onClose, onSaved, defaultData }) {
   )
 }
 
-// ── Rand programare ──
 function RandProgramare({ p, onStatusChange, index }) {
   const nume = p.pacient_nume_complet || p.nume_pacient || '—'
   const ora = formatOra(p.data_ora)
-  const avatarBg = getAvatarColor(nume)
-  const initials = getInitials(nume)
 
   const handleStatus = async (newStatus) => {
-    try {
-      await api.patch(`/programari/${p.id}/`, { status: newStatus })
-      onStatusChange()
-    } catch (err) {
-      console.error(err)
-    }
+    try { await api.patch(`/programari/${p.id}/`, { status: newStatus }); onStatusChange() }
+    catch (err) { console.error(err) }
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderBottom: '1px solid #1a2033', transition: 'background 0.12s' }}
-      onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderBottom: '1px solid var(--border)', transition: 'background 0.12s' }}
+      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
     >
-      {/* Nr + Ora */}
-      <span style={{ fontSize: '11px', color: '#4b5563', width: '18px', textAlign: 'center', flexShrink: 0 }}>{index + 1}</span>
-      <span style={{ fontSize: '13px', fontWeight: '600', color: '#60a5fa', width: '42px', flexShrink: 0 }}>{ora}</span>
-
-      {/* Avatar */}
-      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
-        {initials}
+      <span style={{ fontSize: '11px', color: 'var(--text-dim)', width: '18px', textAlign: 'center', flexShrink: 0 }}>{index + 1}</span>
+      <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--accent-light)', width: '42px', flexShrink: 0 }}>{ora}</span>
+      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
+        {getInitials(nume)}
       </div>
-
-      {/* Info */}
       <div style={{ flex: 1, overflow: 'hidden' }}>
-        <div style={{ fontSize: '13px', fontWeight: '500', color: '#e2e8f0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{nume}</div>
-        {p.motiv && <div style={{ fontSize: '11px', color: '#4b5563', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.motiv}</div>}
-        {p.telefon_pacient && <div style={{ fontSize: '11px', color: '#4b5563' }}>{p.telefon_pacient}</div>}
+        <div style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{nume}</div>
+        {p.motiv && <div style={{ fontSize: '11px', color: 'var(--text-dim)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.motiv}</div>}
+        {p.telefon_pacient && <div style={{ fontSize: '11px', color: 'var(--text-dim)' }}>{p.telefon_pacient}</div>}
       </div>
-
-      {/* Badge + actiuni */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
         <Badge status={p.status} />
-        {/* Actiuni rapide */}
         {p.status === 'programat' && (
-          <button onClick={() => handleStatus('confirmat')}
-            title="Confirma"
-            style={{ padding: '4px 8px', fontSize: '11px', borderRadius: '6px', border: '1px solid rgba(46,204,143,0.3)', background: 'rgba(46,204,143,0.08)', color: '#34d399', cursor: 'pointer' }}>
-            ✓
-          </button>
+          <button onClick={() => handleStatus('confirmat')} title="Confirma"
+            style={{ padding: '4px 8px', fontSize: '11px', borderRadius: '6px', border: '1px solid rgba(46,204,143,0.3)', background: 'rgba(46,204,143,0.08)', color: '#34d399', cursor: 'pointer' }}>✓</button>
         )}
         {['programat','confirmat'].includes(p.status) && (
-          <button onClick={() => handleStatus('anulat')}
-            title="Anuleaza"
-            style={{ padding: '4px 8px', fontSize: '11px', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer' }}>
-            ✕
-          </button>
+          <button onClick={() => handleStatus('anulat')} title="Anuleaza"
+            style={{ padding: '4px 8px', fontSize: '11px', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer' }}>✕</button>
         )}
         {p.status === 'confirmat' && (
-          <button onClick={() => handleStatus('finalizat')}
-            title="Finalizeaza"
-            style={{ padding: '4px 8px', fontSize: '11px', borderRadius: '6px', border: '1px solid rgba(107,114,128,0.3)', background: 'rgba(107,114,128,0.08)', color: '#9ca3af', cursor: 'pointer' }}>
-            ✔✔
-          </button>
+          <button onClick={() => handleStatus('finalizat')} title="Finalizeaza"
+            style={{ padding: '4px 8px', fontSize: '11px', borderRadius: '6px', border: '1px solid rgba(107,114,128,0.3)', background: 'rgba(107,114,128,0.08)', color: '#9ca3af', cursor: 'pointer' }}>✔✔</button>
         )}
       </div>
     </div>
   )
 }
 
-// ── Componenta principala ──
 export default function Programari() {
   const [monday, setMonday] = useState(() => getMondayOf(new Date()))
   const [programari, setProgramari] = useState([])
@@ -258,12 +182,9 @@ export default function Programari() {
   const days = Array.from({ length: 7 }, (_, i) => addDays(monday, i))
 
   const saptamanaLabel = () => {
-    const start = monday
-    const end = addDays(monday, 6)
-    const sm = LUNI_RO[start.getMonth()]
-    const em = LUNI_RO[end.getMonth()]
-    const sy = start.getFullYear()
-    const ey = end.getFullYear()
+    const start = monday, end = addDays(monday, 6)
+    const sm = LUNI_RO[start.getMonth()], em = LUNI_RO[end.getMonth()]
+    const sy = start.getFullYear(), ey = end.getFullYear()
     if (sy !== ey) return `${start.getDate()} ${sm} ${sy} — ${end.getDate()} ${em} ${ey}`
     if (sm !== em) return `${start.getDate()} ${sm} — ${end.getDate()} ${em} ${sy}`
     return `${start.getDate()} — ${end.getDate()} ${sm} ${sy}`
@@ -272,27 +193,17 @@ export default function Programari() {
   const fetchProgramari = async () => {
     setLoading(true)
     try {
-      const res = await api.get('/programari/', {
-        params: { saptamana: formatDate(monday) }
-      })
-      const list = Array.isArray(res.data) ? res.data : (res.data.results || [])
-      setProgramari(list)
-    } finally {
-      setLoading(false)
-    }
+      const res = await api.get('/programari/', { params: { saptamana: formatDate(monday) } })
+      setProgramari(Array.isArray(res.data) ? res.data : (res.data.results || []))
+    } finally { setLoading(false) }
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchProgramari() }, [monday])
 
-  const prevSaptamana = () => setMonday(m => addDays(m, -7))
-  const nextSaptamana = () => setMonday(m => addDays(m, 7))
-  const aziSaptamana  = () => setMonday(getMondayOf(new Date()))
-
   const getProgramariZi = (date) => {
     const dateStr = formatDate(date)
-    return programari.filter(p => p.data_ora.slice(0, 10) === dateStr)
-      .sort((a, b) => a.data_ora.localeCompare(b.data_ora))
+    return programari.filter(p => p.data_ora.slice(0, 10) === dateStr).sort((a, b) => a.data_ora.localeCompare(b.data_ora))
   }
 
   const aziStr = formatDate(new Date())
@@ -300,72 +211,51 @@ export default function Programari() {
 
   const btnNav = (onClick, label) => (
     <button onClick={onClick}
-      style={{ padding: '7px 14px', fontSize: '13px', cursor: 'pointer', background: 'transparent', border: '1px solid #1e2535', borderRadius: '8px', color: '#9ca3af', transition: 'all 0.15s' }}
-      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#e2e8f0' }}
-      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#9ca3af' }}
-    >
-      {label}
-    </button>
+      style={{ padding: '7px 14px', fontSize: '13px', cursor: 'pointer', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-muted)', transition: 'all 0.15s' }}
+      onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)' }}
+      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' }}
+    >{label}</button>
   )
 
   return (
     <div>
-      {/* Header bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {btnNav(prevSaptamana, '← Prev')}
-          {btnNav(aziSaptamana, 'Azi')}
-          {btnNav(nextSaptamana, 'Next →')}
-          <span style={{ fontSize: '14px', fontWeight: '600', color: '#e2e8f0', marginLeft: '6px' }}>
+          {btnNav(() => setMonday(m => addDays(m, -7)), '← Prev')}
+          {btnNav(() => setMonday(getMondayOf(new Date())), 'Azi')}
+          {btnNav(() => setMonday(m => addDays(m, 7)), 'Next →')}
+          <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginLeft: '6px' }}>
             Programari — saptamana {saptamanaLabel()}
           </span>
         </div>
         <button onClick={() => { setShowModal(true); setModalKey(k => k + 1) }}
-          style={{ padding: '9px 18px', fontSize: '13px', cursor: 'pointer', background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: '500' }}
-          onMouseEnter={e => e.currentTarget.style.background = '#2d6bc4'}
-          onMouseLeave={e => e.currentTarget.style.background = '#3a7bd5'}
-        >
-          + Programare noua
-        </button>
+          style={{ padding: '9px 18px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: '500' }}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-hover)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'var(--accent)'}
+        >+ Programare noua</button>
       </div>
 
-      {/* Zile */}
       {loading ? (
-        <div style={{ color: '#4b5563', textAlign: 'center', padding: '60px' }}>Se incarca...</div>
+        <div style={{ color: 'var(--text-dim)', textAlign: 'center', padding: '60px' }}>Se incarca...</div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {days.map((day, idx) => {
             const prog = getProgramariZi(day)
             const today = isToday(day)
             return (
-              <div key={idx} style={{ background: '#161b27', border: `1px solid ${today ? '#3a7bd5' : '#1e2535'}`, borderRadius: '12px', overflow: 'hidden' }}>
-                {/* Zi header */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', background: today ? 'rgba(58,123,213,0.1)' : 'rgba(255,255,255,0.02)', borderBottom: prog.length > 0 ? '1px solid #1e2535' : 'none' }}>
+              <div key={idx} style={{ background: 'var(--bg-card)', border: `1px solid ${today ? 'var(--accent)' : 'var(--border)'}`, borderRadius: '12px', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', background: today ? 'rgba(58,123,213,0.1)' : 'var(--bg-hover)', borderBottom: prog.length > 0 ? '1px solid var(--border)' : 'none' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: '600', color: today ? '#60a5fa' : '#9ca3af', minWidth: '70px' }}>
-                      {ZILE_RO[idx]}
-                    </span>
-                    <span style={{ fontSize: '12px', color: '#4b5563' }}>
-                      {day.getDate()} {LUNI_RO[day.getMonth()]}
-                    </span>
-                    {today && (
-                      <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '20px', background: 'rgba(58,123,213,0.2)', color: '#60a5fa', fontWeight: '600' }}>
-                        Azi
-                      </span>
-                    )}
+                    <span style={{ fontSize: '13px', fontWeight: '600', color: today ? 'var(--accent-light)' : 'var(--text-muted)', minWidth: '70px' }}>{ZILE_RO[idx]}</span>
+                    <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>{day.getDate()} {LUNI_RO[day.getMonth()]}</span>
+                    {today && <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '20px', background: 'rgba(58,123,213,0.2)', color: 'var(--accent-light)', fontWeight: '600' }}>Azi</span>}
                   </div>
-                  <span style={{ fontSize: '12px', color: '#4b5563' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
                     {prog.length > 0 ? `${prog.length} programare${prog.length !== 1 ? 'i' : ''}` : 'Liber'}
                   </span>
                 </div>
-
-                {/* Programarile zilei */}
                 {prog.length > 0 && (
-                  <div>
-                    {prog.map((p, index) => (
-                      <RandProgramare key={p.id} p={p} onStatusChange={fetchProgramari} index={index} />
-                    ))}
-                  </div>
+                  <div>{prog.map((p, index) => <RandProgramare key={p.id} p={p} onStatusChange={fetchProgramari} index={index} />)}</div>
                 )}
               </div>
             )
@@ -373,14 +263,7 @@ export default function Programari() {
         </div>
       )}
 
-      {/* Modal */}
-      {showModal && (
-  <ModalProgramare
-    key={modalKey}
-    onClose={() => setShowModal(false)}
-    onSaved={() => { setShowModal(false); fetchProgramari() }}
-  />
-)}
+      {showModal && <ModalProgramare key={modalKey} onClose={() => setShowModal(false)} onSaved={() => { setShowModal(false); fetchProgramari() }} />}
     </div>
   )
 }

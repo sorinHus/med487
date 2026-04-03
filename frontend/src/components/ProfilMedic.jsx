@@ -5,14 +5,14 @@ const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 const s = {
   page: { padding: '32px', maxWidth: '600px' },
-  card: { background: '#161b27', border: '1px solid #1e2535', borderRadius: '12px', padding: '28px', marginBottom: '24px' },
-  title: { color: '#e2e8f0', fontSize: '20px', fontWeight: 600, marginBottom: '20px' },
+  card: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '28px', marginBottom: '24px' },
+  title: { color: 'var(--text-primary)', fontSize: '20px', fontWeight: 600, marginBottom: '20px' },
   grid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' },
-  label: { color: '#9ca3af', fontSize: '13px', marginBottom: '4px' },
-  input: { width: '100%', background: '#0f1117', border: '1px solid #1e2535', borderRadius: '8px', padding: '9px 12px', color: '#e2e8f0', fontSize: '14px', boxSizing: 'border-box' },
+  label: { color: 'var(--text-muted)', fontSize: '13px', marginBottom: '4px' },
+  input: { width: '100%', background: 'var(--bg-input)', border: '1px solid var(--border)', borderRadius: '8px', padding: '9px 12px', color: 'var(--text-primary)', fontSize: '14px', boxSizing: 'border-box' },
   inputFull: { gridColumn: '1 / -1' },
-  btn: { background: '#3a7bd5', color: '#fff', border: 'none', borderRadius: '8px', padding: '10px 24px', cursor: 'pointer', fontSize: '14px', fontWeight: 500 },
-  btnSecondary: { background: '#1e2535', color: '#e2e8f0', border: 'none', borderRadius: '8px', padding: '10px 24px', cursor: 'pointer', fontSize: '14px' },
+  btn: { background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', padding: '10px 24px', cursor: 'pointer', fontSize: '14px', fontWeight: 500 },
+  btnSecondary: { background: 'var(--bg-hover)', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: '8px', padding: '10px 24px', cursor: 'pointer', fontSize: '14px' },
   msg: (ok) => ({ color: ok ? '#34d399' : '#f87171', fontSize: '13px', marginTop: '12px' }),
   row: { display: 'flex', gap: '12px', marginTop: '20px', alignItems: 'center' },
 }
@@ -28,46 +28,33 @@ export default function ProfilMedic({ onBack }) {
     const token = localStorage.getItem('access')
     axios.get(`${API}/api/profil/`, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => setForm({
-        first_name: r.data.first_name || '',
-        last_name: r.data.last_name || '',
-        email: r.data.email || '',
-        telefon: r.data.telefon || '',
-        parafa: r.data.parafa || '',
-        cod_medic: r.data.cod_medic || '',
+        first_name: r.data.first_name || '', last_name: r.data.last_name || '',
+        email: r.data.email || '', telefon: r.data.telefon || '',
+        parafa: r.data.parafa || '', cod_medic: r.data.cod_medic || '',
       }))
       .catch(() => setMsgProfil({ ok: false, text: 'Eroare la încărcarea profilului.' }))
   }, [])
 
   const salvezaProfil = async () => {
-    setLoading(true)
-    setMsgProfil(null)
+    setLoading(true); setMsgProfil(null)
     try {
       const token = localStorage.getItem('access')
       await axios.patch(`${API}/api/profil/`, form, { headers: { Authorization: `Bearer ${token}` } })
       setMsgProfil({ ok: true, text: 'Profil salvat cu succes.' })
-    } catch {
-      setMsgProfil({ ok: false, text: 'Eroare la salvare.' })
-    }
+    } catch { setMsgProfil({ ok: false, text: 'Eroare la salvare.' }) }
     setLoading(false)
   }
 
   const schimbaParola = async () => {
     setMsgParola(null)
-    if (parole.parola_noua !== parole.parola_noua2) {
-      setMsgParola({ ok: false, text: 'Parolele noi nu coincid.' })
-      return
-    }
+    if (parole.parola_noua !== parole.parola_noua2) { setMsgParola({ ok: false, text: 'Parolele noi nu coincid.' }); return }
     try {
       const token = localStorage.getItem('access')
-      await axios.post(`${API}/api/profil/schimbare-parola/`, {
-        parola_veche: parole.parola_veche,
-        parola_noua: parole.parola_noua,
-      }, { headers: { Authorization: `Bearer ${token}` } })
+      await axios.post(`${API}/api/profil/schimbare-parola/`, { parola_veche: parole.parola_veche, parola_noua: parole.parola_noua }, { headers: { Authorization: `Bearer ${token}` } })
       setMsgParola({ ok: true, text: 'Parola a fost schimbată.' })
       setParole({ parola_veche: '', parola_noua: '', parola_noua2: '' })
     } catch (e) {
-      const err = e.response?.data?.parola_veche || 'Eroare la schimbarea parolei.'
-      setMsgParola({ ok: false, text: err })
+      setMsgParola({ ok: false, text: e.response?.data?.parola_veche || 'Eroare la schimbarea parolei.' })
     }
   }
 
@@ -78,10 +65,9 @@ export default function ProfilMedic({ onBack }) {
     <div style={s.page}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
         <button onClick={onBack} style={s.btnSecondary}>← Înapoi</button>
-        <h2 style={{ color: '#e2e8f0', margin: 0, fontSize: '22px' }}>Profilul meu</h2>
+        <h2 style={{ color: 'var(--text-primary)', margin: 0, fontSize: '22px' }}>Profilul meu</h2>
       </div>
 
-      {/* Date personale */}
       <div style={s.card}>
         <div style={s.title}>Date personale</div>
         <div style={s.grid}>
@@ -118,7 +104,6 @@ export default function ProfilMedic({ onBack }) {
         </div>
       </div>
 
-      {/* Schimbare parolă */}
       <div style={s.card}>
         <div style={s.title}>Schimbare parolă</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
