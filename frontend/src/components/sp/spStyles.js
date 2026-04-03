@@ -239,4 +239,19 @@ export const spStyles = `
   }
   .sp-reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
   .sp-reveal.sp-visible { opacity: 1; transform: translateY(0); }
+
+  .sp-dropdown-wrap:hover .sp-dropdown-menu { display: flex; }
+  .sp-dropdown-menu {
+    display: none; flex-direction: column;
+    position: absolute; top: calc(100% + 8px); right: 0;
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(26,53,87,0.12);
+    min-width: 170px; overflow: hidden; z-index: 200;
+  }
+  .sp-dropdown-menu a {
+    padding: 0.75rem 1rem; font-size: 0.85rem !important;
+    color: #1a2332 !important; text-decoration: none;
+    transition: background .15s; display: block;
+  }
+  .sp-dropdown-menu a:hover { background: #f0f6ff; color: #2563a8 !important; }
 `

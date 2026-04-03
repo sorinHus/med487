@@ -60,9 +60,16 @@ export default function SpLayout({ children }) {
             <li><Link to="/despre" className={isActive('/despre')}>Despre</Link></li>
             <li><Link to="/servicii" className={isActive('/servicii')}>Servicii</Link></li>
             <li><Link to="/program" className={isActive('/program')}>Program & Contact</Link></li>
-            <li><a href="/inregistrare.html" style={{fontSize:'0.85rem', color:'#4a5568'}}>Înregistrare</a></li>
             <li><a href="/programare.html" className="sp-btn-nav">Programare online →</a></li>
-            <li><Link to="/app" className="sp-btn-nav" style={{background:'#2563a8'}}>Login</Link></li>
+            <li style={{position:'relative'}} className="sp-dropdown-wrap">
+                <button className="sp-btn-nav" style={{background:'#2563a8', border:'none', cursor:'pointer', display:'flex', alignItems:'center', gap:'0.4rem'}}>
+                Cont ▾
+                </button>
+                <div className="sp-dropdown-menu">
+                <Link to="/app">🔑 Login</Link>
+                <a href="/inregistrare.html">📋 Înregistrare</a>
+                </div>
+            </li>
         </ul>
       </nav>
 
