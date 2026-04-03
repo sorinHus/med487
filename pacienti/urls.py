@@ -8,6 +8,7 @@ from .views import (LinieRetetaViewSet, PacientViewSet, ConsulatieViewSet,
 from .views import print_concediu, print_reteta, print_trimitere
 from .views import test_email
 from .views import ProfilMedicView, SchimbareParolaView, zile_libere_view
+from .views import VerificareCNPView, InregistrarePacientView, AprobarePacientView
 
 router = DefaultRouter()
 router.register('pacienti', PacientViewSet, basename='pacient')
