@@ -802,25 +802,25 @@ class ResetParolaView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        email = request.data.get('email', '').strip()
-        if not email:
-            return Response({'error': 'Email obligatoriu.'}, status=400)
-        user = CustomUser.objects.filter(email=email).first()
-        if not user:
-            return Response({'ok': True})  # nu dezvaluim daca exista
-        import random, string
-        from django.core.mail import send_mail
-        parola_noua = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-        user.set_password(parola_noua)
-        user.save()
-        try:
-            send_mail(
-                subject='Resetare parolă — Cabinet Medical',
-                message=f'Bună ziua, {user.first_name}!\n\nParola dumneavoastră a fost resetată.\nParolă temporară: {parola_noua}\n\nVă recomandăm să o schimbați după autentificare.\n\nCu stimă,\nCabinet Medical',
-                from_email=None,
-                recipient_list=[user.email],
-                fail_silently=True,
-            )
-        except Exception:
-            pass
-        return Response({'ok': True})    
+    username = request.data.get('username', '').strip()
+    if not username:
+        return Response({'error': 'Username obligatoriu.'}, status=400)
+    user = CustomUser.objects.filter(username=username).first()
+    if not user or not user.email:
+        return Response({'ok': True})  # nu dezvaluim daca exista
+    import random, string
+    from django.core.mail import send_mail
+    parola_noua = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+    user.set_password(parola_noua)
+    user.save()
+    try:
+        send_mail(
+            subject='Resetare parolă — Cabinet Medical',
+            message=f'Bună ziua, {user.first_name}!\n\nParola dumneavoastră a fost resetată.\nParolă temporară: {parola_noua}\n\nVă recomandăm să o schimbați după autentificare.\n\nCu stimă,\nCabinet Medical',
+            from_email=None,
+            recipient_list=[user.email],
+            fail_silently=True,
+        )
+    except Exception:
+        pass
+    return Response({'ok': True})    
