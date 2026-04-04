@@ -36,6 +36,9 @@ export default function CereriPacienti() {
         method: tip === 'aprobare' ? 'POST' : 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       })
+      console.log('status:', r.status, 'ok:', r.ok)
+      const body = await r.json()
+      console.log('body:', body)
       if (r.ok) {
         setMsg(tip === 'aprobare' ? 'Cont aprobat. Email trimis pacientului.' : 'Cerere respinsă.')
         setCereri(prev => prev.filter(c => c.id !== pk))
@@ -43,7 +46,10 @@ export default function CereriPacienti() {
       } else {
         setMsg('Eroare. Încearcă din nou.')
       }
-    } catch { setMsg('Eroare. Încearcă din nou.') }
+    } catch (e) { 
+      console.log('catch error:', e)
+      setMsg('Eroare. Încearcă din nou.') 
+    }
     finally { setProcessing(null) }
   }
 
