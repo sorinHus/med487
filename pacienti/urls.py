@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 from .views import (LinieRetetaViewSet, PacientViewSet, ConsulatieViewSet,
-                    DiagnosticViewSet, RetetaViewSet, UserViewSet,
+                    DiagnosticViewSet, ResetParolaView, RetetaViewSet, UserViewSet,
                     ProgramareViewSet, ConfiguratieCabinetViewSet,
                     ConcediuMedicalViewSet, TrimitereViewSet,
                     ModuleUtilizatorViewSet)
@@ -36,4 +36,5 @@ urlpatterns = router.urls + [
     path('inregistrare/', InregistrarePacientView.as_view()),
     path('cereri/<int:pk>/aprobare/', AprobarePacientView.as_view()),
     path('portal-pacient/', PortalPacientView.as_view()),
+    path('reset-parola/', ResetParolaView.as_view()),
 ]
