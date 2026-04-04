@@ -10,17 +10,21 @@ export default function CereriPacienti() {
   useEffect(() => { fetchCereri() }, [])
 
   const fetchCereri = async () => {
-    setLoading(true)
-    const token = localStorage.getItem('access')
-    try {
-      const r = await fetch(`${API}/useri/?rol=pacient&aprobat=false`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      const data = await r.json()
-      setCereri(Array.isArray(data) ? data : data.results || [])
-    } catch { setCereri([]) }
-    finally { setLoading(false) }
+  setLoading(true)
+  const token = localStorage.getItem('access')
+  try {
+    const r = await fetch(`${API}/useri/?rol=pacient&aprobat=false`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    const data = await r.json()
+    console.log('cereri data:', data)
+    setCereri(Array.isArray(data) ? data : data.results || [])
+  } catch (e) {
+    console.log('cereri error:', e)
+    setCereri([])
   }
+  finally { setLoading(false) }
+}
 
   const actiune = async (pk, tip) => {
     const token = localStorage.getItem('access')
