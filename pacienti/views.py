@@ -813,14 +813,14 @@ class ResetParolaView(APIView):
         parola_noua = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
         user.set_password(parola_noua)
         user.save()
-    try:
-        send_mail(
-            subject='Resetare parolă — Cabinet Medical',
-            message=f'Bună ziua, {user.first_name}!\n\nParola dumneavoastră a fost resetată.\nParolă temporară: {parola_noua}\n\nVă recomandăm să o schimbați după autentificare.\n\nCu stimă,\nCabinet Medical',
-            from_email=None,
-            recipient_list=[user.email],
-            fail_silently=True,
-        )
-    except Exception:
-        pass
-    return Response({'ok': True})    
+        try:
+            send_mail(
+                subject='Resetare parolă — Cabinet Medical',
+                message=f'Bună ziua, {user.first_name}!\n\nParola dumneavoastră a fost resetată.\nParolă temporară: {parola_noua}\n\nVă recomandăm să o schimbați după autentificare.\n\nCu stimă,\nCabinet Medical',
+                from_email=None,
+                recipient_list=[user.email],
+                fail_silently=True,
+            )
+        except Exception:
+            pass
+        return Response({'ok': True})    
