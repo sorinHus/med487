@@ -72,7 +72,7 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
                 <span style={{ flex: 1 }}>{label}</span>
                 {id === 'cereri-pacienti' && cereriCount > 0 && (
                   <span style={{
-                    background: '#e05c7a',
+                    background: '#fc013b',
                     color: '#fff',
                     borderRadius: '10px',
                     minWidth: '20px',
