@@ -16,12 +16,14 @@ import CereriPacienti from './components/CereriPacienti'
 import PortalPacient from './components/PortalPacient'
 
 const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000
+const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
 
 function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
   const [pacientInitial, setPacientInitial] = useState(null)
   const [moduleActive, setModuleActive] = useState([])
+  const [cereriCount, setCereriCount] = useState(0)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -40,28 +42,49 @@ function AppMedic({ user, onLogout }) {
     }
   }, [user])
 
+  const fetchCereriCount = () => {
+    const token = localStorage.getItem('access')
+    if (!token) return
+    fetch(`${API}/useri/?rol=pacient&aprobat=false`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(r => r.json())
+      .then(data => {
+        const list = Array.isArray(data) ? data : data.results || []
+        setCereriCount(list.length)
+      })
+      .catch(() => {})
+  }
+
+  useEffect(() => {
+    fetchCereriCount()
+    const interval = setInterval(fetchCereriCount, 60000)
+    return () => clearInterval(interval)
+  }, [])
+
   const handleNavigate = (page, data = null) => {
     setPacientInitial(null)
     if (page === 'pacienti' && data?.pacient) {
       setPacientInitial(data.pacient)
     }
+    if (page === 'cereri-pacienti') fetchCereriCount()
     setActivePage(page)
   }
 
   if (activePage === 'profil') return (
-    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme}>
+    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme} cereriCount={cereriCount}>
       <ProfilMedic onBack={() => setActivePage('dashboard')} />
     </Layout>
   )
 
   return (
-    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme}>
-      {activePage === 'dashboard'   && <Dashboard onNavigate={handleNavigate} />}
-      {activePage === 'pacienti'    && <PacientList pacientInitial={pacientInitial} moduleActive={moduleActive} />}
-      {activePage === 'programari'  && <Programari />}
-      {activePage === 'consultatii' && <Consultatii onNavigate={handleNavigate} />}
-      {activePage === 'rapoarte'    && <Rapoarte />}
-      {activePage === 'cereri-pacienti' && <CereriPacienti />}
+    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme} cereriCount={cereriCount}>
+      {activePage === 'dashboard'       && <Dashboard onNavigate={handleNavigate} />}
+      {activePage === 'pacienti'        && <PacientList pacientInitial={pacientInitial} moduleActive={moduleActive} />}
+      {activePage === 'programari'      && <Programari />}
+      {activePage === 'consultatii'     && <Consultatii onNavigate={handleNavigate} />}
+      {activePage === 'rapoarte'        && <Rapoarte />}
+      {activePage === 'cereri-pacienti' && <CereriPacienti onActiune={fetchCereriCount} />}
     </Layout>
   )
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
 
-export default function CereriPacienti() {
+export default function CereriPacienti({ onActiune }) {
   const [cereri, setCereri] = useState([])
   const [loading, setLoading] = useState(true)
   const [msg, setMsg] = useState(null)
@@ -42,6 +42,7 @@ export default function CereriPacienti() {
       if (r.ok) {
         setMsg(tip === 'aprobare' ? 'Cont aprobat. Email trimis pacientului.' : 'Cerere respinsă.')
         setCereri(prev => prev.filter(c => c.id !== pk))
+        if (onActiune) onActiune()
         setTimeout(() => setMsg(null), 3000)
       } else {
         setMsg('Eroare. Încearcă din nou.')

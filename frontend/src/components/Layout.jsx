@@ -12,11 +12,11 @@ function getAvatarColor(name) {
 }
 
 const NAV_ITEMS = [
-  { id: 'dashboard',       label: 'Dashboard',   icon: IconDashboard },
-  { id: 'pacienti',        label: 'Pacienti',    icon: IconPacienti },
-  { id: 'programari',      label: 'Programari',  icon: IconProgramari },
-  { id: 'consultatii',     label: 'Consultatii', icon: IconConsultatii },
-  { id: 'rapoarte',        label: 'Rapoarte',    icon: IconRapoarte },
+  { id: 'dashboard',       label: 'Dashboard',       icon: IconDashboard },
+  { id: 'pacienti',        label: 'Pacienti',        icon: IconPacienti },
+  { id: 'programari',      label: 'Programari',      icon: IconProgramari },
+  { id: 'consultatii',     label: 'Consultatii',     icon: IconConsultatii },
+  { id: 'rapoarte',        label: 'Rapoarte',        icon: IconRapoarte },
   { id: 'cereri-pacienti', label: 'Cereri pacienți', icon: IconCereri },
 ]
 
@@ -28,7 +28,7 @@ const PAGE_TITLES = {
   rapoarte:    () => 'Rapoarte & Grafice',
 }
 
-export default function Layout({ children, activePage, onNavigate, onLogout, user, moduleActive = [], theme = 'dark', onToggleTheme }) {
+export default function Layout({ children, activePage, onNavigate, onLogout, user, moduleActive = [], theme = 'dark', onToggleTheme, cereriCount = 0 }) {
   const firstName = user?.first_name || ''
   const lastName  = user?.last_name  || ''
   const prefix   = user?.rol === 'medic' ? 'Dr. ' : ''
@@ -69,7 +69,25 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
                 onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' } }}
               >
                 <Icon size={15} color={active ? 'var(--accent-light)' : 'var(--text-dim)'} />
-                {label}
+                <span style={{ flex: 1 }}>{label}</span>
+                {id === 'cereri-pacienti' && cereriCount > 0 && (
+                  <span style={{
+                    background: '#e05c7a',
+                    color: '#fff',
+                    borderRadius: '50%',
+                    minWidth: '18px',
+                    height: '18px',
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0 4px',
+                    lineHeight: 1,
+                  }}>
+                    {cereriCount > 99 ? '99+' : cereriCount}
+                  </span>
+                )}
               </button>
             )
           })}
