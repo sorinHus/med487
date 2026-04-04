@@ -117,6 +117,14 @@ export default function SuperadminPanel({ onLogout }) {
   }
 
   const handleToggleActiv = async (u) => { await api.post(`/useri/${u.id}/toggle_activ/`); fetchUseri() }
+
+  const handleDelete = async (u) => {
+      if (!window.confirm(`Ești sigur că vrei să ștergi contul lui ${u.first_name} ${u.last_name}? Acțiunea este ireversibilă.`)) return
+      try {
+        await api.delete(`/useri/${u.id}/`)
+        fetchUseri()
+      } catch { alert('Eroare la ștergere.') }
+    }
   const f = (field, val) => setForm(prev => ({ ...prev, [field]: val }))
   const useriMedici = useri.filter(u => u.rol === 'medic' || u.rol === 'asistent')
 
@@ -174,6 +182,7 @@ export default function SuperadminPanel({ onLogout }) {
                     <td style={s.td}>
                       <button style={s.btnAction} onClick={() => openEdit(u)}>Editează</button>
                       <button style={s.btnAction} onClick={() => handleToggleActiv(u)}>{u.is_active ? 'Dezactivează' : 'Activează'}</button>
+                      <button style={{ ...s.btnAction, color: '#f87171', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => handleDelete(u)}>Șterge</button>
                     </td>
                   </tr>
                 ))}
