@@ -60,7 +60,7 @@ export default function SpLayout({ children }) {
             <li><Link to="/despre" className={isActive('/despre')}>Despre</Link></li>
             <li><Link to="/servicii" className={isActive('/servicii')}>Servicii</Link></li>
             <li><Link to="/program" className={isActive('/program')}>Program & Contact</Link></li>
-            <li><a href="/programare.html" className="sp-btn-nav">Programare online →</a></li>
+            <li><a href="/programare.html" className="sp-btn-nav" target="_blank">Programare online →</a></li>
             <li style={{position:'relative'}} className="sp-dropdown-wrap">
                 <button className="sp-btn-nav" style={{background:'#2563a8', border:'none', cursor:'pointer', display:'flex', alignItems:'center', gap:'0.4rem'}}>
                 Cont ▾
