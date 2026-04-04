@@ -102,7 +102,16 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all().order_by('id')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
-    filterset_fields = ['rol', 'aprobat', 'is_active']
+
+    def get_queryset(self):
+        qs = CustomUser.objects.all().order_by('id')
+        rol = self.request.query_params.get('rol')
+        aprobat = self.request.query_params.get('aprobat')
+        if rol:
+            qs = qs.filter(rol=rol)
+        if aprobat is not None:
+            qs = qs.filter(aprobat=aprobat.lower() == 'true')
+        return qs
 
     @action(detail=False, methods=['get'])
     def me(self, request):
