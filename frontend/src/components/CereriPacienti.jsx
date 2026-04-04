@@ -6,27 +6,30 @@ export default function CereriPacienti() {
   const [cereri, setCereri] = useState([])
   const [loading, setLoading] = useState(true)
   const [msg, setMsg] = useState(null)
+  const [processing, setProcessing] = useState(null)
 
   useEffect(() => { fetchCereri() }, [])
 
   const fetchCereri = async () => {
-  setLoading(true)
-  const token = localStorage.getItem('access')
-  try {
-    const r = await fetch(`${API}/useri/?rol=pacient&aprobat=false`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    const data = await r.json()
-    console.log('cereri data:', data)
-    setCereri(Array.isArray(data) ? data : data.results || [])
-  } catch (e) {
-    console.log('cereri error:', e)
-    setCereri([])
+    setLoading(true)
+    const token = localStorage.getItem('access')
+    try {
+      const r = await fetch(`${API}/useri/?rol=pacient&aprobat=false`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const data = await r.json()
+      console.log('cereri data:', data)
+      setCereri(Array.isArray(data) ? data : data.results || [])
+    } catch (e) {
+      console.log('cereri error:', e)
+      setCereri([])
+    }
+    finally { setLoading(false) }
   }
-  finally { setLoading(false) }
-}
 
   const actiune = async (pk, tip) => {
+    if (processing) return
+    setProcessing(pk)
     const token = localStorage.getItem('access')
     try {
       const r = await fetch(`${API}/cereri/${pk}/aprobare/`, {
@@ -35,10 +38,13 @@ export default function CereriPacienti() {
       })
       if (r.ok) {
         setMsg(tip === 'aprobare' ? 'Cont aprobat. Email trimis pacientului.' : 'Cerere respinsă.')
-        fetchCereri()
+        setCereri(prev => prev.filter(c => c.id !== pk))
         setTimeout(() => setMsg(null), 3000)
+      } else {
+        setMsg('Eroare. Încearcă din nou.')
       }
     } catch { setMsg('Eroare. Încearcă din nou.') }
+    finally { setProcessing(null) }
   }
 
   return (
@@ -74,13 +80,17 @@ export default function CereriPacienti() {
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
-                <button onClick={() => actiune(c.id, 'aprobare')}
-                  style={{ padding: '7px 16px', background: 'rgba(80,200,120,0.12)', color: 'var(--success)', border: '1px solid rgba(80,200,120,0.3)', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
+                <button
+                  onClick={() => actiune(c.id, 'aprobare')}
+                  disabled={processing === c.id}
+                  style={{ padding: '7px 16px', background: 'rgba(80,200,120,0.12)', color: 'var(--success)', border: '1px solid rgba(80,200,120,0.3)', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: processing === c.id ? 'not-allowed' : 'pointer', opacity: processing === c.id ? 0.6 : 1 }}
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(80,200,120,0.22)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'rgba(80,200,120,0.12)'}
                 >✓ Aprobă</button>
-                <button onClick={() => actiune(c.id, 'respingere')}
-                  style={{ padding: '7px 16px', background: 'rgba(239,68,68,0.08)', color: 'var(--danger)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
+                <button
+                  onClick={() => actiune(c.id, 'respingere')}
+                  disabled={processing === c.id}
+                  style={{ padding: '7px 16px', background: 'rgba(239,68,68,0.08)', color: 'var(--danger)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: processing === c.id ? 'not-allowed' : 'pointer', opacity: processing === c.id ? 0.6 : 1 }}
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.16)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
                 >✕ Respinge</button>
