@@ -51,10 +51,9 @@ function AppMedic({ user, onLogout }) {
       .then(r => r.json())
       .then(data => {
         const list = Array.isArray(data) ? data : data.results || []
-        console.log('cereriCount:', list.length, data)
         setCereriCount(list.length)
       })
-      .catch((e) => { console.log('cereriCount error:', e) })
+      .catch(() => {})
   }
 
   useEffect(() => {

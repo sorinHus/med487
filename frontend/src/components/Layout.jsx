@@ -74,16 +74,17 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
                   <span style={{
                     background: '#e05c7a',
                     color: '#fff',
-                    borderRadius: '50%',
-                    minWidth: '18px',
-                    height: '18px',
+                    borderRadius: '10px',
+                    minWidth: '20px',
+                    height: '20px',
                     fontSize: '11px',
                     fontWeight: '700',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: '0 4px',
+                    padding: '0 6px',
                     lineHeight: 1,
+                    boxSizing: 'border-box',
                   }}>
                     {cereriCount > 99 ? '99+' : cereriCount}
                   </span>
