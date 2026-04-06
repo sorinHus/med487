@@ -767,7 +767,7 @@ class PortalPacientView(APIView):
 
         programari = Programare.objects.filter(pacient=pacient).order_by('-data_ora')[:20]
         consultatii = Consultatie.objects.filter(pacient=pacient).order_by('-data_ora')[:30]
-        retete = Reteta.objects.filter(pacient=pacient).order_by('-data_prescriere')[:30]
+        retete = Reteta.objects.filter(pacient=pacient).order_by('-data_emiterii')[:30]
 
         return Response({
             'programari': [
@@ -792,8 +792,8 @@ class PortalPacientView(APIView):
             'retete': [
                 {
                     'id': r.id,
-                    'numar': r.numar,
-                    'data_prescriere': r.data_prescriere,
+                    'numar': r.numar_reteta,
+                    'data_prescriere': r.data_emiterii,
                 }
                 for r in retete
             ],
