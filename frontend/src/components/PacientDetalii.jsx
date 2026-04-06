@@ -440,6 +440,7 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
               <div><label style={labelStyle}>Nume *</label><input value={formEdit.nume} onChange={e => setFormEdit(p => ({ ...p, nume: e.target.value }))} required style={inputStyle}/></div>
               <div><label style={labelStyle}>Prenume *</label><input value={formEdit.prenume} onChange={e => setFormEdit(p => ({ ...p, prenume: e.target.value }))} required style={inputStyle}/></div>
             </div>
+            <div><label style={labelStyle}>Nume anterior (după schimbare de nume)</label><input value={formEdit.nume_anterior || ''} onChange={e => setFormEdit(p => ({ ...p, nume_anterior: e.target.value }))} placeholder="Lasă gol dacă nu e cazul" style={inputStyle}/></div>
             <label style={labelStyle}>CNP *</label>
             <input value={formEdit.cnp} maxLength={13} onChange={e => setFormEdit(p => ({ ...p, cnp: e.target.value }))} required style={inputStyle}/>
             {errorsEdit.cnp && <p style={{ color: '#f87171', fontSize: '12px', marginTop: '-8px', marginBottom: '10px' }}>{errorsEdit.cnp}</p>}
@@ -488,6 +489,7 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
           <p style={fieldLabel}>CNP</p><p style={fieldValue}>{pacient.cnp}</p>
           <p style={fieldLabel}>Data nasterii</p><p style={fieldValue}>{dataNastereDinCNP(pacient.cnp)}</p>
           <p style={fieldLabel}>Sex</p><p style={fieldValue}>{pacient.sex === 'M' ? 'Masculin' : 'Feminin'}</p>
+          {pacient.nume_anterior && (<><p style={fieldLabel}>Nume anterior</p><p style={fieldValue}>{pacient.nume_anterior}</p></>)}
           <p style={fieldLabel}>Grup sangvin</p><p style={fieldValue}>{pacient.grup_sangvin || '—'}</p>
           <p style={fieldLabel}>Status</p>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

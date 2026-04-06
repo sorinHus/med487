@@ -30,6 +30,7 @@ class Pacient(models.Model):
     cnp               = models.CharField(max_length=13, unique=True)
     nume              = models.CharField(max_length=100)
     prenume           = models.CharField(max_length=100)
+    nume_anterior     = models.CharField(max_length=100, null=True, blank=True, verbose_name="Nume anterior")
     data_nastere      = models.DateField()
     sex               = models.CharField(max_length=1, choices=SEX_CHOICES)
     telefon           = models.CharField(max_length=20, blank=True)
