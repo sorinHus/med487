@@ -41,20 +41,20 @@ const STATUS_STYLE = {
 }
 
 const TOATE_COLOANELE = [
-  { id: 'pacient',      label: 'Pacient',             sort: 'nume',        fixed: true },
-  { id: 'cnp',          label: 'CNP',                 sort: null },
-  { id: 'varsta',       label: 'Vârstă',              sort: 'varsta' },
-  { id: 'sex',          label: 'Sex',                 sort: null },
-  { id: 'telefon',      label: 'Telefon',             sort: null },
-  { id: 'email',        label: 'Email',               sort: null },
-  { id: 'localitate',   label: 'Localitate',          sort: null },
-  { id: 'grup',         label: 'Grup sangvin',        sort: null },
-  { id: 'alergii',      label: 'Alergii',             sort: null },
-  { id: 'consultatie',  label: 'Ultima consultație',  sort: 'consultatie' },
-  { id: 'inregistrat',  label: 'Data înregistrării',  sort: 'inregistrat' },
-  { id: 'creat_la',     label: 'Data introducerii',   sort: 'creat_la' },
-  { id: 'actualizat_la',label: 'Data actualizării',   sort: 'actualizat_la' },
-  { id: 'status',       label: 'Status',              sort: null },
+  { id: 'pacient',       label: 'Pacient',            sort: 'nume',         fixed: true },
+  { id: 'cnp',           label: 'CNP',                sort: null },
+  { id: 'varsta',        label: 'Vârstă',             sort: 'varsta' },
+  { id: 'sex',           label: 'Sex',                sort: null },
+  { id: 'telefon',       label: 'Telefon',            sort: null },
+  { id: 'email',         label: 'Email',              sort: null },
+  { id: 'localitate',    label: 'Localitate',         sort: null },
+  { id: 'grup',          label: 'Grup sangvin',       sort: null },
+  { id: 'alergii',       label: 'Alergii',            sort: null },
+  { id: 'consultatie',   label: 'Ultima consultație', sort: 'consultatie' },
+  { id: 'inregistrat',   label: 'Data înregistrării', sort: 'inregistrat' },
+  { id: 'creat_la',      label: 'Data introducerii',  sort: 'creat_la' },
+  { id: 'actualizat_la', label: 'Data actualizării',  sort: 'actualizat_la' },
+  { id: 'status',        label: 'Status',             sort: null },
 ]
 
 const COLOANE_DEFAULT = ['pacient', 'cnp', 'varsta', 'telefon', 'consultatie', 'grup', 'status']
@@ -161,14 +161,13 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
     if (filtruSex)    lista = lista.filter(p => p.sex === filtruSex)
     if (varstaMin)    lista = lista.filter(p => (calcVarsta(p.cnp) ?? 0) >= parseInt(varstaMin))
     if (varstaMax)    lista = lista.filter(p => (calcVarsta(p.cnp) ?? 999) <= parseInt(varstaMax))
-
     lista.sort((a, b) => {
       let va, vb
-      if (sortCol === 'nume')         { va = `${a.nume} ${a.prenume}`.toLowerCase(); vb = `${b.nume} ${b.prenume}`.toLowerCase() }
-      else if (sortCol === 'varsta')  { va = calcVarsta(a.cnp) ?? -1; vb = calcVarsta(b.cnp) ?? -1 }
-      else if (sortCol === 'consultatie') { va = a.ultima_consultatie || ''; vb = b.ultima_consultatie || '' }
-      else if (sortCol === 'inregistrat') { va = a.data_inregistrare || ''; vb = b.data_inregistrare || '' }
-      else if (sortCol === 'creat_la')    { va = a.creat_la || ''; vb = b.creat_la || '' }
+      if (sortCol === 'nume')          { va = `${a.nume} ${a.prenume}`.toLowerCase(); vb = `${b.nume} ${b.prenume}`.toLowerCase() }
+      else if (sortCol === 'varsta')   { va = calcVarsta(a.cnp) ?? -1; vb = calcVarsta(b.cnp) ?? -1 }
+      else if (sortCol === 'consultatie')   { va = a.ultima_consultatie || ''; vb = b.ultima_consultatie || '' }
+      else if (sortCol === 'inregistrat')   { va = a.data_inregistrare || ''; vb = b.data_inregistrare || '' }
+      else if (sortCol === 'creat_la')      { va = a.creat_la || ''; vb = b.creat_la || '' }
       else if (sortCol === 'actualizat_la') { va = a.actualizat_la || ''; vb = b.actualizat_la || '' }
       else { va = ''; vb = '' }
       if (va < vb) return sortDir === 'asc' ? -1 : 1
@@ -222,7 +221,6 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
   const inputFiltruStyle = { padding: '7px 10px', fontSize: '12px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '7px', color: 'var(--text-primary)', outline: 'none', width: '70px' }
 
   const renderCelula = (col, p) => {
-    const v = calcVarsta(p.cnp)
     const fmt = (d) => d ? new Date(d).toLocaleDateString('ro-RO', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
     switch (col.id) {
       case 'pacient': return (
@@ -234,7 +232,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
         </div>
       )
       case 'cnp':          return <span style={{ fontFamily: 'monospace', fontSize: '12px', color: 'var(--text-muted)' }}>{p.cnp}</span>
-      case 'varsta':       return <span style={{ color: 'var(--text-muted)' }}>{v ?? '—'}</span>
+      case 'varsta':       return <span style={{ color: 'var(--text-muted)' }}>{calcVarsta(p.cnp) ?? '—'}</span>
       case 'sex':          return <span style={{ color: 'var(--text-muted)' }}>{p.sex === 'M' ? 'Masculin' : p.sex === 'F' ? 'Feminin' : '—'}</span>
       case 'telefon':      return <span style={{ color: 'var(--text-muted)' }}>{p.telefon || '—'}</span>
       case 'email':        return <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{p.email || '—'}</span>
@@ -271,7 +269,6 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
           />
         </div>
         <div style={{ display: 'flex', gap: '8px', flexShrink: 0, alignItems: 'center' }}>
-          
           <button onClick={handleExport} disabled={exportand || loading}
             style={{ padding: '9px 16px', fontSize: '13px', cursor: exportand ? 'default' : 'pointer', background: 'transparent', color: exportand ? 'var(--text-dim)' : '#34d399', border: '1px solid', borderColor: exportand ? 'var(--border)' : '#34d399', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: exportand ? 0.6 : 1 }}
             onMouseEnter={e => { if (!exportand) e.currentTarget.style.background = 'rgba(52,211,153,0.1)' }}
@@ -283,34 +280,6 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
             onMouseEnter={e => { if (!importand) e.currentTarget.style.background = 'rgba(167,139,250,0.1)' }}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           >{importand ? '⏳ Se importă...' : '⬆️ Import Excel'}</button>
-
-          <div style={{ position: 'relative' }} ref={colDropRef}>
-            <button onClick={() => setShowColoane(v => !v)}
-              style={{ padding: '9px 14px', fontSize: '13px', cursor: 'pointer', background: showColoane ? 'rgba(58,123,213,0.1)' : 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border)', borderRadius: '8px', fontWeight: '500' }}>
-              ⚙ Coloane
-            </button>
-            {showColoane && (
-              <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 6px)', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 0', zIndex: 50, minWidth: '200px', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
-                <div style={{ padding: '6px 14px 10px', fontSize: '11px', color: 'var(--text-dim)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--border)', marginBottom: '6px' }}>Coloane vizibile</div>
-                {TOATE_COLOANELE.map(c => (
-                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '7px 14px', cursor: c.fixed ? 'default' : 'pointer', opacity: c.fixed ? 0.5 : 1 }}
-                    onMouseEnter={e => { if (!c.fixed) e.currentTarget.style.background = 'var(--bg-hover)' }}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                    <input type="checkbox" checked={coloane.includes(c.id)} onChange={() => toggleColoana(c.id)} disabled={c.fixed} style={{ cursor: c.fixed ? 'default' : 'pointer' }} />
-                    <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{c.label}</span>
-                    {c.fixed && <span style={{ fontSize: '11px', color: 'var(--text-dim)', marginLeft: 'auto' }}>fix</span>}
-                  </label>
-                ))}
-                <div style={{ borderTop: '1px solid var(--border)', marginTop: '6px', padding: '8px 14px 2px' }}>
-                  <button onClick={() => { setColoane(COLOANE_DEFAULT); localStorage.setItem('pacientList_coloane', JSON.stringify(COLOANE_DEFAULT)) }}
-                    style={{ fontSize: '12px', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-                    Reset implicit
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
           <button onClick={() => setShowForm(true)}
             style={{ padding: '9px 18px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap' }}
             onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-hover)'}
@@ -319,7 +288,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
         </div>
       </div>
 
-      {/* Bara filtre */}
+      {/* Bara filtre + coloane */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
         <span style={{ fontSize: '12px', color: 'var(--text-dim)', fontWeight: '500' }}>Filtre:</span>
         <select value={filtruStatus} onChange={e => setFiltruStatus(e.target.value)} style={selectStyle}>
@@ -345,6 +314,33 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
             ✕ Reset filtre
           </button>
         )}
+        {/* Buton coloane — la dreapta */}
+        <div style={{ position: 'relative', marginLeft: 'auto' }} ref={colDropRef}>
+          <button onClick={() => setShowColoane(v => !v)}
+            style={{ padding: '6px 12px', fontSize: '12px', cursor: 'pointer', background: showColoane ? 'rgba(58,123,213,0.1)' : 'transparent', color: showColoane ? 'var(--accent-light)' : 'var(--text-muted)', border: '1px solid var(--border)', borderRadius: '7px' }}>
+            ⚙ Coloane
+          </button>
+          {showColoane && (
+            <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 6px)', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 0', zIndex: 50, minWidth: '210px', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+              <div style={{ padding: '6px 14px 10px', fontSize: '11px', color: 'var(--text-dim)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--border)', marginBottom: '6px' }}>Coloane vizibile</div>
+              {TOATE_COLOANELE.map(c => (
+                <label key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '7px 14px', cursor: c.fixed ? 'default' : 'pointer', opacity: c.fixed ? 0.5 : 1 }}
+                  onMouseEnter={e => { if (!c.fixed) e.currentTarget.style.background = 'var(--bg-hover)' }}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  <input type="checkbox" checked={coloane.includes(c.id)} onChange={() => toggleColoana(c.id)} disabled={c.fixed} style={{ cursor: c.fixed ? 'default' : 'pointer' }} />
+                  <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{c.label}</span>
+                  {c.fixed && <span style={{ fontSize: '11px', color: 'var(--text-dim)', marginLeft: 'auto' }}>fix</span>}
+                </label>
+              ))}
+              <div style={{ borderTop: '1px solid var(--border)', marginTop: '6px', padding: '8px 14px 2px' }}>
+                <button onClick={() => { setColoane(COLOANE_DEFAULT); localStorage.setItem('pacientList_coloane', JSON.stringify(COLOANE_DEFAULT)) }}
+                  style={{ fontSize: '12px', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                  Reset implicit
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Rezultat import */}
