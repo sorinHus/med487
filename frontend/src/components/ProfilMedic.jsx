@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-
-const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+import api from '../api'
 
 const s = {
   page: { padding: '32px', maxWidth: '600px' },
@@ -25,12 +23,14 @@ export default function ProfilMedic({ onBack }) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const token = localStorage.getItem('access')
-    axios.get(`${API}/api/profil/`, { headers: { Authorization: `Bearer ${token}` } })
+    api.get('/profil/')
       .then(r => setForm({
-        first_name: r.data.first_name || '', last_name: r.data.last_name || '',
-        email: r.data.email || '', telefon: r.data.telefon || '',
-        parafa: r.data.parafa || '', cod_medic: r.data.cod_medic || '',
+        first_name: r.data.first_name || '',
+        last_name: r.data.last_name || '',
+        email: r.data.email || '',
+        telefon: r.data.telefon || '',
+        parafa: r.data.parafa || '',
+        cod_medic: r.data.cod_medic || '',
       }))
       .catch(() => setMsgProfil({ ok: false, text: 'Eroare la încărcarea profilului.' }))
   }, [])
@@ -38,19 +38,24 @@ export default function ProfilMedic({ onBack }) {
   const salvezaProfil = async () => {
     setLoading(true); setMsgProfil(null)
     try {
-      const token = localStorage.getItem('access')
-      await axios.patch(`${API}/api/profil/`, form, { headers: { Authorization: `Bearer ${token}` } })
+      await api.patch('/profil/', form)
       setMsgProfil({ ok: true, text: 'Profil salvat cu succes.' })
-    } catch { setMsgProfil({ ok: false, text: 'Eroare la salvare.' }) }
+    } catch {
+      setMsgProfil({ ok: false, text: 'Eroare la salvare.' })
+    }
     setLoading(false)
   }
 
   const schimbaParola = async () => {
     setMsgParola(null)
-    if (parole.parola_noua !== parole.parola_noua2) { setMsgParola({ ok: false, text: 'Parolele noi nu coincid.' }); return }
+    if (parole.parola_noua !== parole.parola_noua2) {
+      setMsgParola({ ok: false, text: 'Parolele noi nu coincid.' }); return
+    }
     try {
-      const token = localStorage.getItem('access')
-      await axios.post(`${API}/api/profil/schimbare-parola/`, { parola_veche: parole.parola_veche, parola_noua: parole.parola_noua }, { headers: { Authorization: `Bearer ${token}` } })
+      await api.post('/profil/schimbare-parola/', {
+        parola_veche: parole.parola_veche,
+        parola_noua: parole.parola_noua,
+      })
       setMsgParola({ ok: true, text: 'Parola a fost schimbată.' })
       setParole({ parola_veche: '', parola_noua: '', parola_noua2: '' })
     } catch (e) {

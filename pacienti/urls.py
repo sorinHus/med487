@@ -6,7 +6,6 @@ from .views import (LinieRetetaViewSet, PacientViewSet, ConsulatieViewSet,
                     ConcediuMedicalViewSet, TrimitereViewSet,
                     ModuleUtilizatorViewSet)
 from .views import print_concediu, print_reteta, print_trimitere
-from .views import test_email
 from .views import ProfilMedicView, SchimbareParolaView, zile_libere_view
 from .views import VerificareCNPView, InregistrarePacientView, AprobarePacientView
 from .views import PortalPacientView
@@ -29,7 +28,6 @@ urlpatterns = router.urls + [
     path('concedii/<int:pk>/print/', print_concediu, name='print-concediu'),
     path('retete/<int:pk>/print/', print_reteta, name='print-reteta'),
     path('trimiteri/<int:pk>/print/', print_trimitere, name='print-trimitere'),
-    path('test-email/', test_email, name='test-email'),
     path('profil/', ProfilMedicView.as_view(), name='profil-medic'),
     path('profil/schimbare-parola/', SchimbareParolaView.as_view(), name='schimbare-parola'),
     path('module/<int:pk>/', ModuleUtilizatorViewSet.as_view({'get': 'retrieve', 'put': 'update'}), name='module-utilizator'),
