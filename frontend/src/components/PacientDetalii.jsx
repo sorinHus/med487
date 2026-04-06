@@ -373,6 +373,8 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
   const [showConcediu, setShowConcediu]   = useState(false)
   const [formC, setFormC] = useState({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] })
   const [salvandC, setSalvandC] = useState(false)
+  const [documente, setDocumente]   = useState([])
+  const [incarcand, setIncarcand]   = useState(false)
 
   const inputStyle = { width: '100%', padding: '8px 12px', fontSize: '13px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)', boxSizing: 'border-box', marginBottom: '12px', outline: 'none' }
   const labelStyle = { fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }
@@ -383,6 +385,36 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
   useEffect(() => { api.get('/retete/', { params: { pacient: pacient.id } }).then(res => setRetete(Array.isArray(res.data) ? res.data : (res.data.results || []))).catch(console.error).finally(() => setLoadingR(false)) }, [pacient.id])
   useEffect(() => { api.get('/trimiteri/', { params: { pacient: pacient.id } }).then(res => setTrimiteri(Array.isArray(res.data) ? res.data : (res.data.results || []))).catch(console.error).finally(() => setLoadingT(false)) }, [pacient.id])
   useEffect(() => { api.get('/concedii/', { params: { pacient: pacient.id } }).then(res => setConcedii(Array.isArray(res.data) ? res.data : (res.data.results || []))).catch(console.error).finally(() => setLoadingCo(false)) }, [pacient.id])
+  useEffect(() => {
+    api.get(`/pacienti/${pacient.id}/documente/`)
+      .then(res => setDocumente(res.data))
+      .catch(console.error)
+  }, [pacient.id])
+
+  const incarcaDocument = async (e) => {
+    const fisier = e.target.files[0]
+    if (!fisier) return
+    setIncarcand(true)
+    try {
+      const formData = new FormData()
+      formData.append('fisier', fisier)
+      formData.append('nume', fisier.name)
+      const res = await api.post(`/pacienti/${pacient.id}/documente/`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      setDocumente(prev => [res.data, ...prev])
+    } catch { alert('Eroare la încărcarea documentului.') }
+    finally { setIncarcand(false); e.target.value = '' }
+  }
+
+  const stergeDocument = async (id) => {
+    if (!window.confirm('Ștergi acest document?')) return
+    try {
+      await api.delete(`/documente/${id}/`)
+      setDocumente(prev => prev.filter(d => d.id !== id))
+    } catch { alert('Eroare la ștergerea documentului.') }
+  }
+
 
   const schimbaStatus = async (val) => {
     setSalvandStatus(true)
@@ -508,6 +540,32 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
           <p style={fieldLabel}>Alergii</p>
           <p style={{ ...fieldValue, color: pacient.alergii ? '#fbbf24' : 'var(--text-dim)' }}>{pacient.alergii || 'Nicio alergie cunoscuta'}</p>
         </div>
+      </div>
+
+      {/* Documente */}
+      <div style={sectionStyle}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Dosar scanat ({documente.length})</span>
+          <label style={{ padding: '7px 14px', fontSize: '12px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px' }}>
+            + Adaugă document
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={incarcaDocument} style={{ display: 'none' }} />
+          </label>
+        </div>
+        {incarcand && <p style={{ color: 'var(--text-dim)', fontSize: '13px' }}>Se încarcă...</p>}
+        {!incarcand && documente.length === 0 && <p style={{ color: 'var(--text-dim)', fontSize: '13px' }}>Niciun document înregistrat.</p>}
+        {documente.map(d => (
+          <div key={d.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '10px', marginBottom: '10px' }}>
+            <div>
+              <a href={d.fisier_url} target="_blank" rel="noreferrer" style={{ fontWeight: '600', fontSize: '13px', color: 'var(--accent-light)', textDecoration: 'none', marginRight: '10px' }}>
+                📄 {d.nume}
+              </a>
+              <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
+                {new Date(d.incarcat_la).toLocaleDateString('ro-RO')} · {Math.round(d.marime / 1024)} KB · {d.incarcat_de}
+              </span>
+            </div>
+            <button onClick={() => stergeDocument(d.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-dim)', fontSize: '18px', lineHeight: 1 }}>×</button>
+          </div>
+        ))}
       </div>
 
       {/* Retete */}
