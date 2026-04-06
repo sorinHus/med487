@@ -271,33 +271,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
           />
         </div>
         <div style={{ display: 'flex', gap: '8px', flexShrink: 0, alignItems: 'center' }}>
-          {/* Coloane */}
-          <div style={{ position: 'relative' }} ref={colDropRef}>
-            <button onClick={() => setShowColoane(v => !v)}
-              style={{ padding: '9px 14px', fontSize: '13px', cursor: 'pointer', background: showColoane ? 'rgba(58,123,213,0.1)' : 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border)', borderRadius: '8px', fontWeight: '500' }}>
-              ⚙ Coloane
-            </button>
-            {showColoane && (
-              <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 6px)', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 0', zIndex: 50, minWidth: '200px', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
-                <div style={{ padding: '6px 14px 10px', fontSize: '11px', color: 'var(--text-dim)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--border)', marginBottom: '6px' }}>Coloane vizibile</div>
-                {TOATE_COLOANELE.map(c => (
-                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '7px 14px', cursor: c.fixed ? 'default' : 'pointer', opacity: c.fixed ? 0.5 : 1 }}
-                    onMouseEnter={e => { if (!c.fixed) e.currentTarget.style.background = 'var(--bg-hover)' }}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                    <input type="checkbox" checked={coloane.includes(c.id)} onChange={() => toggleColoana(c.id)} disabled={c.fixed} style={{ cursor: c.fixed ? 'default' : 'pointer' }} />
-                    <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{c.label}</span>
-                    {c.fixed && <span style={{ fontSize: '11px', color: 'var(--text-dim)', marginLeft: 'auto' }}>fix</span>}
-                  </label>
-                ))}
-                <div style={{ borderTop: '1px solid var(--border)', marginTop: '6px', padding: '8px 14px 2px' }}>
-                  <button onClick={() => { setColoane(COLOANE_DEFAULT); localStorage.setItem('pacientList_coloane', JSON.stringify(COLOANE_DEFAULT)) }}
-                    style={{ fontSize: '12px', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-                    Reset implicit
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          
           <button onClick={handleExport} disabled={exportand || loading}
             style={{ padding: '9px 16px', fontSize: '13px', cursor: exportand ? 'default' : 'pointer', background: 'transparent', color: exportand ? 'var(--text-dim)' : '#34d399', border: '1px solid', borderColor: exportand ? 'var(--border)' : '#34d399', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: exportand ? 0.6 : 1 }}
             onMouseEnter={e => { if (!exportand) e.currentTarget.style.background = 'rgba(52,211,153,0.1)' }}
