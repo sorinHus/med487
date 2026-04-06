@@ -40,6 +40,33 @@ const STATUS_STYLE = {
   inactiv:    { bg: 'rgba(107,114,128,0.12)', color: '#9ca3af' },
 }
 
+const TOATE_COLOANELE = [
+  { id: 'pacient',       label: 'Pacient',            sort: 'nume',         fixed: true },
+  { id: 'cnp',           label: 'CNP',                sort: null },
+  { id: 'varsta',        label: 'Vârstă',             sort: 'varsta' },
+  { id: 'sex',           label: 'Sex',                sort: null },
+  { id: 'telefon',       label: 'Telefon',            sort: null },
+  { id: 'email',         label: 'Email',              sort: null },
+  { id: 'localitate',    label: 'Localitate',         sort: null },
+  { id: 'grup',          label: 'Grup sangvin',       sort: null },
+  { id: 'alergii',       label: 'Alergii',            sort: null },
+  { id: 'consultatie',   label: 'Ultima consultație', sort: 'consultatie' },
+  { id: 'inregistrat',   label: 'Data înregistrării', sort: 'inregistrat' },
+  { id: 'creat_la',      label: 'Data introducerii',  sort: 'creat_la' },
+  { id: 'actualizat_la', label: 'Data actualizării',  sort: 'actualizat_la' },
+  { id: 'status',        label: 'Status',             sort: null },
+]
+
+const COLOANE_DEFAULT = ['pacient', 'cnp', 'varsta', 'telefon', 'consultatie', 'grup', 'status']
+
+function getColoaneSalvate() {
+  try {
+    const s = localStorage.getItem('pacientList_coloane')
+    if (s) return JSON.parse(s)
+  } catch {}
+  return COLOANE_DEFAULT
+}
+
 async function exportExcel(pacienti) {
   const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs')
   const data = pacienti.map(p => ({
@@ -52,9 +79,10 @@ async function exportExcel(pacienti) {
     'Grup sangvin': p.grup_sangvin || '', 'Alergii': p.alergii || '',
     'Status': p.status || '', 'Data inregistrare': p.data_inregistrare || '',
     'Ultima consultatie': p.ultima_consultatie ? new Date(p.ultima_consultatie).toLocaleDateString('ro-RO') : '',
+    'Data introducerii': p.creat_la ? new Date(p.creat_la).toLocaleDateString('ro-RO') : '',
+    'Data actualizarii': p.actualizat_la ? new Date(p.actualizat_la).toLocaleDateString('ro-RO') : '',
   }))
   const ws = XLSX.utils.json_to_sheet(data)
-  ws['!cols'] = [{ wch: 18 }, { wch: 18 }, { wch: 15 }, { wch: 14 }, { wch: 7 }, { wch: 10 }, { wch: 14 }, { wch: 24 }, { wch: 12 }, { wch: 16 }, { wch: 20 }, { wch: 6 }, { wch: 12 }, { wch: 20 }, { wch: 12 }, { wch: 16 }, { wch: 18 }]
   const wb = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(wb, ws, 'Pacienti')
   XLSX.writeFile(wb, `pacienti_${new Date().toISOString().slice(0, 10)}.xlsx`)
@@ -71,15 +99,17 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
   const [rezultatImport, setRezultatImport]   = useState(null)
   const fileInputRef = useRef(null)
 
-  // Filtre
   const [filtruStatus, setFiltruStatus] = useState('')
   const [filtruSex, setFiltruSex]       = useState('')
   const [varstaMin, setVarstaMin]       = useState('')
   const [varstaMax, setVarstaMax]       = useState('')
 
-  // Sortare
-  const [sortCol, setSortCol]   = useState('nume')
-  const [sortDir, setSortDir]   = useState('asc')
+  const [sortCol, setSortCol] = useState('nume')
+  const [sortDir, setSortDir] = useState('asc')
+
+  const [coloane, setColoane]         = useState(getColoaneSalvate)
+  const [showColoane, setShowColoane] = useState(false)
+  const colDropRef = useRef(null)
 
   useEffect(() => {
     if (pacientInitial) setPacientSelectat(pacientInitial)
@@ -91,6 +121,14 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
+  useEffect(() => {
+    const handler = (e) => {
+      if (colDropRef.current && !colDropRef.current.contains(e.target)) setShowColoane(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
   const fetchPacienti = async () => {
     setLoading(true)
     try {
@@ -100,41 +138,42 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
   }
 
   const handleSort = (col) => {
+    if (!col) return
     if (sortCol === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
     else { setSortCol(col); setSortDir('asc') }
   }
 
-  const resetFiltre = () => {
-    setFiltruStatus(''); setFiltruSex(''); setVarstaMin(''); setVarstaMax('')
+  const resetFiltre = () => { setFiltruStatus(''); setFiltruSex(''); setVarstaMin(''); setVarstaMax('') }
+  const filtrateActive = filtruStatus || filtruSex || varstaMin || varstaMax
+
+  const toggleColoana = (id) => {
+    if (id === 'pacient') return
+    const noi = coloane.includes(id) ? coloane.filter(c => c !== id) : [...coloane, id]
+    setColoane(noi)
+    localStorage.setItem('pacientList_coloane', JSON.stringify(noi))
   }
 
-  const filtrateActive = filtruStatus || filtruSex || varstaMin || varstaMax
+  const coloaneVizibile = TOATE_COLOANELE.filter(c => coloane.includes(c.id))
 
   const pacientiFiltrati = useMemo(() => {
     let lista = [...pacienti]
-
     if (filtruStatus) lista = lista.filter(p => p.status === filtruStatus)
     if (filtruSex)    lista = lista.filter(p => p.sex === filtruSex)
     if (varstaMin)    lista = lista.filter(p => (calcVarsta(p.cnp) ?? 0) >= parseInt(varstaMin))
     if (varstaMax)    lista = lista.filter(p => (calcVarsta(p.cnp) ?? 999) <= parseInt(varstaMax))
-
     lista.sort((a, b) => {
       let va, vb
-      if (sortCol === 'nume') {
-        va = `${a.nume} ${a.prenume}`.toLowerCase()
-        vb = `${b.nume} ${b.prenume}`.toLowerCase()
-      } else if (sortCol === 'varsta') {
-        va = calcVarsta(a.cnp) ?? -1
-        vb = calcVarsta(b.cnp) ?? -1
-      } else if (sortCol === 'consultatie') {
-        va = a.ultima_consultatie || ''
-        vb = b.ultima_consultatie || ''
-      }
+      if (sortCol === 'nume')               { va = `${a.nume} ${a.prenume}`.toLowerCase(); vb = `${b.nume} ${b.prenume}`.toLowerCase() }
+      else if (sortCol === 'varsta')        { va = calcVarsta(a.cnp) ?? -1; vb = calcVarsta(b.cnp) ?? -1 }
+      else if (sortCol === 'consultatie')   { va = a.ultima_consultatie || ''; vb = b.ultima_consultatie || '' }
+      else if (sortCol === 'inregistrat')   { va = a.data_inregistrare || ''; vb = b.data_inregistrare || '' }
+      else if (sortCol === 'creat_la')      { va = a.creat_la || ''; vb = b.creat_la || '' }
+      else if (sortCol === 'actualizat_la') { va = a.actualizat_la || ''; vb = b.actualizat_la || '' }
+      else { va = ''; vb = '' }
       if (va < vb) return sortDir === 'asc' ? -1 : 1
       if (va > vb) return sortDir === 'asc' ? 1 : -1
       return 0
     })
-
     return lista
   }, [pacienti, filtruStatus, filtruSex, varstaMin, varstaMax, sortCol, sortDir])
 
@@ -157,22 +196,15 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
   const handleImport = async (e) => {
     const fisier = e.target.files[0]
     if (!fisier) return
-    setImportand(true)
-    setRezultatImport(null)
+    setImportand(true); setRezultatImport(null)
     try {
       const formData = new FormData()
       formData.append('fisier', fisier)
-      const res = await api.post('/import-pacienti/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-      setRezultatImport(res.data)
-      fetchPacienti()
+      const res = await api.post('/import-pacienti/', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      setRezultatImport(res.data); fetchPacienti()
     } catch (err) {
       setRezultatImport({ eroare: err.response?.data?.eroare || 'Eroare la import.' })
-    } finally {
-      setImportand(false)
-      e.target.value = ''
-    }
+    } finally { setImportand(false); e.target.value = '' }
   }
 
   if (pacientSelectat) return (
@@ -182,27 +214,51 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
     <PacientForm onSaved={() => { setShowForm(false); fetchPacienti() }} onCancel={() => setShowForm(false)} />
   )
 
-  const thStyle = {
-    padding: '10px 14px', fontSize: '11px', fontWeight: '600',
-    color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em',
-    textAlign: 'left', borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap',
-  }
-  const thSortStyle = (col) => ({
-    ...thStyle, cursor: 'pointer', userSelect: 'none',
-    color: sortCol === col ? 'var(--accent-light)' : 'var(--text-dim)',
-  })
-  const sageata = (col) => sortCol === col ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ' ↕'
-
+  const thStyle = { padding: '10px 14px', fontSize: '11px', fontWeight: '600', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'left', borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap' }
+  const thSortStyle = (col) => ({ ...thStyle, cursor: col ? 'pointer' : 'default', userSelect: 'none', color: sortCol === col ? 'var(--accent-light)' : 'var(--text-dim)' })
+  const sageata = (col) => col ? (sortCol === col ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ' ↕') : ''
   const selectStyle = { padding: '7px 10px', fontSize: '12px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '7px', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer' }
   const inputFiltruStyle = { padding: '7px 10px', fontSize: '12px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '7px', color: 'var(--text-primary)', outline: 'none', width: '70px' }
+
+  const renderCelula = (col, p) => {
+    const fmt = (d) => d ? new Date(d).toLocaleDateString('ro-RO', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
+    switch (col.id) {
+      case 'pacient': return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: getAvatarColor(`${p.nume} ${p.prenume}`), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
+            {getInitials(`${p.nume} ${p.prenume}`)}
+          </div>
+          <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>{p.nume} {p.prenume}</span>
+        </div>
+      )
+      case 'cnp':          return <span style={{ fontFamily: 'monospace', fontSize: '12px', color: 'var(--text-muted)' }}>{p.cnp}</span>
+      case 'varsta':       return <span style={{ color: 'var(--text-muted)' }}>{calcVarsta(p.cnp) ?? '—'}</span>
+      case 'sex':          return <span style={{ color: 'var(--text-muted)' }}>{p.sex === 'M' ? 'Masculin' : p.sex === 'F' ? 'Feminin' : '—'}</span>
+      case 'telefon':      return <span style={{ color: 'var(--text-muted)' }}>{p.telefon || '—'}</span>
+      case 'email':        return <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{p.email || '—'}</span>
+      case 'localitate':   return <span style={{ color: 'var(--text-muted)' }}>{p.localitate || '—'}</span>
+      case 'grup':         return p.grup_sangvin
+        ? <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '700', background: 'rgba(58,123,213,0.15)', color: '#60a5fa' }}>{p.grup_sangvin}</span>
+        : <span style={{ color: 'var(--text-dim)' }}>—</span>
+      case 'alergii':      return <span style={{ color: p.alergii ? '#fbbf24' : 'var(--text-dim)', fontSize: '12px' }}>{p.alergii || '—'}</span>
+      case 'consultatie':  return <span style={{ color: 'var(--text-muted)' }}>{fmt(p.ultima_consultatie)}</span>
+      case 'inregistrat':  return <span style={{ color: 'var(--text-muted)' }}>{p.data_inregistrare || '—'}</span>
+      case 'creat_la':     return <span style={{ color: 'var(--text-muted)' }}>{fmt(p.creat_la)}</span>
+      case 'actualizat_la':return <span style={{ color: 'var(--text-muted)' }}>{fmt(p.actualizat_la)}</span>
+      case 'status': {
+        const st = STATUS_STYLE[p.status] || STATUS_STYLE.inactiv
+        return <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: st.bg, color: st.color, textTransform: 'capitalize' }}>{p.status}</span>
+      }
+      default: return null
+    }
+  }
 
   return (
     <div>
       {/* Bara superioara */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', gap: '12px' }}>
         <div style={{ position: 'relative', flex: 1, maxWidth: '380px' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-            style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
             <circle cx="11" cy="11" r="6" stroke="var(--text-dim)" strokeWidth="2"/>
             <path d="M16 16l4 4" stroke="var(--text-dim)" strokeWidth="2" strokeLinecap="round"/>
           </svg>
@@ -212,7 +268,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
             onBlur={e => e.target.style.borderColor = 'var(--border)'}
           />
         </div>
-        <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: '8px', flexShrink: 0, alignItems: 'center' }}>
           <button onClick={handleExport} disabled={exportand || loading}
             style={{ padding: '9px 16px', fontSize: '13px', cursor: exportand ? 'default' : 'pointer', background: 'transparent', color: exportand ? 'var(--text-dim)' : '#34d399', border: '1px solid', borderColor: exportand ? 'var(--border)' : '#34d399', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: exportand ? 0.6 : 1 }}
             onMouseEnter={e => { if (!exportand) e.currentTarget.style.background = 'rgba(52,211,153,0.1)' }}
@@ -232,7 +288,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
         </div>
       </div>
 
-      {/* Bara filtre */}
+      {/* Bara filtre + coloane */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
         <span style={{ fontSize: '12px', color: 'var(--text-dim)', fontWeight: '500' }}>Filtre:</span>
         <select value={filtruStatus} onChange={e => setFiltruStatus(e.target.value)} style={selectStyle}>
@@ -258,6 +314,32 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
             ✕ Reset filtre
           </button>
         )}
+        <div style={{ position: 'relative', marginLeft: 'auto' }} ref={colDropRef}>
+          <button onClick={() => setShowColoane(v => !v)}
+            style={{ padding: '6px 12px', fontSize: '12px', cursor: 'pointer', background: showColoane ? 'rgba(58,123,213,0.1)' : 'transparent', color: showColoane ? 'var(--accent-light)' : 'var(--text-muted)', border: '1px solid var(--border)', borderRadius: '7px' }}>
+            ⚙ Coloane
+          </button>
+          {showColoane && (
+            <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 6px)', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 0', zIndex: 50, minWidth: '210px', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+              <div style={{ padding: '6px 14px 10px', fontSize: '11px', color: 'var(--text-dim)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--border)', marginBottom: '6px' }}>Coloane vizibile</div>
+              {TOATE_COLOANELE.map(c => (
+                <label key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '7px 14px', cursor: c.fixed ? 'default' : 'pointer', opacity: c.fixed ? 0.5 : 1 }}
+                  onMouseEnter={e => { if (!c.fixed) e.currentTarget.style.background = 'var(--bg-hover)' }}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  <input type="checkbox" checked={coloane.includes(c.id)} onChange={() => toggleColoana(c.id)} disabled={c.fixed} style={{ cursor: c.fixed ? 'default' : 'pointer' }} />
+                  <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{c.label}</span>
+                  {c.fixed && <span style={{ fontSize: '11px', color: 'var(--text-dim)', marginLeft: 'auto' }}>fix</span>}
+                </label>
+              ))}
+              <div style={{ borderTop: '1px solid var(--border)', marginTop: '6px', padding: '8px 14px 2px' }}>
+                <button onClick={() => { setColoane(COLOANE_DEFAULT); localStorage.setItem('pacientList_coloane', JSON.stringify(COLOANE_DEFAULT)) }}
+                  style={{ fontSize: '12px', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                  Reset implicit
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Rezultat import */}
@@ -285,63 +367,37 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
           <thead>
             <tr>
-              <th style={{...thStyle, width: '40px'}}>#</th>
-              <th style={thSortStyle('nume')} onClick={() => handleSort('nume')}>Pacient{sageata('nume')}</th>
-              <th style={thStyle}>CNP</th>
-              <th style={thSortStyle('varsta')} onClick={() => handleSort('varsta')}>Vârstă{sageata('varsta')}</th>
-              <th style={thStyle}>Telefon</th>
-              <th style={thSortStyle('consultatie')} onClick={() => handleSort('consultatie')}>Ultima consultație{sageata('consultatie')}</th>
-              <th style={thStyle}>Grup</th>
-              <th style={thStyle}>Status</th>
+              <th style={{ ...thStyle, width: '40px' }}>#</th>
+              {coloaneVizibile.map(col => (
+                <th key={col.id} style={thSortStyle(col.sort)} onClick={() => handleSort(col.sort)}>
+                  {col.label}{sageata(col.sort)}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {loading && (
-              <tr><td colSpan="8" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>Se incarca...</td></tr>
+              <tr><td colSpan={coloaneVizibile.length + 1} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>Se incarca...</td></tr>
             )}
             {!loading && pacientiFiltrati.length === 0 && (
-              <tr><td colSpan="8" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>
+              <tr><td colSpan={coloaneVizibile.length + 1} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>
                 {search || filtrateActive ? 'Niciun pacient găsit pentru filtrele aplicate.' : 'Nu există pacienți înregistrați.'}
               </td></tr>
             )}
-            {!loading && pacientiFiltrati.map((p, index) => {
-              const nume = `${p.nume} ${p.prenume}`
-              const st = STATUS_STYLE[p.status] || STATUS_STYLE.inactiv
-              const v = calcVarsta(p.cnp)
-              return (
-                <tr key={p.id} onClick={() => setPacientSelectat(p)}
-                  style={{ borderBottom: '1px solid var(--border)', cursor: 'pointer', transition: 'background 0.12s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                >
-                  <td style={{ padding: '12px 14px', color: 'var(--text-dim)', textAlign: 'center', fontSize: '12px' }}>{index + 1}</td>
-                  <td style={{ padding: '12px 14px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
-                        {getInitials(nume)}
-                      </div>
-                      <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>{nume}</span>
-                    </div>
+            {!loading && pacientiFiltrati.map((p, index) => (
+              <tr key={p.id} onClick={() => setPacientSelectat(p)}
+                style={{ borderBottom: '1px solid var(--border)', cursor: 'pointer', transition: 'background 0.12s' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <td style={{ padding: '12px 14px', color: 'var(--text-dim)', textAlign: 'center', fontSize: '12px' }}>{index + 1}</td>
+                {coloaneVizibile.map(col => (
+                  <td key={col.id} style={{ padding: '12px 14px' }}>
+                    {renderCelula(col, p)}
                   </td>
-                  <td style={{ padding: '12px 14px', fontFamily: 'monospace', fontSize: '12px', color: 'var(--text-muted)' }}>{p.cnp}</td>
-                  <td style={{ padding: '12px 14px', color: 'var(--text-muted)' }}>{v ?? '—'}</td>
-                  <td style={{ padding: '12px 14px', color: 'var(--text-muted)' }}>{p.telefon || '—'}</td>
-                  <td style={{ padding: '12px 14px', color: 'var(--text-muted)' }}>
-                    {p.ultima_consultatie ? new Date(p.ultima_consultatie).toLocaleDateString('ro-RO', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
-                  </td>
-                  <td style={{ padding: '12px 14px' }}>
-                    {p.grup_sangvin
-                      ? <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '700', background: 'rgba(58,123,213,0.15)', color: '#60a5fa' }}>{p.grup_sangvin}</span>
-                      : <span style={{ color: 'var(--text-dim)' }}>—</span>}
-                  </td>
-                  <td style={{ padding: '12px 14px' }}>
-                    <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: st.bg, color: st.color, textTransform: 'capitalize' }}>
-                      {p.status}
-                    </span>
-                  </td>
-                </tr>
-              )
-            })}
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
