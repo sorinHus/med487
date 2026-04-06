@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import api from '../api'
 import PacientForm from './PacientForm'
 import PacientDetalii from './PacientDetalii'
@@ -16,9 +16,9 @@ function getAvatarColor(name) {
   return AVATAR_COLORS[Math.abs(h) % AVATAR_COLORS.length]
 }
 
-function varsta(cnp) {
+function calcVarsta(cnp) {
   try {
-    if (!cnp || cnp.length !== 13) return '—'
+    if (!cnp || cnp.length !== 13) return null
     const s = parseInt(cnp[0])
     const an2 = parseInt(cnp.slice(1, 3))
     const luna = parseInt(cnp.slice(3, 5))
@@ -30,7 +30,7 @@ function varsta(cnp) {
     else an = 1900 + an2
     const azi = new Date()
     return azi.getFullYear() - an - ((azi.getMonth() + 1 < luna || (azi.getMonth() + 1 === luna && azi.getDate() < zi)) ? 1 : 0)
-  } catch { return '—' }
+  } catch { return null }
 }
 
 const STATUS_STYLE = {
@@ -44,7 +44,7 @@ async function exportExcel(pacienti) {
   const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs')
   const data = pacienti.map(p => ({
     'Nume': p.nume, 'Prenume': p.prenume, 'CNP': p.cnp,
-    'Data nasterii': p.data_nastere || '', 'Varsta': varsta(p.cnp),
+    'Data nasterii': p.data_nastere || '', 'Varsta': calcVarsta(p.cnp) ?? '—',
     'Sex': p.sex === 'M' ? 'Masculin' : p.sex === 'F' ? 'Feminin' : '',
     'Telefon': p.telefon || '', 'Email': p.email || '',
     'Judet': p.judet || '', 'Localitate': p.localitate || '',
@@ -71,6 +71,16 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
   const [rezultatImport, setRezultatImport]   = useState(null)
   const fileInputRef = useRef(null)
 
+  // Filtre
+  const [filtruStatus, setFiltruStatus] = useState('')
+  const [filtruSex, setFiltruSex]       = useState('')
+  const [varstaMin, setVarstaMin]       = useState('')
+  const [varstaMax, setVarstaMax]       = useState('')
+
+  // Sortare
+  const [sortCol, setSortCol]   = useState('nume')
+  const [sortDir, setSortDir]   = useState('asc')
+
   useEffect(() => {
     if (pacientInitial) setPacientSelectat(pacientInitial)
   }, [pacientInitial])
@@ -88,6 +98,45 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
       setPacienti(Array.isArray(res.data) ? res.data : (res.data.results || []))
     } finally { setLoading(false) }
   }
+
+  const handleSort = (col) => {
+    if (sortCol === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    else { setSortCol(col); setSortDir('asc') }
+  }
+
+  const resetFiltre = () => {
+    setFiltruStatus(''); setFiltruSex(''); setVarstaMin(''); setVarstaMax('')
+  }
+
+  const filtrateActive = filtruStatus || filtruSex || varstaMin || varstaMax
+
+  const pacientiFiltrati = useMemo(() => {
+    let lista = [...pacienti]
+
+    if (filtruStatus) lista = lista.filter(p => p.status === filtruStatus)
+    if (filtruSex)    lista = lista.filter(p => p.sex === filtruSex)
+    if (varstaMin)    lista = lista.filter(p => (calcVarsta(p.cnp) ?? 0) >= parseInt(varstaMin))
+    if (varstaMax)    lista = lista.filter(p => (calcVarsta(p.cnp) ?? 999) <= parseInt(varstaMax))
+
+    lista.sort((a, b) => {
+      let va, vb
+      if (sortCol === 'nume') {
+        va = `${a.nume} ${a.prenume}`.toLowerCase()
+        vb = `${b.nume} ${b.prenume}`.toLowerCase()
+      } else if (sortCol === 'varsta') {
+        va = calcVarsta(a.cnp) ?? -1
+        vb = calcVarsta(b.cnp) ?? -1
+      } else if (sortCol === 'consultatie') {
+        va = a.ultima_consultatie || ''
+        vb = b.ultima_consultatie || ''
+      }
+      if (va < vb) return sortDir === 'asc' ? -1 : 1
+      if (va > vb) return sortDir === 'asc' ? 1 : -1
+      return 0
+    })
+
+    return lista
+  }, [pacienti, filtruStatus, filtruSex, varstaMin, varstaMax, sortCol, sortDir])
 
   const handleExport = async () => {
     setExportand(true)
@@ -129,7 +178,6 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
   if (pacientSelectat) return (
     <PacientDetalii pacient={pacientSelectat} onBack={() => { setPacientSelectat(null); fetchPacienti() }} moduleActive={moduleActive} />
   )
-
   if (showForm) return (
     <PacientForm onSaved={() => { setShowForm(false); fetchPacienti() }} onCancel={() => setShowForm(false)} />
   )
@@ -139,10 +187,19 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
     color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em',
     textAlign: 'left', borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap',
   }
+  const thSortStyle = (col) => ({
+    ...thStyle, cursor: 'pointer', userSelect: 'none',
+    color: sortCol === col ? 'var(--accent-light)' : 'var(--text-dim)',
+  })
+  const sageata = (col) => sortCol === col ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ' ↕'
+
+  const selectStyle = { padding: '7px 10px', fontSize: '12px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '7px', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer' }
+  const inputFiltruStyle = { padding: '7px 10px', fontSize: '12px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '7px', color: 'var(--text-primary)', outline: 'none', width: '70px' }
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', gap: '12px' }}>
+      {/* Bara superioara */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', gap: '12px' }}>
         <div style={{ position: 'relative', flex: 1, maxWidth: '380px' }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
             style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
@@ -157,30 +214,53 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
         </div>
         <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
           <button onClick={handleExport} disabled={exportand || loading}
-            style={{ padding: '9px 16px', fontSize: '13px', cursor: exportand ? 'default' : 'pointer', background: 'transparent', color: exportand ? 'var(--text-dim)' : '#34d399', border: '1px solid', borderColor: exportand ? 'var(--border)' : '#34d399', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: exportand ? 0.6 : 1, display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '9px 16px', fontSize: '13px', cursor: exportand ? 'default' : 'pointer', background: 'transparent', color: exportand ? 'var(--text-dim)' : '#34d399', border: '1px solid', borderColor: exportand ? 'var(--border)' : '#34d399', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: exportand ? 0.6 : 1 }}
             onMouseEnter={e => { if (!exportand) e.currentTarget.style.background = 'rgba(52,211,153,0.1)' }}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-          >
-            {exportand ? '⏳ Se exportă...' : '⬇️ Export Excel'}
-          </button>
+          >{exportand ? '⏳ Se exportă...' : '⬇️ Export Excel'}</button>
           <input type="file" accept=".xlsx" ref={fileInputRef} onChange={handleImport} style={{ display: 'none' }} />
           <button onClick={() => fileInputRef.current.click()} disabled={importand}
-            style={{ padding: '9px 16px', fontSize: '13px', cursor: importand ? 'default' : 'pointer', background: 'transparent', color: importand ? 'var(--text-dim)' : '#a78bfa', border: '1px solid', borderColor: importand ? 'var(--border)' : '#a78bfa', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: importand ? 0.6 : 1, display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '9px 16px', fontSize: '13px', cursor: importand ? 'default' : 'pointer', background: 'transparent', color: importand ? 'var(--text-dim)' : '#a78bfa', border: '1px solid', borderColor: importand ? 'var(--border)' : '#a78bfa', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: importand ? 0.6 : 1 }}
             onMouseEnter={e => { if (!importand) e.currentTarget.style.background = 'rgba(167,139,250,0.1)' }}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-          >
-            {importand ? '⏳ Se importă...' : '⬆️ Import Excel'}
-          </button>
+          >{importand ? '⏳ Se importă...' : '⬆️ Import Excel'}</button>
           <button onClick={() => setShowForm(true)}
             style={{ padding: '9px 18px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap' }}
             onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-hover)'}
             onMouseLeave={e => e.currentTarget.style.background = 'var(--accent)'}
-          >
-            + Pacient nou
-          </button>
+          >+ Pacient nou</button>
         </div>
       </div>
 
+      {/* Bara filtre */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
+        <span style={{ fontSize: '12px', color: 'var(--text-dim)', fontWeight: '500' }}>Filtre:</span>
+        <select value={filtruStatus} onChange={e => setFiltruStatus(e.target.value)} style={selectStyle}>
+          <option value="">Toate statusurile</option>
+          <option value="activ">Activ</option>
+          <option value="decedat">Decedat</option>
+          <option value="transferat">Transferat</option>
+          <option value="inactiv">Inactiv</option>
+        </select>
+        <select value={filtruSex} onChange={e => setFiltruSex(e.target.value)} style={selectStyle}>
+          <option value="">Ambele sexe</option>
+          <option value="M">Masculin</option>
+          <option value="F">Feminin</option>
+        </select>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>Vârstă:</span>
+          <input type="number" value={varstaMin} onChange={e => setVarstaMin(e.target.value)} placeholder="min" style={inputFiltruStyle} min="0" max="120" />
+          <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>—</span>
+          <input type="number" value={varstaMax} onChange={e => setVarstaMax(e.target.value)} placeholder="max" style={inputFiltruStyle} min="0" max="120" />
+        </div>
+        {filtrateActive && (
+          <button onClick={resetFiltre} style={{ padding: '6px 12px', fontSize: '12px', cursor: 'pointer', background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border)', borderRadius: '7px' }}>
+            ✕ Reset filtre
+          </button>
+        )}
+      </div>
+
+      {/* Rezultat import */}
       {rezultatImport && (
         <div style={{ marginBottom: '16px', padding: '14px 18px', borderRadius: '10px', background: rezultatImport.eroare ? 'rgba(248,113,113,0.1)' : 'rgba(52,211,153,0.1)', border: `1px solid ${rezultatImport.eroare ? '#f87171' : '#34d399'}`, fontSize: '13px' }}>
           {rezultatImport.eroare ? (
@@ -200,16 +280,17 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
         </div>
       )}
 
+      {/* Tabel */}
       <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
           <thead>
             <tr>
               <th style={{...thStyle, width: '40px'}}>#</th>
-              <th style={thStyle}>Pacient</th>
+              <th style={thSortStyle('nume')} onClick={() => handleSort('nume')}>Pacient{sageata('nume')}</th>
               <th style={thStyle}>CNP</th>
-              <th style={thStyle}>Varsta</th>
+              <th style={thSortStyle('varsta')} onClick={() => handleSort('varsta')}>Vârstă{sageata('varsta')}</th>
               <th style={thStyle}>Telefon</th>
-              <th style={thStyle}>Ultima consultatie</th>
+              <th style={thSortStyle('consultatie')} onClick={() => handleSort('consultatie')}>Ultima consultație{sageata('consultatie')}</th>
               <th style={thStyle}>Grup</th>
               <th style={thStyle}>Status</th>
             </tr>
@@ -218,14 +299,15 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
             {loading && (
               <tr><td colSpan="8" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>Se incarca...</td></tr>
             )}
-            {!loading && pacienti.length === 0 && (
+            {!loading && pacientiFiltrati.length === 0 && (
               <tr><td colSpan="8" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>
-                {search ? 'Niciun pacient gasit.' : 'Nu exista pacienti inregistrati.'}
+                {search || filtrateActive ? 'Niciun pacient găsit pentru filtrele aplicate.' : 'Nu există pacienți înregistrați.'}
               </td></tr>
             )}
-            {!loading && pacienti.map((p, index) => {
+            {!loading && pacientiFiltrati.map((p, index) => {
               const nume = `${p.nume} ${p.prenume}`
               const st = STATUS_STYLE[p.status] || STATUS_STYLE.inactiv
+              const v = calcVarsta(p.cnp)
               return (
                 <tr key={p.id} onClick={() => setPacientSelectat(p)}
                   style={{ borderBottom: '1px solid var(--border)', cursor: 'pointer', transition: 'background 0.12s' }}
@@ -242,7 +324,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
                     </div>
                   </td>
                   <td style={{ padding: '12px 14px', fontFamily: 'monospace', fontSize: '12px', color: 'var(--text-muted)' }}>{p.cnp}</td>
-                  <td style={{ padding: '12px 14px', color: 'var(--text-muted)' }}>{varsta(p.cnp)}</td>
+                  <td style={{ padding: '12px 14px', color: 'var(--text-muted)' }}>{v ?? '—'}</td>
                   <td style={{ padding: '12px 14px', color: 'var(--text-muted)' }}>{p.telefon || '—'}</td>
                   <td style={{ padding: '12px 14px', color: 'var(--text-muted)' }}>
                     {p.ultima_consultatie ? new Date(p.ultima_consultatie).toLocaleDateString('ro-RO', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
@@ -264,9 +346,9 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
         </table>
       </div>
 
-      {!loading && pacienti.length > 0 && (
+      {!loading && (
         <div style={{ marginTop: '10px', fontSize: '12px', color: 'var(--text-dim)', textAlign: 'right' }}>
-          {pacienti.length} pacient{pacienti.length !== 1 ? 'i' : ''}{search && ' (filtrat)'}
+          {pacientiFiltrati.length} din {pacienti.length} pacienți{(search || filtrateActive) ? ' (filtrat)' : ''}
         </div>
       )}
     </div>
