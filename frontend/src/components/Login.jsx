@@ -65,7 +65,7 @@ export default function Login({ onLogin }) {
             )}
             <form onSubmit={handleLogin}>
               <label style={{ fontSize: '13px', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>Username</label>
-              <input type="text" value={username} onChange={e => setUsername(e.target.value)}
+              <input type="text" value={username} onChange={e => setPassword(e.target.value)}
                 placeholder="username (medic) / CNP (pacienti)" style={{ ...inputStyle, marginBottom: '14px' }}
                 onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                 onBlur={e => e.target.style.borderColor = 'var(--border)'}
