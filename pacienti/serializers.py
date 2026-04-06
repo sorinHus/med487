@@ -85,7 +85,7 @@ class PacientSerializer(serializers.ModelSerializer):
         fields = ['id', 'cnp', 'nume', 'prenume', 'nume_anterior', 'data_nastere', 'sex', 'telefon',
                   'email', 'judet', 'localitate', 'strada', 'numar_strada',
                   'grup_sangvin', 'alergii', 'data_inregistrare',
-                  'status', 'medic', 'consultatii_count', 'ultima_consultatie']
+                  'status', 'medic', 'consultatii_count', 'ultima_consultatie', 'creat_la', 'actualizat_la']
 
     def get_consultatii_count(self, obj):
         return obj.consultatii.count()

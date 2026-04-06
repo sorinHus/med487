@@ -42,6 +42,8 @@ class Pacient(models.Model):
     grup_sangvin      = models.CharField(max_length=3, choices=GRUP_CHOICES, blank=True)
     alergii           = models.TextField(blank=True)
     data_inregistrare = models.DateField(auto_now_add=True)
+    creat_la      = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    actualizat_la = models.DateTimeField(auto_now=True, null=True, blank=True)
     status            = models.CharField(max_length=20, choices=STATUS_CHOICES, default='activ')
     medic             = models.ForeignKey(CustomUser, on_delete=models.PROTECT,
                                           related_name='pacienti')
