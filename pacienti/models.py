@@ -352,6 +352,22 @@ class Trimitere(models.Model):
     def __str__(self):
         return f'{self.numar_trimitere} — {self.pacient} → {self.specialist}'
     
+class DocumentPacient(models.Model):
+    pacient     = models.ForeignKey(Pacient, on_delete=models.CASCADE, related_name='documente')
+    nume        = models.CharField(max_length=255, verbose_name='Nume document')
+    fisier_url  = models.URLField(max_length=500, verbose_name='URL fișier')
+    fisier_key  = models.CharField(max_length=500, verbose_name='Cheie R2')
+    marime      = models.PositiveIntegerField(default=0, verbose_name='Mărime (bytes)')
+    incarcat_la = models.DateTimeField(auto_now_add=True)
+    incarcat_de = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+                                    null=True, related_name='documente_incarcate')
+
+    class Meta:
+        ordering = ['-incarcat_la']
+
+    def __str__(self):
+        return f'{self.nume} — {self.pacient}'
+
 class ModuleUtilizator(models.Model):
     MODULE_CHOICES = [
         ('pacienti', 'Pacienți'),

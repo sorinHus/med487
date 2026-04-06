@@ -22,6 +22,9 @@ from rest_framework.views import APIView
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
+import boto3
+import os
+import uuid
 
 
 LUNI_RO = [
@@ -1023,4 +1026,90 @@ def import_pacienti_excel(request):
         })
 
     except Exception as e:
-        return Response({'eroare': f'Eroare la citirea fișierului: {str(e)}'}, status=400)         
+        return Response({'eroare': f'Eroare la citirea fișierului: {str(e)}'}, status=400)       
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def documente_pacient(request, pacient_id):
+    from .models import DocumentPacient
+    try:
+        pacient = Pacient.objects.get(pk=pacient_id)
+    except Pacient.DoesNotExist:
+        return Response({'eroare': 'Pacient negăsit.'}, status=404)
+
+    if request.method == 'GET':
+        docs = DocumentPacient.objects.filter(pacient=pacient)
+        return Response([{
+            'id': d.id,
+            'nume': d.nume,
+            'fisier_url': d.fisier_url,
+            'marime': d.marime,
+            'incarcat_la': d.incarcat_la,
+            'incarcat_de': d.incarcat_de.get_full_name() if d.incarcat_de else '—',
+        } for d in docs])
+
+    if request.method == 'POST':
+        fisier = request.FILES.get('fisier')
+        nume = request.data.get('nume', fisier.name if fisier else 'Document')
+        if not fisier:
+            return Response({'eroare': 'Niciun fișier trimis.'}, status=400)
+        if fisier.size > 10 * 1024 * 1024:
+            return Response({'eroare': 'Fișierul depășește 10MB.'}, status=400)
+
+        try:
+            s3 = boto3.client(
+                's3',
+                endpoint_url=f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com",
+                aws_access_key_id=os.environ['R2_ACCESS_KEY_ID'],
+                aws_secret_access_key=os.environ['R2_SECRET_ACCESS_KEY'],
+                region_name='auto',
+            )
+            ext = fisier.name.rsplit('.', 1)[-1].lower()
+            key = f"pacienti/{pacient_id}/{uuid.uuid4()}.{ext}"
+            s3.upload_fileobj(
+                fisier,
+                os.environ['R2_BUCKET_NAME'],
+                key,
+                ExtraArgs={'ContentType': fisier.content_type}
+            )
+            url = f"{os.environ['R2_PUBLIC_URL']}/{key}"
+            doc = DocumentPacient.objects.create(
+                pacient=pacient,
+                nume=nume,
+                fisier_url=url,
+                fisier_key=key,
+                marime=fisier.size,
+                incarcat_de=request.user,
+            )
+            return Response({
+                'id': doc.id,
+                'nume': doc.nume,
+                'fisier_url': doc.fisier_url,
+                'marime': doc.marime,
+                'incarcat_la': doc.incarcat_la,
+            }, status=201)
+        except Exception as e:
+            return Response({'eroare': f'Eroare upload: {str(e)}'}, status=500)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def sterge_document(request, doc_id):
+    from .models import DocumentPacient
+    try:
+        doc = DocumentPacient.objects.get(pk=doc_id)
+    except DocumentPacient.DoesNotExist:
+        return Response({'eroare': 'Document negăsit.'}, status=404)
+    try:
+        s3 = boto3.client(
+            's3',
+            endpoint_url=f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com",
+            aws_access_key_id=os.environ['R2_ACCESS_KEY_ID'],
+            aws_secret_access_key=os.environ['R2_SECRET_ACCESS_KEY'],
+            region_name='auto',
+        )
+        s3.delete_object(Bucket=os.environ['R2_BUCKET_NAME'], Key=doc.fisier_key)
+    except Exception:
+        pass
+    doc.delete()
+    return Response(status=204)          

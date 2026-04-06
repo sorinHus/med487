@@ -14,3 +14,4 @@ whitenoise==6.8.2
 django-anymail[resend]
 pytz==2024.1
 openpyxl==3.1.5
+boto3==1.35.0
