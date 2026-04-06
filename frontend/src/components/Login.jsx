@@ -17,8 +17,12 @@ export default function Login({ onLogin }) {
   const handleLogin = async (e) => {
     e.preventDefault(); setLoading(true); setError(null)
     try { await login(username, password); onLogin() }
-    catch { setError('Username sau parola incorecta') }
-    finally { setLoading(false) }
+    catch {
+      setLoading(false)
+      setError('Username sau parola incorecta')
+      return
+    }
+    setLoading(false)
   }
 
   const handleReset = async (e) => {
