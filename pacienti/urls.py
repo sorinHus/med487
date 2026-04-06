@@ -41,6 +41,6 @@ urlpatterns = router.urls + [
     path('export-xml/', export_xml_raportare),
     path('import-pacienti/', import_pacienti_excel)
     path('pacienti/<int:pacient_id>/documente/', documente_pacient),
-    path('documente/<int:doc_id>/', sterge_document),,
+    path('documente/<int:doc_id>/', sterge_document),
 ]
 
