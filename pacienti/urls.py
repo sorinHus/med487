@@ -10,6 +10,7 @@ from .views import test_email
 from .views import ProfilMedicView, SchimbareParolaView, zile_libere_view
 from .views import VerificareCNPView, InregistrarePacientView, AprobarePacientView
 from .views import PortalPacientView
+from .views import export_xml_raportare
 
 router = DefaultRouter()
 router.register('pacienti', PacientViewSet, basename='pacient')
