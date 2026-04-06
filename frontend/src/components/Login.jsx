@@ -15,9 +15,13 @@ export default function Login({ onLogin }) {
   const [resetLoading, setResetLoading] = useState(false)
 
   const handleLogin = async (e) => {
-    e.preventDefault(); setLoading(true); setError(null)
-    try { await login(username, password); onLogin() }
-    catch {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    try {
+      await login(username, password)
+      onLogin()
+    } catch {
       setLoading(false)
       setError('Username sau parola incorecta')
       return
@@ -65,7 +69,7 @@ export default function Login({ onLogin }) {
             )}
             <form onSubmit={handleLogin}>
               <label style={{ fontSize: '13px', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>Username</label>
-              <input type="text" value={username} onChange={e => setPassword(e.target.value)}
+              <input type="text" value={username} onChange={e => setUsername(e.target.value)}
                 placeholder="username (medic) / CNP (pacienti)" style={{ ...inputStyle, marginBottom: '14px' }}
                 onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                 onBlur={e => e.target.style.borderColor = 'var(--border)'}
