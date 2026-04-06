@@ -1,8 +1,10 @@
 import axios from 'axios'
 import { getToken } from './auth'
 
+const BASE = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
+
 const api = axios.create({
-  baseURL: 'https://web-production-26811.up.railway.app/api/',
+  baseURL: BASE + '/',
 })
 
 api.interceptors.request.use(config => {
@@ -17,14 +19,11 @@ api.interceptors.response.use(
   response => response,
   async error => {
     const original = error.config
-    if (error.response?.status === 401 && !original._retry) {
+    if (error.response?.status === 401 && !original._retry && !original.url.includes('/token/')) {
       original._retry = true
       try {
         const refresh = localStorage.getItem('refresh')
-        const response = await axios.post(
-          'http://127.0.0.1:8000/api/token/refresh/',
-          { refresh }
-        )
+        const response = await axios.post(`${BASE}/token/refresh/`, { refresh })
         localStorage.setItem('access', response.data.access)
         original.headers.Authorization = `Bearer ${response.data.access}`
         return api(original)
