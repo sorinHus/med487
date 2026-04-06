@@ -31,11 +31,17 @@ function getUltimele6Luni() {
   return luni
 }
 
+const lunaC = new Date().getMonth() + 1
+const anC = new Date().getFullYear()
+
 export default function Rapoarte() {
   const [consultatiiLuna, setConsultatiiLuna]   = useState([])
   const [programariStatus, setProgramariStatus] = useState([])
   const [pacientiNoi, setPacientiNoi]           = useState([])
   const [loading, setLoading]                   = useState(true)
+  const [lunaXml, setLunaXml]                   = useState(lunaC)
+  const [anXml, setAnXml]                       = useState(anC)
+  const [descarcand, setDescarcand]             = useState(false)
 
   useEffect(() => {
     const luni = getUltimele6Luni()
@@ -69,8 +75,26 @@ export default function Rapoarte() {
     fetchDate()
   }, [])
 
+  const descarcaXml = async () => {
+    setDescarcand(true)
+    try {
+      const token = localStorage.getItem('access')
+      const apiBase = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
+      const url = `${apiBase}/export-xml/?luna=${lunaXml}&an=${anXml}`
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } })
+      if (!res.ok) { alert('Eroare la generarea XML.'); return }
+      const blob = await res.blob()
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = `raportare_MF_${anXml}_${String(lunaXml).padStart(2,'0')}.xml`
+      link.click()
+    } catch (err) { alert('Eroare la descărcarea XML.') }
+    finally { setDescarcand(false) }
+  }
+
   const cardStyle = { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }
   const titluStyle = { fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '20px' }
+  const inputStyle = { padding: '7px 12px', fontSize: '13px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)', outline: 'none' }
 
   if (loading) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '300px', color: 'var(--text-dim)' }}>
@@ -80,6 +104,33 @@ export default function Rapoarte() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+      {/* Export XML CNAS */}
+      <div style={cardStyle}>
+        <div style={titluStyle}>Export XML raportare CNAS</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <div>
+            <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Luna</label>
+            <select value={lunaXml} onChange={e => setLunaXml(parseInt(e.target.value))} style={inputStyle}>
+              {LUNI_RO.map((l, i) => <option key={i+1} value={i+1}>{l}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Anul</label>
+            <input type="number" value={anXml} onChange={e => setAnXml(parseInt(e.target.value))} min="2020" max="2099" style={{ ...inputStyle, width: '90px' }} />
+          </div>
+          <div style={{ alignSelf: 'flex-end' }}>
+            <button onClick={descarcaXml} disabled={descarcand}
+              style={{ padding: '8px 20px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', opacity: descarcand ? 0.6 : 1 }}>
+              {descarcand ? 'Se generează...' : '⬇ Descarcă XML'}
+            </button>
+          </div>
+        </div>
+        <div style={{ fontSize: '12px', color: 'var(--text-dim)', marginTop: '10px' }}>
+          Generează fișierul XML conform Anexei 006 CNAS (lista înscriși + concedii medicale din luna selectată).
+        </div>
+      </div>
+
       <div style={cardStyle}>
         <div style={titluStyle}>Consultații — ultimele 6 luni</div>
         <ResponsiveContainer width="100%" height={260}>

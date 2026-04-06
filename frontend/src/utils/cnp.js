@@ -67,4 +67,3 @@ export const validareCNP = (cnp) => {
                                                                                                             data_nastere: `${anComplet}-${luna}-${zi}`
                                                                                                               }
                                                                                                               }
-}
