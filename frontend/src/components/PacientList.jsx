@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import api from '../api'
 import PacientForm from './PacientForm'
 import PacientDetalii from './PacientDetalii'
@@ -67,6 +67,9 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
   const [showForm, setShowForm]               = useState(false)
   const [pacientSelectat, setPacientSelectat] = useState(pacientInitial || null)
   const [exportand, setExportand]             = useState(false)
+  const [importand, setImportand]             = useState(false)
+  const [rezultatImport, setRezultatImport]   = useState(null)
+  const fileInputRef = useRef(null)
 
   useEffect(() => {
     if (pacientInitial) setPacientSelectat(pacientInitial)
@@ -100,6 +103,27 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
       await exportExcel(toata)
     } catch (err) { console.error('Export error:', err); alert('Eroare la export.') }
     finally { setExportand(false) }
+  }
+
+  const handleImport = async (e) => {
+    const fisier = e.target.files[0]
+    if (!fisier) return
+    setImportand(true)
+    setRezultatImport(null)
+    try {
+      const formData = new FormData()
+      formData.append('fisier', fisier)
+      const res = await api.post('/import-pacienti/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      setRezultatImport(res.data)
+      fetchPacienti()
+    } catch (err) {
+      setRezultatImport({ eroare: err.response?.data?.eroare || 'Eroare la import.' })
+    } finally {
+      setImportand(false)
+      e.target.value = ''
+    }
   }
 
   if (pacientSelectat) return (
@@ -139,6 +163,14 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
           >
             {exportand ? '⏳ Se exportă...' : '⬇️ Export Excel'}
           </button>
+          <input type="file" accept=".xlsx" ref={fileInputRef} onChange={handleImport} style={{ display: 'none' }} />
+          <button onClick={() => fileInputRef.current.click()} disabled={importand}
+            style={{ padding: '9px 16px', fontSize: '13px', cursor: importand ? 'default' : 'pointer', background: 'transparent', color: importand ? 'var(--text-dim)' : '#a78bfa', border: '1px solid', borderColor: importand ? 'var(--border)' : '#a78bfa', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: importand ? 0.6 : 1, display: 'flex', alignItems: 'center', gap: '6px' }}
+            onMouseEnter={e => { if (!importand) e.currentTarget.style.background = 'rgba(167,139,250,0.1)' }}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          >
+            {importand ? '⏳ Se importă...' : '⬆️ Import Excel'}
+          </button>
           <button onClick={() => setShowForm(true)}
             style={{ padding: '9px 18px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap' }}
             onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-hover)'}
@@ -148,6 +180,25 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
           </button>
         </div>
       </div>
+
+      {rezultatImport && (
+        <div style={{ marginBottom: '16px', padding: '14px 18px', borderRadius: '10px', background: rezultatImport.eroare ? 'rgba(248,113,113,0.1)' : 'rgba(52,211,153,0.1)', border: `1px solid ${rezultatImport.eroare ? '#f87171' : '#34d399'}`, fontSize: '13px' }}>
+          {rezultatImport.eroare ? (
+            <span style={{ color: '#f87171' }}>❌ {rezultatImport.eroare}</span>
+          ) : (
+            <div>
+              <span style={{ color: '#34d399', fontWeight: '600' }}>✅ Import finalizat: </span>
+              <span style={{ color: 'var(--text-primary)' }}>{rezultatImport.importati} pacienți importați</span>
+              {rezultatImport.sarite > 0 && <span style={{ color: 'var(--text-muted)', marginLeft: '10px' }}>({rezultatImport.sarite} CNP-uri existente, sărite)</span>}
+              {rezultatImport.erori?.length > 0 && (
+                <div style={{ marginTop: '8px', color: '#fbbf24' }}>
+                  {rezultatImport.erori.map((e, i) => <div key={i}>⚠️ {e}</div>)}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>

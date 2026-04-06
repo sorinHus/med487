@@ -825,7 +825,7 @@ class ResetParolaView(APIView):
             pass
         return Response({'ok': True})    
 
-        
+
 from django.http import HttpResponse
 from django.utils.timezone import now
 import xml.etree.ElementTree as ET
@@ -904,4 +904,111 @@ def export_xml_raportare(request):
     response = HttpResponse(content_type='application/xml')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     ET.ElementTree(root).write(response, encoding='unicode', xml_declaration=True)
-    return response        
+    return response   
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def import_pacienti_excel(request):
+    import openpyxl
+    from datetime import date
+
+    fisier = request.FILES.get('fisier')
+    if not fisier:
+        return Response({'eroare': 'Niciun fișier trimis.'}, status=400)
+
+    try:
+        wb = openpyxl.load_workbook(fisier)
+        ws = wb.active
+        rows = list(ws.iter_rows(values_only=True))
+        if len(rows) < 2:
+            return Response({'eroare': 'Fișierul nu conține date.'}, status=400)
+
+        header = [str(h).strip() if h else '' for h in rows[0]]
+
+        def col(row, nume):
+            try:
+                idx = header.index(nume)
+                val = row[idx]
+                return str(val).strip() if val is not None else ''
+            except ValueError:
+                return ''
+
+        medic = request.user
+        importati = 0
+        sarite = 0
+        erori = []
+
+        SEX_MAP = {'masculin': 'M', 'm': 'M', 'feminin': 'F', 'f': 'F'}
+        GRUP_VALID = ['A+','A-','B+','B-','AB+','AB-','0+','0-']
+        STATUS_VALID = ['activ','decedat','transferat','inactiv']
+
+        for i, row in enumerate(rows[1:], start=2):
+            cnp = col(row, 'CNP').replace(' ', '')
+            if not cnp:
+                continue
+
+            if Pacient.objects.filter(cnp=cnp).exists():
+                sarite += 1
+                continue
+
+            nume = col(row, 'Nume')
+            prenume = col(row, 'Prenume')
+            if not nume or not prenume:
+                erori.append(f'Rândul {i}: Nume sau Prenume lipsă.')
+                continue
+
+            sex_raw = col(row, 'Sex').lower()
+            sex = SEX_MAP.get(sex_raw, 'M')
+
+            grup = col(row, 'Grup sangvin')
+            if grup not in GRUP_VALID:
+                grup = ''
+
+            status = col(row, 'Status').lower()
+            if status not in STATUS_VALID:
+                status = 'activ'
+
+            # data_nastere din CNP
+            try:
+                s = int(cnp[0])
+                an2 = int(cnp[1:3])
+                luna_n = int(cnp[3:5])
+                zi_n = int(cnp[5:7])
+                if s in [1,2]: an_n = 1900 + an2
+                elif s in [3,4]: an_n = 1800 + an2
+                elif s in [5,6]: an_n = 2000 + an2
+                else: an_n = 1900 + an2
+                data_nastere = date(an_n, luna_n, zi_n)
+            except:
+                data_nastere = date(2000, 1, 1)
+
+            try:
+                Pacient.objects.create(
+                    cnp=cnp,
+                    nume=nume,
+                    prenume=prenume,
+                    data_nastere=data_nastere,
+                    sex=sex,
+                    telefon=col(row, 'Telefon'),
+                    email=col(row, 'Email'),
+                    judet=col(row, 'Judet'),
+                    localitate=col(row, 'Localitate'),
+                    strada=col(row, 'Strada'),
+                    numar_strada=col(row, 'Nr.'),
+                    grup_sangvin=grup,
+                    alergii=col(row, 'Alergii'),
+                    status=status,
+                    medic=medic,
+                )
+                importati += 1
+            except Exception as e:
+                erori.append(f'Rândul {i} (CNP {cnp}): {str(e)}')
+
+        return Response({
+            'importati': importati,
+            'sarite': sarite,
+            'erori': erori,
+        })
+
+    except Exception as e:
+        return Response({'eroare': f'Eroare la citirea fișierului: {str(e)}'}, status=400)         

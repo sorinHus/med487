@@ -11,6 +11,7 @@ from .views import ProfilMedicView, SchimbareParolaView, zile_libere_view
 from .views import VerificareCNPView, InregistrarePacientView, AprobarePacientView
 from .views import PortalPacientView
 from .views import export_xml_raportare
+from .views import import_pacienti_excel
 
 router = DefaultRouter()
 router.register('pacienti', PacientViewSet, basename='pacient')
@@ -39,4 +40,6 @@ urlpatterns = router.urls + [
     path('portal-pacient/', PortalPacientView.as_view()),
     path('reset-parola/', ResetParolaView.as_view()),
     path('export-xml/', export_xml_raportare),
+    path('import-pacienti/', import_pacienti_excel),
 ]
+
