@@ -132,6 +132,8 @@ class ConfiguratieCabinet(models.Model):
     email               = models.EmailField(blank=True)
     cui                 = models.CharField(max_length=20, blank=True, verbose_name='CUI')
     cod_parafă          = models.CharField(max_length=20, blank=True, verbose_name='Cod parafă medic')
+    nr_contract_cas     = models.CharField(max_length=30, blank=True, verbose_name='Nr. contract CAS')
+    cod_cas             = models.CharField(max_length=10, blank=True, verbose_name='Cod CAS județean (ex: CJ)')
     # Setări globale
     email_contact       = models.EmailField(blank=True, verbose_name='Email contact support')
     durata_slot         = models.PositiveIntegerField(default=30, verbose_name='Durată slot programare (min)')

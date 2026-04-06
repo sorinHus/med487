@@ -116,7 +116,7 @@ class ConfiguratieCabinetSerializer(serializers.ModelSerializer):
         model = ConfiguratieCabinet
         fields = ['id', 'denumire_unitate', 'localitate', 'judet',
                   'strada', 'numar', 'telefon', 'email', 'cui', 'cod_parafă',
-                  'email_contact', 'durata_slot', 'max_programari_zi', 'mod_mentenanta', 'orar_saptamanal']
+                  'email_contact', 'durata_slot', 'max_programari_zi', 'mod_mentenanta', 'orar_saptamanal', 'nr_contract_cas', 'cod_cas']
 
 
 class LinieRetetaSerializer(serializers.ModelSerializer):
