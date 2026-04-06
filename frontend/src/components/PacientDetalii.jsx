@@ -371,7 +371,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
           <thead>
             <tr>
               <th style={{ ...thStyle, width: '40px' }}>#</th>
-              {coloaneleVizibile.map(col => (
+              {coloaneVizibile.map(col => (
                 <th key={col.id} style={thSortStyle(col.sort)} onClick={() => handleSort(col.sort)}>
                   {col.label}{sageata(col.sort)}
                 </th>
@@ -380,10 +380,10 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
           </thead>
           <tbody>
             {loading && (
-              <tr><td colSpan={coloaneleVizibile.length + 1} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>Se incarca...</td></tr>
+              <tr><td colSpan={coloaneVizibile.length + 1} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>Se incarca...</td></tr>
             )}
             {!loading && pacientiFiltrati.length === 0 && (
-              <tr><td colSpan={coloaneleVizibile.length + 1} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>
+              <tr><td colSpan={coloaneVizibile.length + 1} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>
                 {search || filtrateActive ? 'Niciun pacient găsit pentru filtrele aplicate.' : 'Nu există pacienți înregistrați.'}
               </td></tr>
             )}
@@ -394,7 +394,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
               >
                 <td style={{ padding: '12px 14px', color: 'var(--text-dim)', textAlign: 'center', fontSize: '12px' }}>{index + 1}</td>
-                {coloaneleVizibile.map(col => (
+                {coloaneVizibile.map(col => (
                   <td key={col.id} style={{ padding: '12px 14px' }}>
                     {renderCelula(col, p)}
                   </td>
