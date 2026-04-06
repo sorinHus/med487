@@ -25,6 +25,7 @@ export default function PortalPacient({ user, onLogout }) {
   const [date, setDate] = useState(null)
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState('programari')
+  const [retetaSelectata, setRetetaSelectata] = useState(null)
 
   useEffect(() => {
     const token = localStorage.getItem('access')
@@ -150,13 +151,55 @@ export default function PortalPacient({ user, onLogout }) {
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {date.retete.map(r => (
-                      <div key={r.id} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '15px' }}>#{r.numar}</div>
+                      <div key={r.id} onClick={() => setRetetaSelectata(r)}
+                        style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+                        onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
+                        onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                      >
+                        <div style={{ fontWeight: '600', color: 'var(--accent-light)', fontSize: '15px' }}>{r.numar}</div>
                         <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>{formatData(r.data_prescriere)}</div>
+                        <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: r.gratuit === 'da' ? 'rgba(52,211,153,0.15)' : 'rgba(107,114,128,0.15)', color: r.gratuit === 'da' ? '#34d399' : 'var(--text-muted)' }}>
+                          {r.gratuit === 'da' ? 'Gratuit' : 'Cu plată'}
+                        </span>
                       </div>
                     ))}
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* MODAL RETETA */}
+            {retetaSelectata && (
+              <div onClick={() => setRetetaSelectata(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+                <div onClick={e => e.stopPropagation()} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', width: '100%', maxWidth: '560px', maxHeight: '85vh', overflowY: 'auto' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid var(--border)', position: 'sticky', top: 0, background: 'var(--bg-card)' }}>
+                    <div>
+                      <div style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '15px' }}>{retetaSelectata.numar}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-dim)', marginTop: '2px' }}>{formatData(retetaSelectata.data_prescriere)}</div>
+                    </div>
+                    <button onClick={() => setRetetaSelectata(null)} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: '20px', cursor: 'pointer' }}>✕</button>
+                  </div>
+                  <div style={{ padding: '20px' }}>
+                    {retetaSelectata.diagnostic && (
+                      <div style={{ marginBottom: '16px', padding: '10px 14px', background: 'var(--bg-main)', borderRadius: '8px', fontSize: '13px', color: 'var(--text-muted)' }}>
+                        <span style={{ color: 'var(--text-dim)' }}>Diagnostic: </span>{retetaSelectata.diagnostic}
+                      </div>
+                    )}
+                    <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>
+                      Medicamente ({retetaSelectata.linii?.length || 0})
+                    </div>
+                    {retetaSelectata.linii?.map((l, i) => (
+                      <div key={i} style={{ background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '10px', padding: '14px', marginBottom: '10px' }}>
+                        <div style={{ fontWeight: '600', color: 'var(--text-primary)', marginBottom: '6px' }}>{l.nume_medicament} {l.concentratie && `· ${l.concentratie}`}</div>
+                        {l.doza_frecventa && <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '3px' }}><span style={{ color: 'var(--text-dim)' }}>Doză: </span>{l.doza_frecventa}</div>}
+                        <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: 'var(--text-dim)', marginTop: '6px' }}>
+                          {l.durata_zile && <span>⏱ {l.durata_zile} zile</span>}
+                          {l.cantitate && <span>📦 {l.cantitate} cutii</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </>
