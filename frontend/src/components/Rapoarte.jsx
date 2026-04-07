@@ -172,11 +172,20 @@ export default function Rapoarte() {
           {programariStatus.length === 0 ? (
             <div className={s.pieEmpty}>Nicio programare înregistrată.</div>
           ) : (
-            <ResponsiveContainer width="100%" height={240}>
-              <PieChart>
-                <Pie data={programariStatus} dataKey="total" nameKey="status" cx="50%" cy="50%" outerRadius={85} innerRadius={45} paddingAngle={3}
+            <ResponsiveContainer width="100%" height={260}>
+              <PieChart margin={{ top: 20, right: 20, bottom: 0, left: 20 }}>
+                <Pie
+                  data={programariStatus}
+                  dataKey="total"
+                  nameKey="status"
+                  cx="50%"
+                  cy="52%"
+                  outerRadius={80}
+                  innerRadius={42}
+                  paddingAngle={3}
                   label={({ status, percent }) => `${status} ${(percent * 100).toFixed(0)}%`}
-                  labelLine={{ stroke: 'var(--text-dim)' }}>
+                  labelLine={{ stroke: 'var(--text-dim)' }}
+                >
                   {programariStatus.map((_, i) => <Cell key={i} fill={CULORI[i % CULORI.length]} />)}
                 </Pie>
                 <Tooltip content={<TooltipCustom />} />
