@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import api from '../api'
 import PacientForm from './PacientForm'
 import PacientDetalii from './PacientDetalii'
+import s from '../styles/PacientList.module.css'
 
 const AVATAR_COLORS = ['#3a7bd5','#e05c7a','#f5a623','#50c878','#9b59b6','#1abc9c','#e67e22']
 
@@ -61,8 +62,8 @@ const COLOANE_DEFAULT = ['pacient', 'cnp', 'varsta', 'telefon', 'consultatie', '
 
 function getColoaneSalvate() {
   try {
-    const s = localStorage.getItem('pacientList_coloane')
-    if (s) return JSON.parse(s)
+    const saved = localStorage.getItem('pacientList_coloane')
+    if (saved) return JSON.parse(saved)
   } catch {}
   return COLOANE_DEFAULT
 }
@@ -214,40 +215,36 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
     <PacientForm onSaved={() => { setShowForm(false); fetchPacienti() }} onCancel={() => setShowForm(false)} />
   )
 
-  const thStyle = { padding: '10px 14px', fontSize: '11px', fontWeight: '600', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'left', borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap' }
-  const thSortStyle = (col) => ({ ...thStyle, cursor: col ? 'pointer' : 'default', userSelect: 'none', color: sortCol === col ? 'var(--accent-light)' : 'var(--text-dim)' })
   const sageata = (col) => col ? (sortCol === col ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ' ↕') : ''
-  const selectStyle = { padding: '7px 10px', fontSize: '12px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '7px', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer' }
-  const inputFiltruStyle = { padding: '7px 10px', fontSize: '12px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '7px', color: 'var(--text-primary)', outline: 'none', width: '70px' }
 
   const renderCelula = (col, p) => {
     const fmt = (d) => d ? new Date(d).toLocaleDateString('ro-RO', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
     switch (col.id) {
       case 'pacient': return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: getAvatarColor(`${p.nume} ${p.prenume}`), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
+        <div className={s.avatarWrap}>
+          <div className={s.avatar} style={{ background: getAvatarColor(`${p.nume} ${p.prenume}`) }}>
             {getInitials(`${p.nume} ${p.prenume}`)}
           </div>
-          <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>{p.nume} {p.prenume}</span>
+          <span className={s.pacientName}>{p.nume} {p.prenume}</span>
         </div>
       )
-      case 'cnp':          return <span style={{ fontFamily: 'monospace', fontSize: '12px', color: 'var(--text-muted)' }}>{p.cnp}</span>
-      case 'varsta':       return <span style={{ color: 'var(--text-muted)' }}>{calcVarsta(p.cnp) ?? '—'}</span>
-      case 'sex':          return <span style={{ color: 'var(--text-muted)' }}>{p.sex === 'M' ? 'Masculin' : p.sex === 'F' ? 'Feminin' : '—'}</span>
-      case 'telefon':      return <span style={{ color: 'var(--text-muted)' }}>{p.telefon || '—'}</span>
-      case 'email':        return <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{p.email || '—'}</span>
-      case 'localitate':   return <span style={{ color: 'var(--text-muted)' }}>{p.localitate || '—'}</span>
+      case 'cnp':          return <span className={s.cnp}>{p.cnp}</span>
+      case 'varsta':       return <span className={s.muted}>{calcVarsta(p.cnp) ?? '—'}</span>
+      case 'sex':          return <span className={s.muted}>{p.sex === 'M' ? 'Masculin' : p.sex === 'F' ? 'Feminin' : '—'}</span>
+      case 'telefon':      return <span className={s.muted}>{p.telefon || '—'}</span>
+      case 'email':        return <span className={s.mutedSm}>{p.email || '—'}</span>
+      case 'localitate':   return <span className={s.muted}>{p.localitate || '—'}</span>
       case 'grup':         return p.grup_sangvin
-        ? <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '700', background: 'rgba(58,123,213,0.15)', color: '#60a5fa' }}>{p.grup_sangvin}</span>
-        : <span style={{ color: 'var(--text-dim)' }}>—</span>
-      case 'alergii':      return <span style={{ color: p.alergii ? '#fbbf24' : 'var(--text-dim)', fontSize: '12px' }}>{p.alergii || '—'}</span>
-      case 'consultatie':  return <span style={{ color: 'var(--text-muted)' }}>{fmt(p.ultima_consultatie)}</span>
-      case 'inregistrat':  return <span style={{ color: 'var(--text-muted)' }}>{p.data_inregistrare || '—'}</span>
-      case 'creat_la':     return <span style={{ color: 'var(--text-muted)' }}>{fmt(p.creat_la)}</span>
-      case 'actualizat_la':return <span style={{ color: 'var(--text-muted)' }}>{fmt(p.actualizat_la)}</span>
+        ? <span className={s.grupBadge}>{p.grup_sangvin}</span>
+        : <span className={s.dim}>—</span>
+      case 'alergii':      return <span className={p.alergii ? s.alergiiText : s.dim}>{p.alergii || '—'}</span>
+      case 'consultatie':  return <span className={s.muted}>{fmt(p.ultima_consultatie)}</span>
+      case 'inregistrat':  return <span className={s.muted}>{p.data_inregistrare || '—'}</span>
+      case 'creat_la':     return <span className={s.muted}>{fmt(p.creat_la)}</span>
+      case 'actualizat_la':return <span className={s.muted}>{fmt(p.actualizat_la)}</span>
       case 'status': {
         const st = STATUS_STYLE[p.status] || STATUS_STYLE.inactiv
-        return <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: st.bg, color: st.color, textTransform: 'capitalize' }}>{p.status}</span>
+        return <span className={s.statusBadge} style={{ background: st.bg, color: st.color }}>{p.status}</span>
       }
       default: return null
     }
@@ -256,84 +253,74 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
   return (
     <div>
       {/* Bara superioara */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', gap: '12px' }}>
-        <div style={{ position: 'relative', flex: 1, maxWidth: '380px' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+      <div className={s.topBar}>
+        <div className={s.searchWrap}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className={s.searchIcon}>
             <circle cx="11" cy="11" r="6" stroke="var(--text-dim)" strokeWidth="2"/>
             <path d="M16 16l4 4" stroke="var(--text-dim)" strokeWidth="2" strokeLinecap="round"/>
           </svg>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cauta pacient..."
-            style={{ width: '100%', padding: '9px 12px 9px 32px', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '9px', color: 'var(--text-primary)', fontSize: '13px', boxSizing: 'border-box', outline: 'none' }}
-            onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-            onBlur={e => e.target.style.borderColor = 'var(--border)'}
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Cauta pacient..."
+            className={s.searchInput}
           />
         </div>
-        <div style={{ display: 'flex', gap: '8px', flexShrink: 0, alignItems: 'center' }}>
-          <button onClick={handleExport} disabled={exportand || loading}
-            style={{ padding: '9px 16px', fontSize: '13px', cursor: exportand ? 'default' : 'pointer', background: 'transparent', color: exportand ? 'var(--text-dim)' : '#34d399', border: '1px solid', borderColor: exportand ? 'var(--border)' : '#34d399', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: exportand ? 0.6 : 1 }}
-            onMouseEnter={e => { if (!exportand) e.currentTarget.style.background = 'rgba(52,211,153,0.1)' }}
-            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-          >{exportand ? '⏳ Se exportă...' : '⬇️ Export Excel'}</button>
+        <div className={s.actions}>
+          <button onClick={handleExport} disabled={exportand || loading} className={s.btnExport}>
+            {exportand ? '⏳ Se exportă...' : '⬇️ Export Excel'}
+          </button>
           <input type="file" accept=".xlsx" ref={fileInputRef} onChange={handleImport} style={{ display: 'none' }} />
-          <button onClick={() => fileInputRef.current.click()} disabled={importand}
-            style={{ padding: '9px 16px', fontSize: '13px', cursor: importand ? 'default' : 'pointer', background: 'transparent', color: importand ? 'var(--text-dim)' : '#a78bfa', border: '1px solid', borderColor: importand ? 'var(--border)' : '#a78bfa', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap', opacity: importand ? 0.6 : 1 }}
-            onMouseEnter={e => { if (!importand) e.currentTarget.style.background = 'rgba(167,139,250,0.1)' }}
-            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-          >{importand ? '⏳ Se importă...' : '⬆️ Import Excel'}</button>
-          <button onClick={() => setShowForm(true)}
-            style={{ padding: '9px 18px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: '500', whiteSpace: 'nowrap' }}
-            onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-hover)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'var(--accent)'}
-          >+ Pacient nou</button>
+          <button onClick={() => fileInputRef.current.click()} disabled={importand} className={s.btnImport}>
+            {importand ? '⏳ Se importă...' : '⬆️ Import Excel'}
+          </button>
+          <button onClick={() => setShowForm(true)} className={s.btnNou}>+ Pacient nou</button>
         </div>
       </div>
 
       {/* Bara filtre + coloane */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
-        <span style={{ fontSize: '12px', color: 'var(--text-dim)', fontWeight: '500' }}>Filtre:</span>
-        <select value={filtruStatus} onChange={e => setFiltruStatus(e.target.value)} style={selectStyle}>
+      <div className={s.filtreBar}>
+        <span className={s.filtreLabel}>Filtre:</span>
+        <select value={filtruStatus} onChange={e => setFiltruStatus(e.target.value)} className={s.select}>
           <option value="">Toate statusurile</option>
           <option value="activ">Activ</option>
           <option value="decedat">Decedat</option>
           <option value="transferat">Transferat</option>
           <option value="inactiv">Inactiv</option>
         </select>
-        <select value={filtruSex} onChange={e => setFiltruSex(e.target.value)} style={selectStyle}>
+        <select value={filtruSex} onChange={e => setFiltruSex(e.target.value)} className={s.select}>
           <option value="">Ambele sexe</option>
           <option value="M">Masculin</option>
           <option value="F">Feminin</option>
         </select>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>Vârstă:</span>
-          <input type="number" value={varstaMin} onChange={e => setVarstaMin(e.target.value)} placeholder="min" style={inputFiltruStyle} min="0" max="120" />
-          <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>—</span>
-          <input type="number" value={varstaMax} onChange={e => setVarstaMax(e.target.value)} placeholder="max" style={inputFiltruStyle} min="0" max="120" />
+        <div className={s.varstaWrap}>
+          <span className={s.varstaLabel}>Vârstă:</span>
+          <input type="number" value={varstaMin} onChange={e => setVarstaMin(e.target.value)} placeholder="min" className={s.inputVarsta} min="0" max="120" />
+          <span className={s.varstaLabel}>—</span>
+          <input type="number" value={varstaMax} onChange={e => setVarstaMax(e.target.value)} placeholder="max" className={s.inputVarsta} min="0" max="120" />
         </div>
         {filtrateActive && (
-          <button onClick={resetFiltre} style={{ padding: '6px 12px', fontSize: '12px', cursor: 'pointer', background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border)', borderRadius: '7px' }}>
-            ✕ Reset filtre
-          </button>
+          <button onClick={resetFiltre} className={s.btnResetFiltre}>✕ Reset filtre</button>
         )}
-        <div style={{ position: 'relative', marginLeft: 'auto' }} ref={colDropRef}>
-          <button onClick={() => setShowColoane(v => !v)}
-            style={{ padding: '6px 12px', fontSize: '12px', cursor: 'pointer', background: showColoane ? 'rgba(58,123,213,0.1)' : 'transparent', color: showColoane ? 'var(--accent-light)' : 'var(--text-muted)', border: '1px solid var(--border)', borderRadius: '7px' }}>
+        <div className={s.coloaneDrop} ref={colDropRef}>
+          <button onClick={() => setShowColoane(v => !v)} className={`${s.btnColoane} ${showColoane ? s.btnColoaneActive : ''}`}>
             ⚙ Coloane
           </button>
           {showColoane && (
-            <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 6px)', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 0', zIndex: 50, minWidth: '210px', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
-              <div style={{ padding: '6px 14px 10px', fontSize: '11px', color: 'var(--text-dim)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--border)', marginBottom: '6px' }}>Coloane vizibile</div>
+            <div className={s.coloaneMenu}>
+              <div className={s.coloaneMenuTitle}>Coloane vizibile</div>
               {TOATE_COLOANELE.map(c => (
-                <label key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '7px 14px', cursor: c.fixed ? 'default' : 'pointer', opacity: c.fixed ? 0.5 : 1 }}
-                  onMouseEnter={e => { if (!c.fixed) e.currentTarget.style.background = 'var(--bg-hover)' }}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                <label
+                  key={c.id}
+                  className={`${s.coloanaRow} ${c.fixed ? s.coloanaRowFixed : ''}`}
+                >
                   <input type="checkbox" checked={coloane.includes(c.id)} onChange={() => toggleColoana(c.id)} disabled={c.fixed} style={{ cursor: c.fixed ? 'default' : 'pointer' }} />
-                  <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{c.label}</span>
-                  {c.fixed && <span style={{ fontSize: '11px', color: 'var(--text-dim)', marginLeft: 'auto' }}>fix</span>}
+                  <span className={s.coloanaLabel}>{c.label}</span>
+                  {c.fixed && <span className={s.coloanaFixTag}>fix</span>}
                 </label>
               ))}
-              <div style={{ borderTop: '1px solid var(--border)', marginTop: '6px', padding: '8px 14px 2px' }}>
-                <button onClick={() => { setColoane(COLOANE_DEFAULT); localStorage.setItem('pacientList_coloane', JSON.stringify(COLOANE_DEFAULT)) }}
-                  style={{ fontSize: '12px', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+              <div className={s.coloaneReset}>
+                <button onClick={() => { setColoane(COLOANE_DEFAULT); localStorage.setItem('pacientList_coloane', JSON.stringify(COLOANE_DEFAULT)) }} className={s.btnColoaneReset}>
                   Reset implicit
                 </button>
               </div>
@@ -344,16 +331,16 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
 
       {/* Rezultat import */}
       {rezultatImport && (
-        <div style={{ marginBottom: '16px', padding: '14px 18px', borderRadius: '10px', background: rezultatImport.eroare ? 'rgba(248,113,113,0.1)' : 'rgba(52,211,153,0.1)', border: `1px solid ${rezultatImport.eroare ? '#f87171' : '#34d399'}`, fontSize: '13px' }}>
+        <div className={rezultatImport.eroare ? s.importError : s.importSuccess}>
           {rezultatImport.eroare ? (
-            <span style={{ color: '#f87171' }}>❌ {rezultatImport.eroare}</span>
+            <span className={s.importErrorText}>❌ {rezultatImport.eroare}</span>
           ) : (
             <div>
-              <span style={{ color: '#34d399', fontWeight: '600' }}>✅ Import finalizat: </span>
+              <span className={s.importSuccessText}>✅ Import finalizat: </span>
               <span style={{ color: 'var(--text-primary)' }}>{rezultatImport.importati} pacienți importați</span>
-              {rezultatImport.sarite > 0 && <span style={{ color: 'var(--text-muted)', marginLeft: '10px' }}>({rezultatImport.sarite} CNP-uri existente, sărite)</span>}
+              {rezultatImport.sarite > 0 && <span className={s.importMuted}>({rezultatImport.sarite} CNP-uri existente, sărite)</span>}
               {rezultatImport.erori?.length > 0 && (
-                <div style={{ marginTop: '8px', color: '#fbbf24' }}>
+                <div className={s.importWarnings}>
                   {rezultatImport.erori.map((e, i) => <div key={i}>⚠️ {e}</div>)}
                 </div>
               )}
@@ -363,13 +350,17 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
       )}
 
       {/* Tabel */}
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+      <div className={s.tableWrap}>
+        <table className={s.table}>
           <thead>
             <tr>
-              <th style={{ ...thStyle, width: '40px' }}>#</th>
+              <th className={s.th} style={{ width: '40px' }}>#</th>
               {coloaneVizibile.map(col => (
-                <th key={col.id} style={thSortStyle(col.sort)} onClick={() => handleSort(col.sort)}>
+                <th
+                  key={col.id}
+                  className={`${s.th} ${col.sort ? s.thSortable : ''} ${sortCol === col.sort ? s.thSortActive : ''}`}
+                  onClick={() => handleSort(col.sort)}
+                >
                   {col.label}{sageata(col.sort)}
                 </th>
               ))}
@@ -377,7 +368,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
           </thead>
           <tbody>
             {loading && (
-              <tr><td colSpan={coloaneVizibile.length + 1} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>Se incarca...</td></tr>
+              <tr><td colSpan={coloaneVizibile.length + 1} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>Se încarcă...</td></tr>
             )}
             {!loading && pacientiFiltrati.length === 0 && (
               <tr><td colSpan={coloaneVizibile.length + 1} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>
@@ -385,14 +376,10 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
               </td></tr>
             )}
             {!loading && pacientiFiltrati.map((p, index) => (
-              <tr key={p.id} onClick={() => setPacientSelectat(p)}
-                style={{ borderBottom: '1px solid var(--border)', cursor: 'pointer', transition: 'background 0.12s' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-              >
-                <td style={{ padding: '12px 14px', color: 'var(--text-dim)', textAlign: 'center', fontSize: '12px' }}>{index + 1}</td>
+              <tr key={p.id} className={s.tr} onClick={() => setPacientSelectat(p)}>
+                <td className={s.tdIndex}>{index + 1}</td>
                 {coloaneVizibile.map(col => (
-                  <td key={col.id} style={{ padding: '12px 14px' }}>
+                  <td key={col.id} className={s.td}>
                     {renderCelula(col, p)}
                   </td>
                 ))}
@@ -403,7 +390,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
       </div>
 
       {!loading && (
-        <div style={{ marginTop: '10px', fontSize: '12px', color: 'var(--text-dim)', textAlign: 'right' }}>
+        <div className={s.footer}>
           {pacientiFiltrati.length} din {pacienti.length} pacienți{(search || filtrateActive) ? ' (filtrat)' : ''}
         </div>
       )}

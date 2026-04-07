@@ -1,0 +1,389 @@
+/* ── Top bar ── */
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.searchWrap {
+  position: relative;
+  flex: 1;
+  max-width: 380px;
+}
+.searchIcon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.searchInput {
+  width: 100%;
+  padding: 9px 12px 9px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text-primary);
+  font-size: 13px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.searchInput:focus {
+  border-color: var(--accent);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.btnExport {
+  padding: 9px 16px;
+  font-size: 13px;
+  background: transparent;
+  color: #34d399;
+  border: 1px solid #34d399;
+  border-radius: 8px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btnExport:hover:not(:disabled) {
+  background: rgba(52,211,153,0.1);
+}
+.btnExport:disabled {
+  color: var(--text-dim);
+  border-color: var(--border);
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btnImport {
+  padding: 9px 16px;
+  font-size: 13px;
+  background: transparent;
+  color: #a78bfa;
+  border: 1px solid #a78bfa;
+  border-radius: 8px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btnImport:hover:not(:disabled) {
+  background: rgba(167,139,250,0.1);
+}
+.btnImport:disabled {
+  color: var(--text-dim);
+  border-color: var(--border);
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btnNou {
+  padding: 9px 18px;
+  font-size: 13px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btnNou:hover {
+  background: var(--accent-hover);
+}
+
+/* ── Filtre ── */
+.filtreBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.filtreLabel {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.select {
+  padding: 7px 10px;
+  font-size: 12px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+}
+.varstaWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.varstaLabel {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.inputVarsta {
+  padding: 7px 10px;
+  font-size: 12px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text-primary);
+  outline: none;
+  width: 70px;
+}
+.btnResetFiltre {
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+/* ── Coloane dropdown ── */
+.coloaneDrop {
+  position: relative;
+  margin-left: auto;
+}
+.btnColoane {
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  transition: background 0.15s, color 0.15s;
+}
+.btnColoaneActive {
+  background: rgba(58,123,213,0.1);
+  color: var(--accent-light);
+}
+.coloaneMenu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 0;
+  z-index: 50;
+  min-width: 210px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.coloaneMenuTitle {
+  padding: 6px 14px 10px;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+.coloanaRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.coloanaRow:hover {
+  background: var(--bg-hover);
+}
+.coloanaRowFixed {
+  cursor: default;
+  opacity: 0.5;
+}
+.coloanaRowFixed:hover {
+  background: transparent;
+}
+.coloanaLabel {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.coloanaFixTag {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-left: auto;
+}
+.coloaneReset {
+  border-top: 1px solid var(--border);
+  margin-top: 6px;
+  padding: 8px 14px 2px;
+}
+.btnColoaneReset {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ── Import result ── */
+.importSuccess {
+  margin-bottom: 16px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: rgba(52,211,153,0.1);
+  border: 1px solid #34d399;
+  font-size: 13px;
+}
+.importError {
+  margin-bottom: 16px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: rgba(248,113,113,0.1);
+  border: 1px solid #f87171;
+  font-size: 13px;
+}
+.importSuccessText {
+  color: #34d399;
+  font-weight: 600;
+}
+.importMuted {
+  color: var(--text-muted);
+  margin-left: 10px;
+}
+.importWarnings {
+  margin-top: 8px;
+  color: #fbbf24;
+}
+.importErrorText {
+  color: #f87171;
+}
+
+/* ── Tabel ── */
+.tableWrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.th {
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+}
+.thSortable {
+  cursor: pointer;
+}
+.thSortActive {
+  color: var(--accent-light);
+}
+.td {
+  padding: 12px 14px;
+}
+.tdIndex {
+  padding: 12px 14px;
+  color: var(--text-dim);
+  text-align: center;
+  font-size: 12px;
+}
+.tr {
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.tr:hover {
+  background: var(--bg-hover);
+}
+.trEmpty td {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-dim);
+}
+
+/* ── Celule speciale ── */
+.avatarWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.pacientName {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.cnp {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.muted {
+  color: var(--text-muted);
+}
+.mutedSm {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.grupBadge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(58,123,213,0.15);
+  color: #60a5fa;
+}
+.dim {
+  color: var(--text-dim);
+}
+.alergiiText {
+  font-size: 12px;
+  color: #fbbf24;
+}
+.statusBadge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* ── Footer ── */
+.footer {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: right;
+}
