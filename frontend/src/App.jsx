@@ -20,85 +20,72 @@ const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.rai
 
 function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
-    const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
-      const [pacientInitial, setPacientInitial] = useState(null)
-        const [moduleActive, setModuleActive] = useState([])
-          const [cereriCount, setCereriCount] = useState(0)
+  const [theme, setTheme]           = useState(() => localStorage.getItem('theme') || 'dark')
+  const [pacientInitial, setPacientInitial] = useState(null)
+  const [moduleActive, setModuleActive]     = useState([])
+  const [cereriCount, setCereriCount]       = useState(0)
 
-            useEffect(() => {
-                document.documentElement.setAttribute('data-theme', theme)
-                    localStorage.setItem('theme', theme)
-                      }, [theme])
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+  }, [theme])
 
-                        const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark')
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark')
 
-                          useEffect(() => {
-                              if (user?.id) {
-                                    api.get(`/module/${user.id}/`).then(res => {
-                                            setModuleActive(res.data.active || [])
-                                                  }).catch(() => {
-                                                          setModuleActive([])
-                                                                })
-                                                                    }
-                                                                      }, [user])
+  useEffect(() => {
+    if (user?.id) {
+      api.get(`/module/${user.id}/`).then(res => {
+        setModuleActive(res.data.active || [])
+      }).catch(() => {
+        setModuleActive([])
+      })
+    }
+  }, [user])
 
-                                                                        const fetchCereriCount = () => {
-                                                                            const token = localStorage.getItem('access')
-                                                                                if (!token) return
-                                                                                    fetch(`${API}/useri/?rol=pacient&aprobat=false`, {
-                                                                                          headers: { Authorization: `Bearer ${token}` }
-                                                                                              })
-                                                                                                    .then(r => r.json())
-                                                                                                          .then(data => {
-                                                                                                                  const list = Array.isArray(data) ? data : data.results || []
-                                                                                                                          setCereriCount(list.length)
-                                                                                                                                })
-                                                                                                                                      .catch(() => {})
-                                                                                                                                        }
+  const fetchCereriCount = () => {
+    const token = localStorage.getItem('access')
+    if (!token) return
+    fetch(`${API}/useri/?rol=pacient&aprobat=false`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(r => r.json())
+      .then(data => {
+        const list = Array.isArray(data) ? data : data.results || []
+        setCereriCount(list.length)
+      })
+      .catch(() => {})
+  }
 
-                                                                                                                                          useEffect(() => {
-                                                                                                                                              fetchCereriCount()
-                                                                                                                                                  const interval = setInterval(fetchCereriCount, 60000)
-                                                                                                                                                      return () => clearInterval(interval)
-                                                                                                                                                        }, [])
+  useEffect(() => {
+    fetchCereriCount()
+    const interval = setInterval(fetchCereriCount, 60000)
+    return () => clearInterval(interval)
+  }, [])
 
-                                                                                                                                                          const handleNavigate = (page, data = null) => {
-                                                                                                                                                              setPacientInitial(null)
-                                                                                                                                                                  if (page === 'pacienti' && data?.pacient) {
-                                                                                                                                                                        setPacientInitial(data.pacient)
-                                                                                                                                                                            }
-                                                                                                                                                                                if (page === 'cereri-pacienti') fetchCereriCount()
-                                                                                                                                                                                    setActivePage(page)
-                                                                                                                                                                                      }
+  const handleNavigate = (page, data = null) => {
+    setPacientInitial(null)
+    if (page === 'pacienti' && data?.pacient) {
+      setPacientInitial(data.pacient)
+    }
+    if (page === 'cereri-pacienti') fetchCereriCount()
+    setActivePage(page)
+  }
 
-                                                                                                                                                                                        if (activePage === 'profil') return (
-                                                                                                                                                                                            <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme} cereriCount={cereriCount}>
-                                                                                                                                                                                                  <ProfilMedic onBack={() => setActivePage('dashboard')} />
-                                                                                                                                                                                                      </Layout>
-                                                                                                                                                                                                        )
+  if (activePage === 'profil') return (
+    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme} cereriCount={cereriCount}>
+      <ProfilMedic onBack={() => setActivePage('dashboard')} />
+    </Layout>
+  )
 
-                                                                                                                                                                                                          return (
-                                                                                                                                                                                                              <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme} cereriCount={cereriCount}>
-                                                                                                                                                                                                                    {activePage === 'dashboard'       && <Dashboard onNavigate={handleNavigate} />}
-                                                                                                                                                                                                                          {activePage === 'pacienti'        && <PacientList pacientInitial={pacientInitial} moduleActive={moduleActive} />}
-                                                                                                                                                                                                                                {activePage === 'programari'      && <Programari />}
-                                                                                                                                                                                                                                      {activePage === 'consultatii'     && <Consultatii onNavigate={handleNavigate} />}
-                                                                                                                                                                                                                                            {activePage === 'rapoarte'        && <Rapoarte />}
-                                                                                                                                                                                                                                                  {activePage === 'cereri-pacienti' && <CereriPacienti onActiune={fetchCereriCount} />}
-                                                                                                                                                                                                                                                      </Layout>
-                                                                                                                                                                                                                                                        )
-                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                        
-function PortalPlaceholder({ onLogout }) {
   return (
-    <div style={{ minHeight: '100vh', background: '#0f1117', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
-      <div style={{ color: '#60a5fa', fontSize: '3rem' }}>🏥</div>
-      <h2 style={{ color: '#e2e8f0', fontFamily: 'serif' }}>Portal Pacient</h2>
-      <p style={{ color: '#9ca3af' }}>În curând — portalul pentru pacienți este în dezvoltare.</p>
-      <button onClick={onLogout} style={{ marginTop: '1rem', padding: '0.5rem 1.5rem', background: '#1e2535', color: '#e2e8f0', border: '1px solid #1e2535', borderRadius: '8px', cursor: 'pointer' }}>
-        Deconectare
-      </button>
-    </div>
+    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme} cereriCount={cereriCount}>
+      {activePage === 'dashboard'       && <Dashboard onNavigate={handleNavigate} />}
+      {activePage === 'pacienti'        && <PacientList pacientInitial={pacientInitial} moduleActive={moduleActive} />}
+      {activePage === 'programari'      && <Programari />}
+      {activePage === 'consultatii'     && <Consultatii onNavigate={handleNavigate} />}
+      {activePage === 'rapoarte'        && <Rapoarte />}
+      {activePage === 'cereri-pacienti' && <CereriPacienti onActiune={fetchCereriCount} />}
+    </Layout>
   )
 }
 
@@ -162,7 +149,7 @@ export default function App() {
       <Routes>
         <Route path="/*" element={<SitePrezentare />} />
         <Route path="/app" element={<AppInterna />} />
-        <Route path="*"    element={<Navigate to="/" replace />} />
+        <Route path="*"   element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )
