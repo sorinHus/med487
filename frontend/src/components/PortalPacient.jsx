@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
+import s from '../styles/PortalPacient.module.css'
 
 const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
 
 const STATUS_COLORS = {
-  programat:  { bg: 'rgba(37,99,168,0.1)',  color: '#2563a8',  label: 'Programat' },
-  confirmat:  { bg: 'rgba(80,200,120,0.1)', color: 'var(--success)', label: 'Confirmat' },
-  finalizat:  { bg: 'rgba(113,128,150,0.1)', color: 'var(--text-dim)', label: 'Finalizat' },
-  anulat:     { bg: 'rgba(239,68,68,0.1)',  color: 'var(--danger)', label: 'Anulat' },
+  programat:  { bg: 'rgba(37,99,168,0.1)',   color: '#2563a8',          label: 'Programat' },
+  confirmat:  { bg: 'rgba(80,200,120,0.1)',  color: 'var(--success)',   label: 'Confirmat' },
+  finalizat:  { bg: 'rgba(113,128,150,0.1)', color: 'var(--text-dim)',  label: 'Finalizat' },
+  anulat:     { bg: 'rgba(239,68,68,0.1)',   color: 'var(--danger)',    label: 'Anulat' },
 }
 
 function formatData(dataStr) {
@@ -19,6 +20,15 @@ function formatOra(dataStr) {
   if (!dataStr) return ''
   const d = new Date(dataStr)
   return d.toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })
+}
+
+function Empty({ text }) {
+  return (
+    <div className={s.empty}>
+      <div className={s.emptyIcon}>📋</div>
+      <div className={s.emptyText}>{text}</div>
+    </div>
+  )
 }
 
 export default function PortalPacient({ user, onLogout }) {
@@ -39,78 +49,65 @@ export default function PortalPacient({ user, onLogout }) {
 
   const nume = `${user?.first_name || ''} ${user?.last_name || ''}`.trim()
 
-  const tabStyle = (id) => ({
-    padding: '0.6rem 1.25rem',
-    borderRadius: '8px',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '14px',
-    fontWeight: tab === id ? '600' : '400',
-    background: tab === id ? 'var(--accent)' : 'transparent',
-    color: tab === id ? 'white' : 'var(--text-muted)',
-    transition: 'all .15s',
-  })
-
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-main)', fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+    <div className={s.root}>
 
       {/* Header */}
-      <header style={{ background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', padding: '0 2rem', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ width: '34px', height: '34px', borderRadius: '8px', background: '#1a3557', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '1rem' }}>✚</div>
-          <span style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '15px' }}>Cabinet Medical</span>
+      <header className={s.header}>
+        <div className={s.headerLogo}>
+          <div className={s.logoIcon}>✚</div>
+          <span className={s.logoText}>Cabinet Medical</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <a href="/" style={{ fontSize: '13px', color: 'var(--text-dim)', textDecoration: 'none' }}>← Site</a>
-          <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{nume}</span>
-          <button onClick={() => { if (window.confirm('Ești sigur că vrei să te deconectezi?')) onLogout() }}
-            style={{ padding: '6px 14px', borderRadius: '7px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-muted)', fontSize: '13px', cursor: 'pointer' }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#f87171' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' }}
+        <div className={s.headerRight}>
+          <a href="/" className={s.linkSite}>← Site</a>
+          <span className={s.headerUser}>{nume}</span>
+          <button
+            onClick={() => { if (window.confirm('Ești sigur că vrei să te deconectezi?')) onLogout() }}
+            className={s.btnLogout}
           >Deconectare</button>
         </div>
       </header>
 
       {/* Content */}
-      <div style={{ maxWidth: '860px', margin: '0 auto', padding: '2rem 1.5rem' }}>
+      <div className={s.content}>
 
         {/* Welcome */}
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ fontSize: '22px', fontWeight: '600', color: 'var(--text-primary)' }}>Bună ziua, {user?.first_name || 'pacient'}!</div>
-          <div style={{ fontSize: '14px', color: 'var(--text-dim)', marginTop: '4px' }}>Portalul dumneavoastră medical</div>
+        <div className={s.welcome}>
+          <div className={s.welcomeTitle}>Bună ziua, {user?.first_name || 'pacient'}!</div>
+          <div className={s.welcomeSub}>Portalul dumneavoastră medical</div>
         </div>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: 'var(--bg-card)', padding: '0.4rem', borderRadius: '10px', border: '1px solid var(--border)', width: 'fit-content' }}>
-          <button style={tabStyle('programari')} onClick={() => setTab('programari')}>📅 Programări</button>
-          <button style={tabStyle('consultatii')} onClick={() => setTab('consultatii')}>🩺 Consultații</button>
-          <button style={tabStyle('retete')} onClick={() => setTab('retete')}>💊 Rețete</button>
+        <div className={s.tabs}>
+          <button className={`${s.tab} ${tab === 'programari' ? s.tabActive : ''}`} onClick={() => setTab('programari')}>📅 Programări</button>
+          <button className={`${s.tab} ${tab === 'consultatii' ? s.tabActive : ''}`} onClick={() => setTab('consultatii')}>🩺 Consultații</button>
+          <button className={`${s.tab} ${tab === 'retete' ? s.tabActive : ''}`} onClick={() => setTab('retete')}>💊 Rețete</button>
         </div>
 
         {loading ? (
-          <div style={{ color: 'var(--text-dim)', fontSize: '14px' }}>Se încarcă...</div>
+          <div className={s.loading}>Se încarcă...</div>
         ) : (
           <>
             {/* PROGRAMARI */}
             {tab === 'programari' && (
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <div style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)' }}>Programările mele</div>
-                  <a href="/programare.html" style={{ padding: '7px 16px', background: 'var(--accent)', color: 'white', borderRadius: '8px', textDecoration: 'none', fontSize: '13px', fontWeight: '500' }}>+ Programare nouă</a>
+                <div className={s.sectionHeader}>
+                  <div className={s.sectionTitle} style={{ marginBottom: 0 }}>Programările mele</div>
+                  <a href="/programare.html" className={s.btnNouaProgramare}>+ Programare nouă</a>
                 </div>
                 {!date?.programari?.length ? (
                   <Empty text="Nicio programare înregistrată" />
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div className={s.cardList}>
                     {date.programari.map(p => {
-                      const s = STATUS_COLORS[p.status] || STATUS_COLORS.programat
+                      const st = STATUS_COLORS[p.status] || STATUS_COLORS.programat
                       return (
-                        <div key={p.id} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div key={p.id} className={s.programareCard}>
                           <div>
-                            <div style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '15px' }}>{formatData(p.data_ora)} · {formatOra(p.data_ora)}</div>
-                            <div style={{ fontSize: '13px', color: 'var(--text-dim)', marginTop: '3px' }}>{p.motiv}</div>
+                            <div className={s.programareData}>{formatData(p.data_ora)} · {formatOra(p.data_ora)}</div>
+                            <div className={s.programareMotiv}>{p.motiv}</div>
                           </div>
-                          <span style={{ padding: '4px 12px', borderRadius: '999px', fontSize: '12px', fontWeight: '500', background: s.bg, color: s.color }}>{s.label}</span>
+                          <span className={s.statusBadge} style={{ background: st.bg, color: st.color }}>{st.label}</span>
                         </div>
                       )
                     })}
@@ -122,19 +119,19 @@ export default function PortalPacient({ user, onLogout }) {
             {/* CONSULTATII */}
             {tab === 'consultatii' && (
               <div>
-                <div style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '1rem' }}>Istoricul consultațiilor</div>
+                <div className={s.sectionTitle}>Istoricul consultațiilor</div>
                 {!date?.consultatii?.length ? (
                   <Empty text="Nicio consultație înregistrată" />
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div className={s.cardList}>
                     {date.consultatii.map(c => (
-                      <div key={c.id} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                          <div style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '15px' }}>{formatData(c.data_ora)}</div>
-                          <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>Dr. {c.medic}</div>
+                      <div key={c.id} className={s.consultatieCard}>
+                        <div className={s.consultatieHeader}>
+                          <div className={s.consultatieData}>{formatData(c.data_ora)}</div>
+                          <div className={s.consultatieMedic}>Dr. {c.medic}</div>
                         </div>
-                        <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '4px' }}><span style={{ color: 'var(--text-dim)' }}>Simptome:</span> {c.simptome}</div>
-                        <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}><span style={{ color: 'var(--text-dim)' }}>Tratament:</span> {c.tratament}</div>
+                        <div className={s.consultatieRow}><span className={s.label}>Simptome:</span> {c.simptome}</div>
+                        <div className={s.consultatieRow}><span className={s.label}>Tratament:</span> {c.tratament}</div>
                       </div>
                     ))}
                   </div>
@@ -145,20 +142,16 @@ export default function PortalPacient({ user, onLogout }) {
             {/* RETETE */}
             {tab === 'retete' && (
               <div>
-                <div style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '1rem' }}>Rețetele mele</div>
+                <div className={s.sectionTitle}>Rețetele mele</div>
                 {!date?.retete?.length ? (
                   <Empty text="Nicio rețetă înregistrată" />
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div className={s.cardList}>
                     {date.retete.map(r => (
-                      <div key={r.id} onClick={() => setRetetaSelectata(r)}
-                        style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
-                        onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
-                        onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
-                      >
-                        <div style={{ fontWeight: '600', color: 'var(--accent-light)', fontSize: '15px' }}>{r.numar}</div>
-                        <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>{formatData(r.data_prescriere)}</div>
-                        <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: r.gratuit === 'da' ? 'rgba(52,211,153,0.15)' : 'rgba(107,114,128,0.15)', color: r.gratuit === 'da' ? '#34d399' : 'var(--text-muted)' }}>
+                      <div key={r.id} className={s.retetaCard} onClick={() => setRetetaSelectata(r)}>
+                        <div className={s.retetaNumar}>{r.numar}</div>
+                        <div className={s.retetaData}>{formatData(r.data_prescriere)}</div>
+                        <span className={`${s.retetaBadge} ${r.gratuit === 'da' ? s.retetaGratuit : s.retetaPlata}`}>
                           {r.gratuit === 'da' ? 'Gratuit' : 'Cu plată'}
                         </span>
                       </div>
@@ -170,29 +163,31 @@ export default function PortalPacient({ user, onLogout }) {
 
             {/* MODAL RETETA */}
             {retetaSelectata && (
-              <div onClick={() => setRetetaSelectata(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-                <div onClick={e => e.stopPropagation()} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', width: '100%', maxWidth: '560px', maxHeight: '85vh', overflowY: 'auto' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid var(--border)', position: 'sticky', top: 0, background: 'var(--bg-card)' }}>
+              <div className={s.overlay} onClick={() => setRetetaSelectata(null)}>
+                <div className={s.modal} onClick={e => e.stopPropagation()}>
+                  <div className={s.modalHeader}>
                     <div>
-                      <div style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '15px' }}>{retetaSelectata.numar}</div>
-                      <div style={{ fontSize: '12px', color: 'var(--text-dim)', marginTop: '2px' }}>{formatData(retetaSelectata.data_prescriere)}</div>
+                      <div className={s.modalNumar}>{retetaSelectata.numar}</div>
+                      <div className={s.modalData}>{formatData(retetaSelectata.data_prescriere)}</div>
                     </div>
-                    <button onClick={() => setRetetaSelectata(null)} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: '20px', cursor: 'pointer' }}>✕</button>
+                    <button className={s.btnClose} onClick={() => setRetetaSelectata(null)}>✕</button>
                   </div>
-                  <div style={{ padding: '20px' }}>
+                  <div className={s.modalBody}>
                     {retetaSelectata.diagnostic && (
-                      <div style={{ marginBottom: '16px', padding: '10px 14px', background: 'var(--bg-main)', borderRadius: '8px', fontSize: '13px', color: 'var(--text-muted)' }}>
-                        <span style={{ color: 'var(--text-dim)' }}>Diagnostic: </span>{retetaSelectata.diagnostic}
+                      <div className={s.diagnostic}>
+                        <span className={s.label}>Diagnostic: </span>{retetaSelectata.diagnostic}
                       </div>
                     )}
-                    <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>
+                    <div className={s.medicamenteTitle}>
                       Medicamente ({retetaSelectata.linii?.length || 0})
                     </div>
                     {retetaSelectata.linii?.map((l, i) => (
-                      <div key={i} style={{ background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '10px', padding: '14px', marginBottom: '10px' }}>
-                        <div style={{ fontWeight: '600', color: 'var(--text-primary)', marginBottom: '6px' }}>{l.nume_medicament} {l.concentratie && `· ${l.concentratie}`}</div>
-                        {l.doza_frecventa && <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '3px' }}><span style={{ color: 'var(--text-dim)' }}>Doză: </span>{l.doza_frecventa}</div>}
-                        <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: 'var(--text-dim)', marginTop: '6px' }}>
+                      <div key={i} className={s.medicamentCard}>
+                        <div className={s.medicamentNume}>{l.nume_medicament} {l.concentratie && `· ${l.concentratie}`}</div>
+                        {l.doza_frecventa && (
+                          <div className={s.medicamentDoza}><span className={s.label}>Doză: </span>{l.doza_frecventa}</div>
+                        )}
+                        <div className={s.medicamentMeta}>
                           {l.durata_zile && <span>⏱ {l.durata_zile} zile</span>}
                           {l.cantitate && <span>📦 {l.cantitate} cutii</span>}
                         </div>
@@ -205,15 +200,6 @@ export default function PortalPacient({ user, onLogout }) {
           </>
         )}
       </div>
-    </div>
-  )
-}
-
-function Empty({ text }) {
-  return (
-    <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '3rem', textAlign: 'center', color: 'var(--text-dim)' }}>
-      <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>📋</div>
-      <div style={{ fontSize: '14px' }}>{text}</div>
     </div>
   )
 }
