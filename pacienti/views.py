@@ -31,14 +31,17 @@ import uuid
 
 
 def log_actiune(request, actiune, descriere=''):
-    from .models import LogActivitate
-    ip = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() or request.META.get('REMOTE_ADDR')
-    LogActivitate.objects.create(
-        user=request.user if request.user.is_authenticated else None,
-        actiune=actiune,
-        descriere=descriere,
-        ip=ip or None,
-    )
+    try:
+        from .models import LogActivitate
+        ip = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() or request.META.get('REMOTE_ADDR')
+        LogActivitate.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            actiune=actiune,
+            descriere=descriere,
+            ip=ip or None,
+        )
+    except Exception:
+        pass
 
 
 LUNI_RO = [
@@ -68,12 +71,7 @@ class PacientViewSet(viewsets.ModelViewSet):
         instance = serializer.save(medic=self.request.user)
         log_actiune(self.request, 'creare_pacient', f'{instance.nume} {instance.prenume}')
 
-    def perform_update(self, serializer):
-        instance = serializer.save()
-        if self.request.user.is_authenticated:
-            log_actiune(self.request, 'modificare_programare',
-                f'{instance.data_ora:%d.%m.%Y %H:%M} — status: {instance.status}')
-
+    
     def perform_destroy(self, instance):
         log_actiune(self.request, 'stergere_pacient', f'{instance.nume} {instance.prenume}')
         instance.delete()
@@ -195,6 +193,12 @@ class ProgramareViewSet(viewsets.ModelViewSet):
         except Exception as e:
             import logging
             logging.getLogger(__name__).error(f"EMAIL ERROR: {e}")
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if self.request.user.is_authenticated:
+            log_actiune(self.request, 'modificare_programare',
+                f'{instance.data_ora:%d.%m.%Y %H:%M} — status: {instance.status}')
 
     def _trimite_emailuri(self, p):
         data = f"{p.data_ora.day} {LUNI_RO[p.data_ora.month - 1]} {p.data_ora.year}"
