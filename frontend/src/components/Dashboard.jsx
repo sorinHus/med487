@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import api from '../api'
+import s from '../styles/Dashboard.module.css'
 
 const AVATAR_COLORS = ['#3a7bd5','#e05c7a','#f5a623','#50c878','#9b59b6','#1abc9c','#e67e22']
 
@@ -23,21 +24,22 @@ const STATUS_STYLE = {
 }
 
 function Badge({ status }) {
-  const s = STATUS_STYLE[status] || STATUS_STYLE.programat
+  const st = STATUS_STYLE[status] || STATUS_STYLE.programat
   return (
-    <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: s.bg, color: s.color, whiteSpace: 'nowrap' }}>
-      {s.label}
+    <span className={s.badge} style={{ background: st.bg, color: st.color }}>
+      {st.label}
     </span>
   )
 }
 
 function StatCard({ label, value, sub, color, trend }) {
+  const subClass = trend > 0 ? s['statCard__sub--up'] : trend < 0 ? s['statCard__sub--down'] : s['statCard__sub--neutral']
   return (
-    <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '18px 20px' }}>
-      <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>{label}</div>
-      <div style={{ fontSize: '28px', fontWeight: '700', color: color || 'var(--text-primary)', lineHeight: 1 }}>{value ?? '—'}</div>
+    <div className={s.statCard}>
+      <div className={s.statCard__label}>{label}</div>
+      <div className={s.statCard__value} style={{ color: color || 'var(--text-primary)' }}>{value ?? '—'}</div>
       {sub && (
-        <div style={{ fontSize: '11px', color: trend > 0 ? '#34d399' : trend < 0 ? '#f87171' : 'var(--text-dim)', marginTop: '6px' }}>
+        <div className={`${s.statCard__sub} ${subClass}`}>
           {trend > 0 ? '↑ ' : trend < 0 ? '↓ ' : ''}{sub}
         </div>
       )}
@@ -68,17 +70,14 @@ async function exportRaportExcel(consultatii, totalPeMedic, perioada) {
 
 function Row({ label, value }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
-      <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>{label}</span>
-      <span style={{ fontSize: '12px', color: 'var(--text-primary)', textAlign: 'right' }}>{value}</span>
+    <div className={s.row}>
+      <span className={s.row__label}>{label}</span>
+      <span className={s.row__value}>{value}</span>
     </div>
   )
 }
 
 function SectiuneRaport({ onNavigate }) {
-  const inputStyle = { padding: '8px 12px', fontSize: '13px', background: 'var(--bg-input)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)', outline: 'none' }
-  const labelStyle = { fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }
-
   const primaZiLuna = new Date()
   primaZiLuna.setDate(1)
   const ultimaZiLuna = new Date(primaZiLuna.getFullYear(), primaZiLuna.getMonth() + 1, 0)
@@ -120,80 +119,69 @@ function SectiuneRaport({ onNavigate }) {
     finally { setExportand(false) }
   }
 
-  const thStyle = {
-    padding: '9px 12px', fontSize: '11px', fontWeight: '600',
-    color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em',
-    textAlign: 'left', borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap',
-  }
-
   return (
-    <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '18px 20px' }}>
-      <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
-        Raport consultații per perioadă
-      </div>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
+    <div className={s.raportCard}>
+      <div className={s.raportTitle}>Raport consultații per perioadă</div>
+      <div className={s.raportControls}>
         <div>
-          <label style={labelStyle}>De la</label>
-          <input type="date" value={perioada.de_la} onChange={e => setPerioada(p => ({ ...p, de_la: e.target.value }))} style={inputStyle} />
+          <label className={s.raportLabel}>De la</label>
+          <input type="date" value={perioada.de_la} onChange={e => setPerioada(p => ({ ...p, de_la: e.target.value }))} className={s.raportInput} />
         </div>
         <div>
-          <label style={labelStyle}>Până la</label>
-          <input type="date" value={perioada.pana_la} onChange={e => setPerioada(p => ({ ...p, pana_la: e.target.value }))} style={inputStyle} />
+          <label className={s.raportLabel}>Până la</label>
+          <input type="date" value={perioada.pana_la} onChange={e => setPerioada(p => ({ ...p, pana_la: e.target.value }))} className={s.raportInput} />
         </div>
-        <button onClick={fetchRaport} disabled={loading}
-          style={{ padding: '8px 18px', fontSize: '13px', cursor: loading ? 'default' : 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', opacity: loading ? 0.6 : 1, height: '36px' }}>
+        <button onClick={fetchRaport} disabled={loading} className={s.btnGenereaza}>
           {loading ? 'Se încarcă...' : '🔍 Generează'}
         </button>
         {cautata && consultatii.length > 0 && (
-          <button onClick={handleExport} disabled={exportand}
-            style={{ padding: '8px 16px', fontSize: '13px', cursor: exportand ? 'default' : 'pointer', background: 'transparent', color: '#34d399', border: '1px solid #34d399', borderRadius: '8px', opacity: exportand ? 0.6 : 1, height: '36px' }}>
+          <button onClick={handleExport} disabled={exportand} className={s.btnExport}>
             {exportand ? '⏳ Export...' : '⬇️ Export Excel'}
           </button>
         )}
       </div>
+
       {cautata && !loading && (
         <>
-          <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
-            <div style={{ background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 18px' }}>
-              <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginBottom: '4px' }}>Total consultații</div>
-              <div style={{ fontSize: '22px', fontWeight: '700', color: '#60a5fa' }}>{consultatii.length}</div>
+          <div className={s.raportSummary}>
+            <div className={s.raportSummaryItem}>
+              <div className={s.raportSummaryItem__label}>Total consultații</div>
+              <div className={s.raportSummaryItem__value} style={{ color: '#60a5fa' }}>{consultatii.length}</div>
             </div>
-            <div style={{ background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 18px' }}>
-              <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginBottom: '4px' }}>Medici activi</div>
-              <div style={{ fontSize: '22px', fontWeight: '700', color: '#34d399' }}>{Object.keys(totalPeMedic).length}</div>
+            <div className={s.raportSummaryItem}>
+              <div className={s.raportSummaryItem__label}>Medici activi</div>
+              <div className={s.raportSummaryItem__value} style={{ color: '#34d399' }}>{Object.keys(totalPeMedic).length}</div>
             </div>
             {Object.entries(totalPeMedic).map(([medic, total]) => (
-              <div key={medic} style={{ background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 18px' }}>
-                <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginBottom: '4px' }}>{medic}</div>
-                <div style={{ fontSize: '22px', fontWeight: '700', color: '#fbbf24' }}>{total}</div>
+              <div key={medic} className={s.raportSummaryItem}>
+                <div className={s.raportSummaryItem__label}>{medic}</div>
+                <div className={s.raportSummaryItem__value} style={{ color: '#fbbf24' }}>{total}</div>
               </div>
             ))}
           </div>
+
           {consultatii.length === 0 ? (
-            <div style={{ color: 'var(--text-dim)', fontSize: '13px', textAlign: 'center', padding: '20px 0' }}>Nicio consultație în perioada selectată.</div>
+            <div className={s.raportEmpty}>Nicio consultație în perioada selectată.</div>
           ) : (
-            <div style={{ border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden', maxHeight: '320px', overflowY: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-                <thead style={{ position: 'sticky', top: 0, background: 'var(--bg-card)', zIndex: 1 }}>
+            <div className={s.tableWrap}>
+              <table className={s.table}>
+                <thead>
                   <tr>
-                    <th style={thStyle}>Data</th>
-                    <th style={thStyle}>Pacient</th>
-                    <th style={thStyle}>Medic</th>
-                    <th style={thStyle}>Simptome</th>
+                    <th className={s.th}>Data</th>
+                    <th className={s.th}>Pacient</th>
+                    <th className={s.th}>Medic</th>
+                    <th className={s.th}>Simptome</th>
                   </tr>
                 </thead>
                 <tbody>
                   {consultatii.map(c => (
-                    <tr key={c.id} style={{ borderBottom: '1px solid var(--border)', cursor: 'pointer' }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                      onClick={() => setModalConsultatie(c)}>
-                      <td style={{ padding: '9px 12px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                    <tr key={c.id} className={s.tr} onClick={() => setModalConsultatie(c)}>
+                      <td className={s['td--data']}>
                         {new Date(c.data_ora).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                       </td>
-                      <td style={{ padding: '9px 12px', color: 'var(--text-primary)', fontWeight: '500' }}>{c.pacient_nume || `#${c.pacient}`}</td>
-                      <td style={{ padding: '9px 12px', color: 'var(--text-muted)' }}>{c.medic_nume || `#${c.medic}`}</td>
-                      <td style={{ padding: '9px 12px', color: 'var(--text-dim)', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.simptome || '—'}</td>
+                      <td className={s['td--bold']}>{c.pacient_nume || `#${c.pacient}`}</td>
+                      <td className={s['td--muted']}>{c.medic_nume || `#${c.medic}`}</td>
+                      <td className={s['td--ellipsis']}>{c.simptome || '—'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -202,50 +190,49 @@ function SectiuneRaport({ onNavigate }) {
           )}
         </>
       )}
+
       {modalConsultatie && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
-          onClick={() => setModalConsultatie(null)}>
-          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '28px', minWidth: '340px', maxWidth: '480px', width: '90%' }}
-            onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <span style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)' }}>Detalii consultație</span>
-              <button onClick={() => setModalConsultatie(null)} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '18px', lineHeight: 1 }}>✕</button>
+        <div className={s.modalOverlay} onClick={() => setModalConsultatie(null)}>
+          <div className={`${s.modalBox} ${s['modalBox--wide']}`} onClick={e => e.stopPropagation()}>
+            <div className={s.modalHeader}>
+              <span className={s.modalTitle}>Detalii consultație</span>
+              <button onClick={() => setModalConsultatie(null)} className={s.modalClose}>✕</button>
             </div>
-            <div style={{ background: 'var(--bg-main)', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+            <div className={s.modalInfoBox}>
               <Row label="Pacient" value={modalConsultatie.pacient_nume || '—'} />
               <Row label="Medic"   value={modalConsultatie.medic_nume || '—'} />
               <Row label="Data"    value={new Date(modalConsultatie.data_ora).toLocaleDateString('ro-RO', { day: '2-digit', month: 'long', year: 'numeric' })} />
               <Row label="Ora"     value={new Date(modalConsultatie.data_ora).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })} />
             </div>
             {modalConsultatie.simptome && (
-              <div style={{ marginBottom: '10px' }}>
-                <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Simptome</div>
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{modalConsultatie.simptome}</div>
+              <div className={s.modalSection}>
+                <div className={s.modalSectionLabel}>Simptome</div>
+                <div className={s.modalSectionText}>{modalConsultatie.simptome}</div>
               </div>
             )}
             {modalConsultatie.tratament && (
-              <div style={{ marginBottom: '10px' }}>
-                <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tratament</div>
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{modalConsultatie.tratament}</div>
+              <div className={s.modalSection}>
+                <div className={s.modalSectionLabel}>Tratament</div>
+                <div className={s.modalSectionText}>{modalConsultatie.tratament}</div>
               </div>
             )}
             {modalConsultatie.diagnostice?.length > 0 && (
-              <div style={{ marginBottom: '16px' }}>
-                <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Diagnostice</div>
+              <div className={s.modalSection}>
+                <div className={s.modalSectionLabel}>Diagnostice</div>
                 {modalConsultatie.diagnostice.map(d => (
-                  <span key={d.id} style={{ display: 'inline-block', marginRight: '6px', marginBottom: '4px', padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: 'rgba(58,123,213,0.15)', color: '#60a5fa' }}>
+                  <span key={d.id} className={s.diagnosticBadge}>
                     {d.diagnostic.cod_icd10} — {d.diagnostic.denumire}
                   </span>
                 ))}
               </div>
             )}
-            <button onClick={async () => {
+            <button className={s.btnPrimary} onClick={async () => {
               try {
                 const res = await api.get(`/pacienti/${modalConsultatie.pacient}/`)
                 setModalConsultatie(null)
                 onNavigate('pacienti', { pacient: res.data })
               } catch { alert('Eroare la incarcarea fisiei pacientului.') }
-            }} style={{ width: '100%', padding: '10px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
+            }}>
               Deschide fișă pacient
             </button>
           </div>
@@ -312,51 +299,46 @@ export default function Dashboard({ onNavigate }) {
   const trend = stats.consultatiiLunaTrecuta > 0 ? stats.consultatiiLuna - stats.consultatiiLunaTrecuta : null
   const subConsultatii = trend !== null ? `${Math.abs(trend)} față de luna trecută (${stats.consultatiiLunaTrecuta})` : 'luna curentă'
 
-  if (loading) return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px', color: 'var(--text-dim)' }}>Se incarca...</div>
-  )
+  if (loading) return <div className={s.loading}>Se incarca...</div>
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }}>
+    <div className={s.root}>
+      {/* Stat cards */}
+      <div className={s.statGrid}>
         <StatCard label="Pacienti inregistrati" value={stats.pacienti?.toLocaleString('ro-RO')} color="#60a5fa" />
         <StatCard label="Programari azi" value={stats.programariAzi} sub={`${stats.programariRamase} ramase`} color="#fbbf24" />
         <StatCard label="Consultatii luna" value={stats.consultatiiLuna} sub={subConsultatii} trend={trend} color="#34d399" />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+      <div className={s.twoCol}>
         {/* Programari azi */}
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '18px 20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Programari azi</span>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <button onClick={() => onNavigate('programari')} style={{ fontSize: '12px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Vezi toate</button>
-              <span style={{ color: 'var(--border-light)' }}>|</span>
-              <a href="/programare.html" target="_blank" style={{ fontSize: '12px', padding: '4px 10px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', textDecoration: 'none' }}>
+        <div className={s.card}>
+          <div className={s.card__header}>
+            <span className={s.card__title}>Programari azi</span>
+            <div className={s.card__headerActions}>
+              <button onClick={() => onNavigate('programari')} className={s.card__linkBtn}>Vezi toate</button>
+              <span className={s.card__divider}>|</span>
+              <a href="/programare.html" target="_blank" className={s.card__actionLink}>
                 + Programare online
               </a>
             </div>
           </div>
           {programariAzi.length === 0 ? (
-            <div style={{ color: 'var(--text-dim)', fontSize: '13px', textAlign: 'center', padding: '20px 0' }}>Nicio programare pentru azi</div>
+            <div className={s.card__empty}>Nicio programare pentru azi</div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {programariAzi.map(p => {
                 const nume = p.pacient_nume_complet || p.nume_pacient || '—'
                 const ora = new Date(p.data_ora).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })
                 return (
-                  <div key={p.id}
-                    style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '4px 6px', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.12s' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                    onClick={() => setModalProgramare(p)}>
-                    <span style={{ fontSize: '12px', color: 'var(--text-dim)', width: '36px', flexShrink: 0 }}>{ora}</span>
-                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
+                  <div key={p.id} className={s.progRow} onClick={() => setModalProgramare(p)}>
+                    <span className={s.progRow__ora}>{ora}</span>
+                    <div className={`${s.avatar} ${s['avatar--sm']}`} style={{ background: getAvatarColor(nume) }}>
                       {getInitials(nume)}
                     </div>
-                    <div style={{ flex: 1, overflow: 'hidden' }}>
-                      <div style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{nume}</div>
-                      {p.motiv && <div style={{ fontSize: '11px', color: 'var(--text-dim)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.motiv}</div>}
+                    <div className={s.progRow__info}>
+                      <div className={s.progRow__nume}>{nume}</div>
+                      {p.motiv && <div className={s.progRow__motiv}>{p.motiv}</div>}
                     </div>
                     <Badge status={p.status} />
                   </div>
@@ -366,127 +348,113 @@ export default function Dashboard({ onNavigate }) {
           )}
         </div>
 
-        {/* Modal programare */}
-        {modalProgramare && (
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
-            onClick={() => setModalProgramare(null)}>
-            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '28px', minWidth: '320px', maxWidth: '420px', width: '90%' }}
-              onClick={e => e.stopPropagation()}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <span style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)' }}>Detalii programare</span>
-                <button onClick={() => setModalProgramare(null)} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '18px', lineHeight: 1 }}>✕</button>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: getAvatarColor(modalProgramare.pacient_nume_complet || ''), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
-                    {getInitials(modalProgramare.pacient_nume_complet || '')}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>{modalProgramare.pacient_nume_complet || '—'}</div>
-                    <Badge status={modalProgramare.status} />
-                  </div>
-                </div>
-                <div style={{ background: 'var(--bg-main)', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <Row label="Ora"     value={new Date(modalProgramare.data_ora).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })} />
-                  <Row label="Durata"  value={`${modalProgramare.durata_min} min`} />
-                  {modalProgramare.motiv && <Row label="Motiv" value={modalProgramare.motiv} />}
-                  {modalProgramare.telefon_pacient && <Row label="Telefon" value={modalProgramare.telefon_pacient} />}
-                </div>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '20px' }}>
-                {modalProgramare.status === 'programat' && (
-                  <button onClick={async () => {
-                    await api.patch(`/programari/${modalProgramare.id}/`, { status: 'confirmat' })
-                    const updated = { ...modalProgramare, status: 'confirmat' }
-                    setModalProgramare(updated)
-                    setProgramariAzi(prev => prev.map(p => p.id === updated.id ? updated : p))
-                  }} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid rgba(46,204,143,0.3)', background: 'rgba(46,204,143,0.08)', color: '#34d399', cursor: 'pointer', fontSize: '13px' }}>
-                    ✓ Confirmă
-                  </button>
-                )}
-                {['programat', 'confirmat'].includes(modalProgramare.status) && (
-                  <button onClick={async () => {
-                    await api.patch(`/programari/${modalProgramare.id}/`, { status: 'anulat' })
-                    const updated = { ...modalProgramare, status: 'anulat' }
-                    setModalProgramare(updated)
-                    setProgramariAzi(prev => prev.map(p => p.id === updated.id ? updated : p))
-                  }} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer', fontSize: '13px' }}>
-                    ✕ Anulează
-                  </button>
-                )}
-                {modalProgramare.status === 'confirmat' && (
-                  <button onClick={async () => {
-                    await api.patch(`/programari/${modalProgramare.id}/`, { status: 'finalizat' })
-                    const updated = { ...modalProgramare, status: 'finalizat' }
-                    setModalProgramare(updated)
-                    setProgramariAzi(prev => prev.map(p => p.id === updated.id ? updated : p))
-                  }} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid rgba(107,114,128,0.3)', background: 'rgba(107,114,128,0.08)', color: '#9ca3af', cursor: 'pointer', fontSize: '13px' }}>
-                    ✔✔ Finalizează
-                  </button>
-                )}
-                {modalProgramare.pacient && (
-                  <button onClick={async () => {
-                    try {
-                      const res = await api.get(`/pacienti/${modalProgramare.pacient}/`)
-                      setModalProgramare(null)
-                      onNavigate('pacienti', { pacient: res.data })
-                    } catch { alert('Eroare la incarcarea fisiei pacientului.') }
-                  }} style={{ width: '100%', padding: '10px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
-                    Deschide fișă pacient
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Acces rapid pacienti */}
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '18px 20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Acces rapid pacienti</span>
-            <button onClick={() => onNavigate && onNavigate('pacienti')} style={{ fontSize: '12px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Toti pacientii</button>
+        <div className={s.card}>
+          <div className={s.card__header}>
+            <span className={s.card__title}>Acces rapid pacienti</span>
+            <button onClick={() => onNavigate && onNavigate('pacienti')} className={s.card__linkBtn}>Toti pacientii</button>
           </div>
-          <div style={{ position: 'relative', marginBottom: '12px' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }}>
+          <div className={s.searchWrap}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className={s.searchIcon}>
               <path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="var(--text-dim)" strokeWidth="2" strokeLinecap="round"/>
             </svg>
-            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
               placeholder="Cauta dupa nume sau CNP..."
-              style={{ width: '100%', padding: '8px 10px 8px 30px', background: 'var(--bg-input)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '12px', boxSizing: 'border-box', outline: 'none' }}
+              className={s.searchInput}
             />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {loadingSearch && <div style={{ color: 'var(--text-dim)', fontSize: '12px' }}>Se cauta...</div>}
+          <div className={s.pacientList}>
+            {loadingSearch && <div className={s.searchLoading}>Se cauta...</div>}
             {!loadingSearch && displayPacienti.map(p => {
               const nume = `${p.nume} ${p.prenume}`
               const varsta = p.data_nastere ? Math.floor((new Date() - new Date(p.data_nastere)) / 31557600000) : null
               return (
-                <div key={p.id}
-                  style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 8px', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.12s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  onClick={() => onNavigate('pacienti', { pacient: p })}>
-                  <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
+                <div key={p.id} className={s.pacientRow} onClick={() => onNavigate('pacienti', { pacient: p })}>
+                  <div className={`${s.avatar} ${s['avatar--md']}`} style={{ background: getAvatarColor(nume) }}>
                     {getInitials(nume)}
                   </div>
-                  <div style={{ flex: 1, overflow: 'hidden' }}>
-                    <div style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{nume}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-dim)' }}>CNP: {p.cnp}{varsta !== null ? ` · ${varsta} ani` : ''}</div>
+                  <div className={s.pacientRow__info}>
+                    <div className={s.pacientRow__nume}>{nume}</div>
+                    <div className={s.pacientRow__cnp}>CNP: {p.cnp}{varsta !== null ? ` · ${varsta} ani` : ''}</div>
                   </div>
                   {p.grup_sangvin && (
-                    <span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '700', background: 'rgba(58,123,213,0.15)', color: '#60a5fa' }}>
-                      {p.grup_sangvin}
-                    </span>
+                    <span className={s.grupSangvin}>{p.grup_sangvin}</span>
                   )}
                 </div>
               )
             })}
             {!loadingSearch && displayPacienti.length === 0 && searchQuery.trim() && (
-              <div style={{ color: 'var(--text-dim)', fontSize: '12px', textAlign: 'center', padding: '12px 0' }}>Niciun rezultat</div>
+              <div className={s.noResults}>Niciun rezultat</div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Modal programare */}
+      {modalProgramare && (
+        <div className={s.modalOverlay} onClick={() => setModalProgramare(null)}>
+          <div className={s.modalBox} onClick={e => e.stopPropagation()}>
+            <div className={s.modalHeader}>
+              <span className={s.modalTitle}>Detalii programare</span>
+              <button onClick={() => setModalProgramare(null)} className={s.modalClose}>✕</button>
+            </div>
+            <div className={s.modalBody}>
+              <div className={s.modalPatientHeader}>
+                <div className={`${s.avatar} ${s['avatar--lg']}`} style={{ background: getAvatarColor(modalProgramare.pacient_nume_complet || '') }}>
+                  {getInitials(modalProgramare.pacient_nume_complet || '')}
+                </div>
+                <div>
+                  <div className={s.modalPatientName}>{modalProgramare.pacient_nume_complet || '—'}</div>
+                  <Badge status={modalProgramare.status} />
+                </div>
+              </div>
+              <div className={s.modalInfoBox}>
+                <Row label="Ora"    value={new Date(modalProgramare.data_ora).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })} />
+                <Row label="Durata" value={`${modalProgramare.durata_min} min`} />
+                {modalProgramare.motiv && <Row label="Motiv" value={modalProgramare.motiv} />}
+                {modalProgramare.telefon_pacient && <Row label="Telefon" value={modalProgramare.telefon_pacient} />}
+              </div>
+            </div>
+            <div className={s.modalActions}>
+              {modalProgramare.status === 'programat' && (
+                <button className={s.btnConfirm} onClick={async () => {
+                  await api.patch(`/programari/${modalProgramare.id}/`, { status: 'confirmat' })
+                  const updated = { ...modalProgramare, status: 'confirmat' }
+                  setModalProgramare(updated)
+                  setProgramariAzi(prev => prev.map(p => p.id === updated.id ? updated : p))
+                }}>✓ Confirmă</button>
+              )}
+              {['programat', 'confirmat'].includes(modalProgramare.status) && (
+                <button className={s.btnAnuleaza} onClick={async () => {
+                  await api.patch(`/programari/${modalProgramare.id}/`, { status: 'anulat' })
+                  const updated = { ...modalProgramare, status: 'anulat' }
+                  setModalProgramare(updated)
+                  setProgramariAzi(prev => prev.map(p => p.id === updated.id ? updated : p))
+                }}>✕ Anulează</button>
+              )}
+              {modalProgramare.status === 'confirmat' && (
+                <button className={s.btnFinalizeaza} onClick={async () => {
+                  await api.patch(`/programari/${modalProgramare.id}/`, { status: 'finalizat' })
+                  const updated = { ...modalProgramare, status: 'finalizat' }
+                  setModalProgramare(updated)
+                  setProgramariAzi(prev => prev.map(p => p.id === updated.id ? updated : p))
+                }}>✔✔ Finalizează</button>
+              )}
+              {modalProgramare.pacient && (
+                <button className={s.btnPrimary} onClick={async () => {
+                  try {
+                    const res = await api.get(`/pacienti/${modalProgramare.pacient}/`)
+                    setModalProgramare(null)
+                    onNavigate('pacienti', { pacient: res.data })
+                  } catch { alert('Eroare la incarcarea fisiei pacientului.') }
+                }}>Deschide fișă pacient</button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <SectiuneRaport onNavigate={onNavigate} />
     </div>

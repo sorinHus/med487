@@ -1,0 +1,542 @@
+/* Dashboard.module.css */
+
+/* ── Layout general ── */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-dim);
+}
+
+/* ── Grid stat cards ── */
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+/* ── StatCard ── */
+.statCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.statCard__label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.statCard__value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+.statCard__sub {
+  font-size: 11px;
+  margin-top: 6px;
+}
+.statCard__sub--up    { color: #34d399; }
+.statCard__sub--down  { color: #f87171; }
+.statCard__sub--neutral { color: var(--text-dim); }
+
+/* ── Grid 2 coloane ── */
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ── Card generic (programari / acces rapid) ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.card__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.card__headerActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.card__linkBtn {
+  font-size: 12px;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.card__divider {
+  color: var(--border-light);
+}
+.card__actionLink {
+  font-size: 12px;
+  padding: 4px 10px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.card__empty {
+  color: var(--text-dim);
+  font-size: 13px;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* ── Badge status ── */
+.badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Avatar ── */
+.avatar {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.avatar--sm {
+  width: 28px;
+  height: 28px;
+  font-size: 10px;
+}
+.avatar--md {
+  width: 30px;
+  height: 30px;
+  font-size: 11px;
+}
+.avatar--lg {
+  width: 40px;
+  height: 40px;
+  font-size: 13px;
+}
+
+/* ── Rand programare ── */
+.progRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.progRow:hover { background: var(--bg-hover); }
+
+.progRow__ora {
+  font-size: 12px;
+  color: var(--text-dim);
+  width: 36px;
+  flex-shrink: 0;
+}
+.progRow__info {
+  flex: 1;
+  overflow: hidden;
+}
+.progRow__nume {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.progRow__motiv {
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Acces rapid pacienti ── */
+.searchWrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.searchInput {
+  width: 100%;
+  padding: 8px 10px 8px 30px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 12px;
+  box-sizing: border-box;
+  outline: none;
+}
+.pacientList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pacientRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.pacientRow:hover { background: var(--bg-hover); }
+.pacientRow__info { flex: 1; overflow: hidden; }
+.pacientRow__nume {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pacientRow__cnp {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.grupSangvin {
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(58,123,213,0.15);
+  color: #60a5fa;
+}
+.searchLoading {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+.noResults {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-align: center;
+  padding: 12px 0;
+}
+
+/* ── Modal overlay ── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modalBox {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  min-width: 320px;
+  max-width: 420px;
+  width: 90%;
+}
+.modalBox--wide {
+  min-width: 340px;
+  max-width: 480px;
+}
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.modalTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.modalClose {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.modalPatientHeader {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.modalPatientName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.modalInfoBox {
+  background: var(--bg-main);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.modalActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+}
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Row label/value in modal ── */
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.row__label {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.row__value {
+  font-size: 12px;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* ── Butoane modal ── */
+.btnConfirm {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(46,204,143,0.3);
+  background: rgba(46,204,143,0.08);
+  color: #34d399;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btnAnuleaza {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(239,68,68,0.3);
+  background: rgba(239,68,68,0.08);
+  color: #f87171;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btnFinalizeaza {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(107,114,128,0.3);
+  background: rgba(107,114,128,0.08);
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btnPrimary {
+  width: 100%;
+  padding: 10px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ── Sectiune raport ── */
+.raportCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.raportTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+.raportControls {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.raportLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+.raportInput {
+  padding: 8px 12px;
+  font-size: 13px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  outline: none;
+  height: 36px;
+  box-sizing: border-box;
+}
+.btnGenereaza {
+  padding: 8px 18px;
+  font-size: 13px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  height: 36px;
+  cursor: pointer;
+}
+.btnGenereaza:disabled { opacity: 0.6; cursor: default; }
+.btnExport {
+  padding: 8px 16px;
+  font-size: 13px;
+  background: transparent;
+  color: #34d399;
+  border: 1px solid #34d399;
+  border-radius: 8px;
+  height: 36px;
+  cursor: pointer;
+}
+.btnExport:disabled { opacity: 0.6; cursor: default; }
+
+.raportSummary {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.raportSummaryItem {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 18px;
+}
+.raportSummaryItem__label {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.raportSummaryItem__value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.raportEmpty {
+  color: var(--text-dim);
+  font-size: 13px;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.tableWrap {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.table thead {
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 1;
+}
+.th {
+  padding: 9px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.tr {
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.tr:hover { background: var(--bg-hover); }
+.td--data  { padding: 9px 12px; color: var(--text-muted); white-space: nowrap; }
+.td--bold  { padding: 9px 12px; color: var(--text-primary); font-weight: 500; }
+.td--muted { padding: 9px 12px; color: var(--text-muted); }
+.td--ellipsis {
+  padding: 9px 12px;
+  color: var(--text-dim);
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Modal consultatie ── */
+.modalSection {
+  margin-bottom: 10px;
+}
+.modalSectionLabel {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.modalSectionText {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.diagnosticBadge {
+  display: inline-block;
+  margin-right: 6px;
+  margin-bottom: 4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(58,123,213,0.15);
+  color: #60a5fa;
+}
