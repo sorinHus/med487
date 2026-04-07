@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import api from '../api'
+import s from '../styles/Programari.module.css'
 
 const AVATAR_COLORS = ['#3a7bd5','#e05c7a','#f5a623','#50c878','#9b59b6','#1abc9c','#e67e22']
 
@@ -42,25 +43,22 @@ const STATUS_STYLE = {
 }
 
 function Badge({ status }) {
-  const s = STATUS_STYLE[status] || STATUS_STYLE.programat
+  const st = STATUS_STYLE[status] || STATUS_STYLE.programat
   return (
-    <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: s.bg, color: s.color, whiteSpace: 'nowrap' }}>
-      {s.label}
+    <span className={s.badge} style={{ background: st.bg, color: st.color }}>
+      {st.label}
     </span>
   )
 }
 
-function ModalProgramare({ onClose, onSaved, defaultData }) {
+function ModalProgramare({ onClose, onSaved }) {
   const [form, setForm] = useState({
-    data_ora: defaultData?.data_ora || new Date().toISOString().slice(0, 16),
+    data_ora: new Date().toISOString().slice(0, 16),
     durata_min: 20, motiv: '', nume_pacient: '', telefon_pacient: '',
-    email_pacient: '', medic: 1, status: 'programat', ...defaultData,
+    email_pacient: '', medic: 1, status: 'programat',
   })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
-
-  const inputStyle = { width: '100%', padding: '8px 12px', fontSize: '13px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)', boxSizing: 'border-box', marginBottom: '12px', outline: 'none' }
-  const labelStyle = { fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setSaving(true); setError(null)
@@ -70,56 +68,48 @@ function ModalProgramare({ onClose, onSaved, defaultData }) {
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '24px', width: '460px', maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <span style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)' }}>Programare noua</span>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '22px', lineHeight: 1, padding: '0 4px' }}>×</button>
+    <div className={s.modalOverlay}>
+      <div className={s.modalBox}>
+        <div className={s.modalHeader}>
+          <span className={s.modalTitle}>Programare noua</span>
+          <button onClick={onClose} className={s.modalClose}>×</button>
         </div>
-        {error && (
-          <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', padding: '10px 14px', color: '#f87171', fontSize: '13px', marginBottom: '14px' }}>
-            {error}
-          </div>
-        )}
+        {error && <div className={s.modalError}>{error}</div>}
         <form onSubmit={handleSubmit}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 14px' }}>
+          <div className={s.formGrid2}>
             <div>
-              <label style={labelStyle}>Data si ora *</label>
-              <input type="datetime-local" value={form.data_ora} onChange={e => setForm(p => ({ ...p, data_ora: e.target.value }))} required style={inputStyle} />
+              <label className={s.formLabel}>Data si ora *</label>
+              <input type="datetime-local" value={form.data_ora} onChange={e => setForm(p => ({ ...p, data_ora: e.target.value }))} required className={s.formInput} />
             </div>
             <div>
-              <label style={labelStyle}>Durata (min)</label>
-              <select value={form.durata_min} onChange={e => setForm(p => ({ ...p, durata_min: parseInt(e.target.value) }))} style={inputStyle}>
+              <label className={s.formLabel}>Durata (min)</label>
+              <select value={form.durata_min} onChange={e => setForm(p => ({ ...p, durata_min: parseInt(e.target.value) }))} className={s.formInput}>
                 {[10,15,20,30,45,60].map(d => <option key={d} value={d}>{d} min</option>)}
               </select>
             </div>
           </div>
-          <label style={labelStyle}>Nume pacient *</label>
-          <input value={form.nume_pacient} onChange={e => setForm(p => ({ ...p, nume_pacient: e.target.value }))} required placeholder="Nume si prenume" style={inputStyle} />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 14px' }}>
+          <label className={s.formLabel}>Nume pacient *</label>
+          <input value={form.nume_pacient} onChange={e => setForm(p => ({ ...p, nume_pacient: e.target.value }))} required placeholder="Nume si prenume" className={s.formInput} />
+          <div className={s.formGrid2}>
             <div>
-              <label style={labelStyle}>Telefon</label>
-              <input value={form.telefon_pacient} onChange={e => setForm(p => ({ ...p, telefon_pacient: e.target.value }))} placeholder="07xx xxx xxx" style={inputStyle} />
+              <label className={s.formLabel}>Telefon</label>
+              <input value={form.telefon_pacient} onChange={e => setForm(p => ({ ...p, telefon_pacient: e.target.value }))} placeholder="07xx xxx xxx" className={s.formInput} />
             </div>
             <div>
-              <label style={labelStyle}>Email</label>
-              <input type="email" value={form.email_pacient} onChange={e => setForm(p => ({ ...p, email_pacient: e.target.value }))} style={inputStyle} />
+              <label className={s.formLabel}>Email</label>
+              <input type="email" value={form.email_pacient} onChange={e => setForm(p => ({ ...p, email_pacient: e.target.value }))} className={s.formInput} />
             </div>
           </div>
-          <label style={labelStyle}>Motiv consultatie</label>
-          <input value={form.motiv} onChange={e => setForm(p => ({ ...p, motiv: e.target.value }))} placeholder="ex. Control periodic, Reinnoire reteta..." style={inputStyle} />
-          <label style={labelStyle}>Status</label>
-          <select value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value }))} style={inputStyle}>
+          <label className={s.formLabel}>Motiv consultatie</label>
+          <input value={form.motiv} onChange={e => setForm(p => ({ ...p, motiv: e.target.value }))} placeholder="ex. Control periodic, Reinnoire reteta..." className={s.formInput} />
+          <label className={s.formLabel}>Status</label>
+          <select value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value }))} className={s.formInput}>
             <option value="programat">Programat</option>
             <option value="confirmat">Confirmat</option>
           </select>
-          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '4px' }}>
-            <button type="button" onClick={onClose}
-              style={{ padding: '9px 20px', fontSize: '13px', cursor: 'pointer', border: '1px solid var(--border)', borderRadius: '8px', background: 'transparent', color: 'var(--text-muted)' }}>
-              Anuleaza
-            </button>
-            <button type="submit" disabled={saving}
-              style={{ padding: '9px 20px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', opacity: saving ? 0.6 : 1 }}>
+          <div className={s.formActions}>
+            <button type="button" onClick={onClose} className={s.btnCancel}>Anuleaza</button>
+            <button type="submit" disabled={saving} className={s.btnSave}>
               {saving ? 'Se salveaza...' : 'Salveaza'}
             </button>
           </div>
@@ -139,33 +129,27 @@ function RandProgramare({ p, onStatusChange, index }) {
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderBottom: '1px solid var(--border)', transition: 'background 0.12s' }}
-      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
-      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-    >
-      <span style={{ fontSize: '11px', color: 'var(--text-dim)', width: '18px', textAlign: 'center', flexShrink: 0 }}>{index + 1}</span>
-      <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--accent-light)', width: '42px', flexShrink: 0 }}>{ora}</span>
-      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: getAvatarColor(nume), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
+    <div className={s.rand}>
+      <span className={s.rand__index}>{index + 1}</span>
+      <span className={s.rand__ora}>{ora}</span>
+      <div className={s.rand__avatar} style={{ background: getAvatarColor(nume) }}>
         {getInitials(nume)}
       </div>
-      <div style={{ flex: 1, overflow: 'hidden' }}>
-        <div style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{nume}</div>
-        {p.motiv && <div style={{ fontSize: '11px', color: 'var(--text-dim)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.motiv}</div>}
-        {p.telefon_pacient && <div style={{ fontSize: '11px', color: 'var(--text-dim)' }}>{p.telefon_pacient}</div>}
+      <div className={s.rand__info}>
+        <div className={s.rand__nume}>{nume}</div>
+        {p.motiv && <div className={s.rand__motiv}>{p.motiv}</div>}
+        {p.telefon_pacient && <div className={s.rand__telefon}>{p.telefon_pacient}</div>}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+      <div className={s.rand__actions}>
         <Badge status={p.status} />
         {p.status === 'programat' && (
-          <button onClick={() => handleStatus('confirmat')} title="Confirma"
-            style={{ padding: '4px 8px', fontSize: '11px', borderRadius: '6px', border: '1px solid rgba(46,204,143,0.3)', background: 'rgba(46,204,143,0.08)', color: '#34d399', cursor: 'pointer' }}>✓</button>
+          <button onClick={() => handleStatus('confirmat')} title="Confirma" className={s.btnConfirm}>✓</button>
         )}
         {['programat','confirmat'].includes(p.status) && (
-          <button onClick={() => handleStatus('anulat')} title="Anuleaza"
-            style={{ padding: '4px 8px', fontSize: '11px', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer' }}>✕</button>
+          <button onClick={() => handleStatus('anulat')} title="Anuleaza" className={s.btnAnuleaza}>✕</button>
         )}
         {p.status === 'confirmat' && (
-          <button onClick={() => handleStatus('finalizat')} title="Finalizeaza"
-            style={{ padding: '4px 8px', fontSize: '11px', borderRadius: '6px', border: '1px solid rgba(107,114,128,0.3)', background: 'rgba(107,114,128,0.08)', color: '#9ca3af', cursor: 'pointer' }}>✔✔</button>
+          <button onClick={() => handleStatus('finalizat')} title="Finalizeaza" className={s.btnFinalizeaza}>✔✔</button>
         )}
       </div>
     </div>
@@ -209,48 +193,36 @@ export default function Programari() {
   const aziStr = formatDate(new Date())
   const isToday = (date) => formatDate(date) === aziStr
 
-  const btnNav = (onClick, label) => (
-    <button onClick={onClick}
-      style={{ padding: '7px 14px', fontSize: '13px', cursor: 'pointer', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-muted)', transition: 'all 0.15s' }}
-      onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)' }}
-      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' }}
-    >{label}</button>
-  )
-
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {btnNav(() => setMonday(m => addDays(m, -7)), '← Prev')}
-          {btnNav(() => setMonday(getMondayOf(new Date())), 'Azi')}
-          {btnNav(() => setMonday(m => addDays(m, 7)), 'Next →')}
-          <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginLeft: '6px' }}>
-            Programari — saptamana {saptamanaLabel()}
-          </span>
+      <div className={s.pageHeader}>
+        <div className={s.pageHeader__left}>
+          <button className={s.btnNav} onClick={() => setMonday(m => addDays(m, -7))}>← Prev</button>
+          <button className={s.btnNav} onClick={() => setMonday(getMondayOf(new Date()))}>Azi</button>
+          <button className={s.btnNav} onClick={() => setMonday(m => addDays(m, 7))}>Next →</button>
+          <span className={s.pageHeader__title}>Programari — saptamana {saptamanaLabel()}</span>
         </div>
-        <button onClick={() => { setShowModal(true); setModalKey(k => k + 1) }}
-          style={{ padding: '9px 18px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: '500' }}
-          onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-hover)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'var(--accent)'}
-        >+ Programare noua</button>
+        <button className={s.btnNou} onClick={() => { setShowModal(true); setModalKey(k => k + 1) }}>
+          + Programare noua
+        </button>
       </div>
 
       {loading ? (
-        <div style={{ color: 'var(--text-dim)', textAlign: 'center', padding: '60px' }}>Se incarca...</div>
+        <div className={s.loading}>Se incarca...</div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div className={s.dayList}>
           {days.map((day, idx) => {
             const prog = getProgramariZi(day)
             const today = isToday(day)
             return (
-              <div key={idx} style={{ background: 'var(--bg-card)', border: `1px solid ${today ? 'var(--accent)' : 'var(--border)'}`, borderRadius: '12px', overflow: 'hidden' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', background: today ? 'rgba(58,123,213,0.1)' : 'var(--bg-hover)', borderBottom: prog.length > 0 ? '1px solid var(--border)' : 'none' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: '600', color: today ? 'var(--accent-light)' : 'var(--text-muted)', minWidth: '70px' }}>{ZILE_RO[idx]}</span>
-                    <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>{day.getDate()} {LUNI_RO[day.getMonth()]}</span>
-                    {today && <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '20px', background: 'rgba(58,123,213,0.2)', color: 'var(--accent-light)', fontWeight: '600' }}>Azi</span>}
+              <div key={idx} className={`${s.dayCard} ${today ? s['dayCard--today'] : ''}`}>
+                <div className={`${s.dayHeader} ${today ? s['dayHeader--today'] : ''} ${prog.length > 0 ? s['dayHeader--withRows'] : ''}`}>
+                  <div className={s.dayHeader__left}>
+                    <span className={`${s.dayHeader__zi} ${today ? s['dayHeader__zi--today'] : ''}`}>{ZILE_RO[idx]}</span>
+                    <span className={s.dayHeader__data}>{day.getDate()} {LUNI_RO[day.getMonth()]}</span>
+                    {today && <span className={s.dayHeader__aziTag}>Azi</span>}
                   </div>
-                  <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
+                  <span className={s.dayHeader__count}>
                     {prog.length > 0 ? `${prog.length} programare${prog.length !== 1 ? 'i' : ''}` : 'Liber'}
                   </span>
                 </div>
