@@ -1,3 +1,5 @@
+import s from '../../styles/sp.module.css'
+
 const SERVICII = [
   { icon: '🩺', title: 'Consultații generale', desc: 'Evaluare clinică completă pentru adulți și copii, diagnostic și plan de tratament personalizat.' },
   { icon: '💉', title: 'Vaccinări', desc: 'Schema completă de vaccinare conform calendarului național, pentru copii și adulți.' },
@@ -9,19 +11,19 @@ const SERVICII = [
 
 export default function ServiciiPage() {
   return (
-    <section className="sp-section sp-servicii">
-      <div className="sp-section-inner">
-        <div className="sp-reveal">
-          <span className="sp-section-tag">Ce oferim</span>
-          <h2 className="sp-section-title">Servicii medicale complete</h2>
-          <p className="sp-section-desc">Acoperim toate nevoile medicale de bază ale familiei tale, cu trimiteri rapide către specialiști când este necesar.</p>
+    <section className={`${s.section} ${s.servicii}`}>
+      <div className={s.sectionInner}>
+        <div className={s.reveal}>
+          <span className={s.sectionTag}>Ce oferim</span>
+          <h2 className={s.sectionTitle}>Servicii medicale complete</h2>
+          <p className={s.sectionDesc}>Acoperim toate nevoile medicale de bază ale familiei tale, cu trimiteri rapide către specialiști când este necesar.</p>
         </div>
-        <div className="sp-servicii-grid">
-          {SERVICII.map((s, i) => (
-            <div className="sp-serviciu-card sp-reveal" key={i}>
-              <div className="sp-serviciu-icon">{s.icon}</div>
-              <h3>{s.title}</h3>
-              <p>{s.desc}</p>
+        <div className={s.serviciiGrid}>
+          {SERVICII.map((serv, i) => (
+            <div className={`${s.serviciuCard} ${s.reveal}`} key={i}>
+              <div className={s.serviciuIcon}>{serv.icon}</div>
+              <h3>{serv.title}</h3>
+              <p>{serv.desc}</p>
             </div>
           ))}
         </div>

@@ -1,28 +1,14 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { spStyles } from './spStyles'
+import s from '../../styles/sp.module.css'
 
 export default function SpLayout({ children }) {
   const navRef = useRef(null)
   const location = useLocation()
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const styleEl = document.createElement('style')
-    styleEl.id = 'sp-styles'
-    if (!document.getElementById('sp-styles')) {
-      styleEl.textContent = spStyles
-      document.head.appendChild(styleEl)
-    }
-    return () => {
-      const el = document.getElementById('sp-styles')
-      if (el) el.remove()
-    }
-  }, [])
-
-  useEffect(() => {
-    const handleScroll = () => {
-      navRef.current?.classList.toggle('scrolled', window.scrollY > 20)
-    }
+    const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -30,11 +16,11 @@ export default function SpLayout({ children }) {
   useEffect(() => {
     window.scrollTo(0, 0)
     setTimeout(() => {
-      const reveals = document.querySelectorAll('.sp-reveal')
+      const reveals = document.querySelectorAll(`.${s.reveal}`)
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, i) => {
           if (entry.isIntersecting) {
-            setTimeout(() => entry.target.classList.add('sp-visible'), i * 80)
+            setTimeout(() => entry.target.classList.add(s.visible), i * 80)
             observer.unobserve(entry.target)
           }
         })
@@ -47,44 +33,44 @@ export default function SpLayout({ children }) {
   const isActive = (path) => location.pathname === path ? 'active' : ''
 
   return (
-    <div className="sp-root">
-      <nav className="sp-nav" ref={navRef}>
-        <Link to="/" className="sp-nav-logo">
-          <div className="sp-nav-logo-icon">✚</div>
-          <div className="sp-nav-logo-text">
-            <span className="sp-nav-logo-name">Cabinet Medical</span>
-            <span className="sp-nav-logo-sub">Medicină de Familie</span>
+    <div className={s.root}>
+      <nav ref={navRef} className={`${s.nav} ${scrolled ? s.navScrolled : ''}`}>
+        <Link to="/" className={s.navLogo}>
+          <div className={s.navLogoIcon}>✚</div>
+          <div className={s.navLogoText}>
+            <span className={s.navLogoName}>Cabinet Medical</span>
+            <span className={s.navLogoSub}>Medicină de Familie</span>
           </div>
         </Link>
-        <ul className="sp-nav-links">
-            <li><Link to="/despre" className={isActive('/despre')}>Despre</Link></li>
-            <li><Link to="/servicii" className={isActive('/servicii')}>Servicii</Link></li>
-            <li><Link to="/program" className={isActive('/program')}>Program & Contact</Link></li>
-            <li><a href="/programare.html" className="sp-btn-nav" target="_blank">Programare online →</a></li>
-            <li style={{position:'relative'}} className="sp-dropdown-wrap">
-                <button className="sp-btn-nav" style={{background:'#2563a8', border:'none', cursor:'pointer', display:'flex', alignItems:'center', gap:'0.4rem'}}>
-                Cont ▾
-                </button>
-                <div className="sp-dropdown-menu">
-                    <div className="sp-dropdown-menu-inner">
-                        <Link to="/app">🔑 Login</Link>
-                        <a href="/inregistrare.html">📋 Înregistrare</a>
-                    </div>
-                </div>
-            </li>
+        <ul className={s.navLinks}>
+          <li><Link to="/despre" className={isActive('/despre')}>Despre</Link></li>
+          <li><Link to="/servicii" className={isActive('/servicii')}>Servicii</Link></li>
+          <li><Link to="/program" className={isActive('/program')}>Program & Contact</Link></li>
+          <li><a href="/programare.html" className={s.btnNav} target="_blank">Programare online →</a></li>
+          <li className={s.dropdownWrap}>
+            <button className={s.btnNav} style={{ background: '#2563a8' }}>
+              Cont ▾
+            </button>
+            <div className={s.dropdownMenu}>
+              <div className={s.dropdownInner}>
+                <Link to="/app">🔑 Login</Link>
+                <a href="/inregistrare.html">📋 Înregistrare</a>
+              </div>
+            </div>
+          </li>
         </ul>
       </nav>
 
-      <div className="sp-page">
+      <div className={s.page}>
         {children}
       </div>
 
-      <footer className="sp-footer">
-        <div className="sp-footer-logo">
+      <footer className={s.footer}>
+        <div className={s.footerLogo}>
           Cabinet Medical Dr. Ion Popescu
-          <span>Medicină de Familie · Cluj-Napoca</span>
+          <span className={s.footerLogoSub}>Medicină de Familie · Cluj-Napoca</span>
         </div>
-        <p>© 2026 · Toate drepturile rezervate</p>
+        <p className={s.footerCopy}>© 2026 · Toate drepturile rezervate</p>
       </footer>
     </div>
   )
