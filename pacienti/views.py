@@ -1210,6 +1210,8 @@ def sterge_document(request, doc_id):
 @permission_classes([IsAuthenticated])
 def loguri_activitate(request):
     from .models import LogActivitate
+    from zoneinfo import ZoneInfo
+    tz_ro = ZoneInfo('Europe/Bucharest')
     if request.user.rol != 'superadmin':
         return Response({'detail': 'Acces interzis.'}, status=403)
     loguri = LogActivitate.objects.select_related('user').all()[:500]
@@ -1220,6 +1222,6 @@ def loguri_activitate(request):
         'actiune': l.actiune,
         'descriere': l.descriere,
         'ip': l.ip,
-        'timestamp': l.timestamp.strftime('%d.%m.%Y %H:%M:%S'),
+        'timestamp': l.timestamp.astimezone(tz_ro).strftime('%d.%m.%Y %H:%M:%S'),
     } for l in loguri]
     return Response(data)
