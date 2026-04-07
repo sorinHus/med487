@@ -9,7 +9,7 @@ from .views import print_concediu, print_reteta, print_trimitere
 from .views import ProfilMedicView, SchimbareParolaView, zile_libere_view
 from .views import VerificareCNPView, InregistrarePacientView, AprobarePacientView
 from .views import PortalPacientView
-from .views import export_xml_raportare
+from .views import export_xml_raportare, export_xml_concedii
 from .views import import_pacienti_excel
 from .views import documente_pacient, sterge_document
 
@@ -39,7 +39,7 @@ urlpatterns = router.urls + [
     path('portal-pacient/', PortalPacientView.as_view()),
     path('reset-parola/', ResetParolaView.as_view()),
     path('export-xml/', export_xml_raportare),
-    path('export-xml-concedii/', views.export_xml_concedii),
+    path('export-xml-concedii/', export_xml_concedii),
     path('import-pacienti/', import_pacienti_excel),
     path('pacienti/<int:pacient_id>/documente/', documente_pacient),
     path('documente/<int:doc_id>/', sterge_document),
