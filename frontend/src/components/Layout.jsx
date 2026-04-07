@@ -1,3 +1,5 @@
+import s from '../styles/Layout.module.css'
+
 const AVATAR_COLORS = ['#3a7bd5','#e05c7a','#f5a623','#50c878','#9b59b6','#1abc9c','#e67e22']
 
 function getInitials(firstName, lastName) {
@@ -31,63 +33,40 @@ const PAGE_TITLES = {
 export default function Layout({ children, activePage, onNavigate, onLogout, user, moduleActive = [], theme = 'dark', onToggleTheme, cereriCount = 0 }) {
   const firstName = user?.first_name || ''
   const lastName  = user?.last_name  || ''
-  const prefix   = user?.rol === 'medic' ? 'Dr. ' : ''
-  const fullName = `${prefix}${firstName} ${lastName}`.trim()
+  const prefix    = user?.rol === 'medic' ? 'Dr. ' : ''
+  const fullName  = `${prefix}${firstName} ${lastName}`.trim()
   const initials  = getInitials(firstName, lastName)
   const avatarBg  = getAvatarColor(fullName)
   const rol       = user?.rol || 'medic'
   const title     = PAGE_TITLES[activePage]?.() || ''
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: 'var(--bg-main)', color: 'var(--text-primary)', fontFamily: "'DM Sans', 'Segoe UI', system-ui, sans-serif", overflow: 'hidden' }}>
+    <div className={s.root}>
 
       {/* ── Sidebar ── */}
-      <aside style={{ width: '210px', minWidth: '210px', background: 'var(--bg-card)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}>
+      <aside className={s.sidebar}>
 
         {/* Logo */}
-        <div style={{ padding: '16px', borderBottom: '1px solid var(--border)' }}>
-          <a href="/" style={{ display: 'block' }}>
-            <img src="/logo.png" alt="MED487" style={{ width: '100%', height: 'auto', display: 'block' }} />
+        <div className={s.sidebar__logo}>
+          <a href="/" className={s.sidebar__logoLink}>
+            <img src="/logo.png" alt="MED487" className={s.sidebar__logoImg} />
           </a>
         </div>
 
         {/* Nav */}
-        <nav style={{ flex: 1, padding: '14px 10px' }}>
+        <nav className={s.sidebar__nav}>
           {NAV_ITEMS.filter(item => item.id === 'dashboard' || moduleActive.length === 0 || moduleActive.includes(item.id)).map(({ id, label, icon: Icon }) => {
             const active = activePage === id
             return (
-              <button key={id} onClick={() => onNavigate(id)}
-                style={{
-                  width: '100%', display: 'flex', alignItems: 'center', gap: '9px',
-                  padding: '9px 10px', borderRadius: '8px', border: 'none', cursor: 'pointer',
-                  marginBottom: '2px', textAlign: 'left',
-                  background: active ? 'rgba(58,123,213,0.15)' : 'transparent',
-                  color: active ? 'var(--accent-light)' : 'var(--text-muted)',
-                  fontSize: '16px', fontWeight: active ? '600' : '400',
-                  transition: 'background 0.15s, color 0.15s',
-                  borderLeft: active ? '3px solid var(--accent)' : '3px solid transparent',
-                }}
-                onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)' } }}
-                onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' } }}
+              <button
+                key={id}
+                onClick={() => onNavigate(id)}
+                className={`${s.navBtn} ${active ? s['navBtn--active'] : ''}`}
               >
                 <Icon size={15} color={active ? 'var(--accent-light)' : 'var(--text-dim)'} />
-                <span style={{ flex: 1 }}>{label}</span>
+                <span className={s.navBtn__label}>{label}</span>
                 {id === 'cereri-pacienti' && cereriCount > 0 && (
-                  <span style={{
-                    background: '#fc013b',
-                    color: '#fff',
-                    borderRadius: '10px',
-                    minWidth: '20px',
-                    height: '20px',
-                    fontSize: '11px',
-                    fontWeight: '700',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '0 6px',
-                    lineHeight: 1,
-                    boxSizing: 'border-box',
-                  }}>
+                  <span className={s.badge}>
                     {cereriCount > 99 ? '99+' : cereriCount}
                   </span>
                 )}
@@ -97,21 +76,19 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
         </nav>
 
         {/* User + Logout */}
-        <div style={{ padding: '15px 14px', borderTop: '1px solid var(--border)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '9px', marginBottom: '10px' }}>
-            <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: '#fff', flexShrink: 0 }}>
+        <div className={s.sidebar__footer}>
+          <div className={s.userRow}>
+            <div className={s.avatar} style={{ background: avatarBg }}>
               {initials}
             </div>
-            <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: '15px', fontWeight: '500', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{fullName}</div>
-              <div style={{ fontSize: '14px', color: 'var(--text-dim)', textTransform: 'capitalize' }}>{rol}</div>
+            <div className={s.userInfo}>
+              <div className={s.userName}>{fullName}</div>
+              <div className={s.userRol}>{rol}</div>
             </div>
           </div>
-
-          <button onClick={() => { if (window.confirm('Ești sigur că vrei să te deconectezi?')) onLogout() }}
-            style={{ width: '100%', padding: '7px', borderRadius: '7px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-muted)', fontSize: '15px', cursor: 'pointer', transition: 'all 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#f87171'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'var(--border)' }}
+          <button
+            className={s.btnLogout}
+            onClick={() => { if (window.confirm('Ești sigur că vrei să te deconectezi?')) onLogout() }}
           >
             Deconectare
           </button>
@@ -119,41 +96,36 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
       </aside>
 
       {/* ── Main ── */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div className={s.main}>
 
-      {/* Header */}
-      <header style={{ height: '54px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0 }}>
-        <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>{title}</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <a href="/" style={{ fontSize: '13px', color: 'var(--text-dim)', textDecoration: 'none', transition: 'color 0.15s', paddingRight: '6px' }}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-light)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
-          >← Site principal</a>
-          <button onClick={onToggleTheme} title={theme === 'dark' ? 'Mod luminos' : 'Mod întunecat'}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--text-dim)', display: 'flex', alignItems: 'center', transition: 'color 0.15s' }}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-light)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
-          >
-            {theme === 'dark'
-              ? <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-12.37l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0zM7.05 18.36l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0z"/></svg>
-              : <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
-            }
-          </button>
-          <span
-            onClick={() => onNavigate('profil')}
-            style={{ fontSize: '16px', color: 'var(--text-dim)', cursor: 'pointer', transition: 'color 0.15s' }}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-light)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
-            title="Profilul meu"
-          >{fullName}</span>
-          <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: '#fff' }}>
-            {initials}
+        {/* Header */}
+        <header className={s.header}>
+          <span className={s.header__title}>{title}</span>
+          <div className={s.header__actions}>
+            <a href="/" className={s.header__siteLink}>← Site principal</a>
+            <button
+              onClick={onToggleTheme}
+              title={theme === 'dark' ? 'Mod luminos' : 'Mod întunecat'}
+              className={s.header__themeBtn}
+            >
+              {theme === 'dark'
+                ? <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-12.37l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0zM7.05 18.36l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0z"/></svg>
+                : <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+              }
+            </button>
+            <span
+              className={s.header__userName}
+              onClick={() => onNavigate('profil')}
+              title="Profilul meu"
+            >{fullName}</span>
+            <div className={s.header__avatar} style={{ background: avatarBg }}>
+              {initials}
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
         {/* Page content */}
-        <main style={{ flex: 1, overflow: 'auto', padding: '24px' }}>
+        <main className={s.content}>
           {children}
         </main>
       </div>
@@ -200,7 +172,6 @@ function IconRapoarte({ size = 16, color = 'currentColor' }) {
     </svg>
   )
 }
-
 function IconCereri({ size = 16, color = 'currentColor' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>

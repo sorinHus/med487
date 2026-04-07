@@ -1,0 +1,228 @@
+/* Layout.module.css */
+
+/* ── Wrapper principal ── */
+.root {
+  display: flex;
+  height: 100vh;
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 210px;
+  min-width: 210px;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__logo {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar__logoLink {
+  display: block;
+}
+.sidebar__logoImg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.sidebar__nav {
+  flex: 1;
+  padding: 14px 10px;
+}
+
+.navBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 2px;
+  text-align: left;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 16px;
+  font-weight: 400;
+  transition: background 0.15s, color 0.15s;
+  border-left: 3px solid transparent;
+}
+.navBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.navBtn--active {
+  background: rgba(58,123,213,0.15);
+  color: var(--accent-light);
+  font-weight: 600;
+  border-left: 3px solid var(--accent);
+}
+.navBtn--active:hover {
+  background: rgba(58,123,213,0.15);
+  color: var(--accent-light);
+}
+.navBtn__label {
+  flex: 1;
+}
+
+.badge {
+  background: #fc013b;
+  color: #fff;
+  border-radius: 10px;
+  min-width: 20px;
+  height: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+/* ── User + Logout ── */
+.sidebar__footer {
+  padding: 15px 14px;
+  border-top: 1px solid var(--border);
+}
+.userRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 10px;
+}
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.userInfo {
+  overflow: hidden;
+}
+.userName {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.userRol {
+  font-size: 14px;
+  color: var(--text-dim);
+  text-transform: capitalize;
+}
+
+.btnLogout {
+  width: 100%;
+  padding: 7px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btnLogout:hover {
+  background: rgba(239,68,68,0.1);
+  color: #f87171;
+  border-color: rgba(239,68,68,0.3);
+}
+
+/* ── Main area ── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.header {
+  height: 54px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+.header__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.header__siteLink {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.15s;
+  padding-right: 6px;
+}
+.header__siteLink:hover {
+  color: var(--accent-light);
+}
+.header__themeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+.header__themeBtn:hover {
+  color: var(--accent-light);
+}
+.header__userName {
+  font-size: 16px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.header__userName:hover {
+  color: var(--accent-light);
+}
+.header__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ── Content ── */
+.content {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+}
