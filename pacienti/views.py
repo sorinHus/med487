@@ -929,7 +929,7 @@ def export_xml_raportare(request):
     ET.ElementTree(root).write(response, encoding='unicode', xml_declaration=True)
     return response   
 
-    @api_view(['GET'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def export_xml_concedii(request):
     luna = request.GET.get('luna')
