@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from django_ratelimit.decorators import ratelimit
+from django_ratelimit.exceptions import Ratelimited
+from django.utils.decorators import method_decorator
 from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
     DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical, Trimitere, \
     ModuleUtilizator
@@ -25,6 +28,7 @@ from django.contrib.auth.hashers import make_password
 import boto3
 import os
 import uuid
+
 
 
 LUNI_RO = [
@@ -632,6 +636,7 @@ def zile_libere_view(request):
         return JsonResponse([], safe=False)
 
 
+@method_decorator(ratelimit(key='ip', rate='10/h', method='POST', block=True), name='post')
 class VerificareCNPView(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -651,6 +656,7 @@ class VerificareCNPView(APIView):
         return Response({'gasit': False})
 
 
+@method_decorator(ratelimit(key='ip', rate='5/h', method='POST', block=True), name='post')
 class InregistrarePacientView(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -718,6 +724,7 @@ class InregistrarePacientView(APIView):
             return Response({'ok': True})
         except Exception as e:
             return Response({'error': str(e), 'trace': traceback.format_exc()}, status=500)
+            
 
 
 class AprobarePacientView(APIView):
@@ -813,6 +820,7 @@ class PortalPacientView(APIView):
                 for r in retete
             ],
         })         
+@method_decorator(ratelimit(key='ip', rate='3/h', method='POST', block=True), name='post')
 class ResetParolaView(APIView):
     permission_classes = [permissions.AllowAny]
 

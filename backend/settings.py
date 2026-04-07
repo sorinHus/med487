@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'pacienti',
     'django_filters',
+    'django_ratelimit',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,11 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD            = True
     SECURE_CONTENT_TYPE_NOSNIFF    = True
+
+# ── Rate limiting ─────────────────────────────────────────────────────────────
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
+RATELIMIT_USE_CACHE = 'default'    
