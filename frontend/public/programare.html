@@ -478,7 +478,10 @@
     try {
       const res = await fetch(`${API}/programari/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(pacientLogat ? { Authorization: `Bearer ${pacientLogat.token}` } : {})
+        },
         body: JSON.stringify({
           data_ora: dataOra,
           durata_min: 20,
@@ -488,6 +491,7 @@
           motiv: motiv,
           medic: MEDIC_ID,
           status: 'programat',
+          ...(pacientLogat ? { pacient: pacientLogat.user.pacient_id } : {})
         })
       })
 
@@ -560,8 +564,34 @@
     renderCalendar()
   }
 
-  // Init
-  loadSarbatori()
+  // ── Asociere cont pacient ──
+let pacientLogat = null
+
+async function checkLogat() {
+  const token = localStorage.getItem('access')
+  if (!token) return
+  try {
+    const res = await fetch(`${API}/useri/me/`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    if (!res.ok) return
+    const user = await res.json()
+    if (user.rol !== 'pacient') return
+    // Obtine datele pacientului
+    const resPacient = await fetch(`${API}/portal-pacient/`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    pacientLogat = { token, user }
+    // Prefill nume din user
+    const nume = `${user.last_name} ${user.first_name}`.trim()
+    if (nume) document.getElementById('f-nume').value = nume
+    if (user.email) document.getElementById('f-email').value = user.email
+  } catch { /* ignoram */ }
+}
+
+// Init
+loadSarbatori()
+checkLogat()
 </script>
 </body>
 </html>

@@ -6,10 +6,17 @@ from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
+    pacient_id = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'rol', 'is_active', 'telefon', 'parafa', 'cod_medic', 'password']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'rol', 'is_active', 'telefon', 'parafa', 'cod_medic', 'password', 'pacient_id']
+
+    def get_pacient_id(self, obj):
+        try:
+            return obj.pacient_profil.id
+        except:
+            return None
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
