@@ -33,6 +33,8 @@ const ACTIUNE_COLOR = {
   export_xml: '#fbbf24', upload_document: '#a78bfa', stergere_document: '#f87171',
   import_pacienti: '#fbbf24', creare_user: '#34d399', stergere_user: '#f87171',
   login: '#60a5fa', logout: '#9ca3af',
+  creare_programare: '#60a5fa',
+  modificare_programare: '#a78bfa',
 }
 
 function badgeClass(rol) {

@@ -403,6 +403,8 @@ class LogActivitate(models.Model):
         ('import_pacienti', 'Import Excel pacienți'),
         ('creare_user', 'Creare utilizator'),
         ('stergere_user', 'Ștergere utilizator'),
+        ('creare_programare', 'Creare programare'),
+        ('modificare_programare', 'Modificare programare'),
     ]
 
     user       = models.ForeignKey(CustomUser, on_delete=models.SET_NULL,

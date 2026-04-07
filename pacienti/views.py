@@ -70,7 +70,9 @@ class PacientViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         instance = serializer.save()
-        log_actiune(self.request, 'modificare_pacient', f'{instance.nume} {instance.prenume}')
+        if self.request.user.is_authenticated:
+            log_actiune(self.request, 'modificare_programare',
+                f'{instance.data_ora:%d.%m.%Y %H:%M} — status: {instance.status}')
 
     def perform_destroy(self, instance):
         log_actiune(self.request, 'stergere_pacient', f'{instance.nume} {instance.prenume}')
