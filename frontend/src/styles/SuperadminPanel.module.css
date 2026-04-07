@@ -1,0 +1,450 @@
+.root {
+  min-height: 100vh;
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+/* ── Header ── */
+.header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.headerTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.headerSub {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.btnLogout {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.4rem 1rem;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+/* ── Layout ── */
+.main {
+  padding: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+.tab {
+  padding: 0.6rem 1.25rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s;
+}
+.tabActive {
+  color: var(--accent-light);
+  border-bottom: 2px solid var(--accent-light);
+}
+
+/* ── Top bar ── */
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.pageTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.btnAdd {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.55rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+.btnAdd:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.savedMsg {
+  font-size: 0.82rem;
+  color: #34d399;
+}
+.topBarRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ── Table ── */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+}
+.td {
+  padding: 0.85rem 1rem;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+.tdMuted {
+  padding: 0.85rem 1rem;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+.badgeSuperadmin { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+.badgeMedic      { background: rgba(58,123,213,0.15);  color: #60a5fa; }
+.badgeAsistent   { background: rgba(16,185,129,0.15);  color: #34d399; }
+.badgePacient    { background: rgba(156,163,175,0.15); color: #9ca3af; }
+.badgeActiv      { background: rgba(16,185,129,0.15);  color: #34d399; }
+.badgeInactiv    { background: rgba(239,68,68,0.1);    color: #f87171; }
+
+/* ── Action buttons ── */
+.btnAction {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  margin-right: 0.4rem;
+}
+.btnDelete {
+  background: transparent;
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #f87171;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  margin-right: 0.4rem;
+}
+
+/* ── Modal ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 2rem;
+  width: 460px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modalTitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.btnCancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+.btnSave {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+.btnSave:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Form fields ── */
+.label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 5px;
+}
+.input {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 0.88rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  outline: none;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+.select {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 0.88rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  outline: none;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+.error {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  color: #f87171;
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Module cards ── */
+.moduleCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+.moduleCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.moduleCardName {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.moduleCardSub {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.moduleGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+.moduleChip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  transition: all 0.15s;
+}
+.moduleChipActive {
+  border-color: var(--accent);
+  background: rgba(58,123,213,0.1);
+  color: var(--accent-light);
+}
+.savingText {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* ── Setari ── */
+.setariGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.sectionLabel {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+.inputTime {
+  width: 100px;
+  margin-bottom: 0;
+  padding: 4px 8px;
+}
+
+/* ── Orar ── */
+.orarRow {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.orarRowHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.toggleTrack {
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggleThumb {
+  position: absolute;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  transition: left 0.2s;
+}
+.orarZiLabel {
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  width: 80px;
+}
+.btnInterval {
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+.orarIntervale {
+  margin-left: 52px;
+  margin-top: 0.35rem;
+}
+.intervalRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+.intervalSep {
+  color: var(--text-dim);
+}
+.btnStergeInterval {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+.orarEmpty {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-left: 52px;
+  margin-top: 0.35rem;
+}
+
+/* ── Mentenanta toggle ── */
+.toggleTrackLarge {
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+.toggleThumbLarge {
+  position: absolute;
+  top: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  transition: left 0.2s;
+}
+.mentenantaLabel {
+  font-size: 0.85rem;
+}
+.mentenantaRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Empty state ── */
+.emptyState {
+  color: var(--text-dim);
+  padding: 2rem;
+}
+.loading {
+  color: var(--text-dim);
+  padding: 2rem;
+}
