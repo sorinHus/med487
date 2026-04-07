@@ -1,0 +1,464 @@
+/* Consultatii.module.css */
+
+/* ── Header pagina ── */
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+.searchWrap {
+  position: relative;
+  flex: 1;
+  max-width: 380px;
+}
+.searchIcon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.searchInput {
+  width: 100%;
+  padding: 9px 12px 9px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text-primary);
+  font-size: 13px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.searchInput:focus {
+  border-color: var(--accent);
+}
+.totalLabel {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ── Tabel ── */
+.tableWrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.th {
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.th--narrow { width: 40px; }
+
+.tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+}
+.tr:hover { background: var(--bg-hover); }
+
+.td { padding: 12px 14px; color: var(--text-muted); font-size: 13px; }
+.td--center { padding: 12px 14px; color: var(--text-dim); font-size: 12px; text-align: center; }
+.td--nowrap { padding: 12px 14px; color: var(--text-muted); font-size: 13px; white-space: nowrap; }
+.td--ellipsis { padding: 12px 14px; color: var(--text-muted); font-size: 13px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.td--empty { padding: 40px; text-align: center; color: var(--text-dim); }
+
+.btnPacient {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--accent-light);
+  font-size: 13px;
+  padding: 0;
+  font-weight: 500;
+}
+
+.diagBadge {
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(58,123,213,0.15);
+  color: var(--accent-light);
+}
+.diagWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+.diagMore {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.btnDetalii {
+  padding: 5px 12px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.btnDetalii:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* ── Paginare ── */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.paginationBtns {
+  display: flex;
+  gap: 8px;
+}
+.btnPag {
+  padding: 6px 14px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+.btnPag:disabled {
+  color: var(--text-dim);
+  cursor: default;
+}
+
+/* ── Modal consultatie ── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modalBox {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.modalTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+.modalClose {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.modalClose:hover { color: var(--text-primary); }
+
+.modalBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.modalGrid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.modalFooter {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.btnReteta {
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  background: rgba(58,123,213,0.1);
+  color: var(--accent-light);
+  font-size: 13px;
+  cursor: pointer;
+}
+.btnClose {
+  padding: 7px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.btnClose:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* ── InfoRow / InfoBlock ── */
+.infoLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  margin-top: 0;
+}
+.infoLabelMb {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  margin-top: 0;
+}
+.infoText {
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0;
+  white-space: pre-wrap;
+}
+.diagModalBadge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(58,123,213,0.15);
+  color: var(--accent-light);
+}
+.diagModalWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.diagPrincipal {
+  opacity: 0.6;
+  margin-left: 4px;
+}
+
+/* ── Modal reteta ── */
+.retetaOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.retetaBox {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 92vh;
+  overflow-y: auto;
+}
+.retetaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 1;
+}
+.retetaTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+.retetaClose {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  cursor: pointer;
+}
+.retetaForm {
+  padding: 20px;
+}
+.formGrid3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0 16px;
+}
+.formGrid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 12px;
+}
+.formGrid21 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0 12px;
+}
+.formGrid211 {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 0 12px;
+}
+.formLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+.formInput {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  outline: none;
+}
+.formTextarea {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  outline: none;
+  height: 55px;
+  resize: vertical;
+}
+.medSection {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+.medSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.medSectionTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.btnAdaugaMed {
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  background: rgba(58,123,213,0.15);
+  color: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: 7px;
+}
+.medCard {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.medCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.medCardTitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+.btnStergeMed {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 16px;
+  line-height: 1;
+}
+.formError {
+  color: #f87171;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+}
+.btnCancel {
+  padding: 8px 18px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+}
+.btnSave {
+  padding: 8px 18px;
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+}
+.btnSave:disabled { opacity: 0.6; }

@@ -1,22 +1,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import api from '../api'
+import s from '../styles/Consultatii.module.css'
 
 function formatData(iso) {
   if (!iso) return '—'
   return new Date(iso).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
-const thStyle = {
-  padding: '10px 14px', fontSize: '11px', fontWeight: '600',
-  color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em',
-  textAlign: 'left', borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap',
-}
-const tdStyle = { padding: '12px 14px', color: 'var(--text-muted)', fontSize: '13px' }
-
 function ModalReteta({ pacientId, medicId, consultatieId, onClose, onSaved }) {
-  const inputStyle = { width: '100%', padding: '8px 12px', fontSize: '13px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)', boxSizing: 'border-box', marginBottom: '12px', outline: 'none' }
-  const labelStyle = { fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }
-
   const [form, setForm] = useState({ gratuit: 'nu', valabilitate_zile: 30, diagnostic: '', nr_fisa: '', observatii: '' })
   const [linii, setLinii] = useState([{ nume_medicament: '', concentratie: '', doza_frecventa: '', durata_zile: '', cantitate: 1, observatii: '' }])
   const [salvand, setSalvand] = useState(false)
@@ -45,87 +36,153 @@ function ModalReteta({ pacientId, medicId, consultatieId, onClose, onSaved }) {
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', width: '100%', maxWidth: '680px', maxHeight: '92vh', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid var(--border)', position: 'sticky', top: 0, background: 'var(--bg-card)', zIndex: 1 }}>
-          <span style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '15px' }}>Rețetă nouă</span>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: '20px', cursor: 'pointer' }}>✕</button>
+    <div className={s.retetaOverlay}>
+      <div className={s.retetaBox}>
+        <div className={s.retetaHeader}>
+          <span className={s.retetaTitle}>Rețetă nouă</span>
+          <button onClick={onClose} className={s.retetaClose}>✕</button>
         </div>
-        <form onSubmit={salveaza} style={{ padding: '20px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0 16px' }}>
+        <form onSubmit={salveaza} className={s.retetaForm}>
+          <div className={s.formGrid3}>
             <div>
-              <label style={labelStyle}>Gratuit / Cu plată</label>
-              <select value={form.gratuit} onChange={e => setForm(p => ({ ...p, gratuit: e.target.value }))} style={inputStyle}>
+              <label className={s.formLabel}>Gratuit / Cu plată</label>
+              <select value={form.gratuit} onChange={e => setForm(p => ({ ...p, gratuit: e.target.value }))} className={s.formInput}>
                 <option value="nu">Cu plată</option>
                 <option value="da">Gratuit</option>
               </select>
             </div>
             <div>
-              <label style={labelStyle}>Valabilitate (zile)</label>
-              <input type="number" min="1" max="90" value={form.valabilitate_zile} onChange={e => setForm(p => ({ ...p, valabilitate_zile: e.target.value }))} style={inputStyle} />
+              <label className={s.formLabel}>Valabilitate (zile)</label>
+              <input type="number" min="1" max="90" value={form.valabilitate_zile} onChange={e => setForm(p => ({ ...p, valabilitate_zile: e.target.value }))} className={s.formInput} />
             </div>
             <div>
-              <label style={labelStyle}>Nr. fișă</label>
-              <input value={form.nr_fisa} onChange={e => setForm(p => ({ ...p, nr_fisa: e.target.value }))} style={inputStyle} placeholder="optional" />
+              <label className={s.formLabel}>Nr. fișă</label>
+              <input value={form.nr_fisa} onChange={e => setForm(p => ({ ...p, nr_fisa: e.target.value }))} className={s.formInput} placeholder="optional" />
             </div>
           </div>
-          <label style={labelStyle}>Diagnostic</label>
-          <input value={form.diagnostic} onChange={e => setForm(p => ({ ...p, diagnostic: e.target.value }))} style={inputStyle} placeholder="ex: Hipertensiune arterială esențială" />
-          <label style={labelStyle}>Observații</label>
-          <textarea value={form.observatii} onChange={e => setForm(p => ({ ...p, observatii: e.target.value }))} style={{ ...inputStyle, height: '55px', resize: 'vertical' }} />
-          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '14px', marginTop: '4px', marginBottom: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--accent-light)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Medicamente ({linii.length})</span>
-              <button type="button" onClick={adaugaLinie}
-                style={{ padding: '5px 12px', fontSize: '12px', cursor: 'pointer', background: 'rgba(58,123,213,0.15)', color: 'var(--accent-light)', border: '1px solid var(--accent)', borderRadius: '7px' }}>
-                + Adaugă medicament
-              </button>
+          <label className={s.formLabel}>Diagnostic</label>
+          <input value={form.diagnostic} onChange={e => setForm(p => ({ ...p, diagnostic: e.target.value }))} className={s.formInput} placeholder="ex: Hipertensiune arterială esențială" />
+          <label className={s.formLabel}>Observații</label>
+          <textarea value={form.observatii} onChange={e => setForm(p => ({ ...p, observatii: e.target.value }))} className={s.formTextarea} />
+          <div className={s.medSection}>
+            <div className={s.medSectionHeader}>
+              <span className={s.medSectionTitle}>Medicamente ({linii.length})</span>
+              <button type="button" onClick={adaugaLinie} className={s.btnAdaugaMed}>+ Adaugă medicament</button>
             </div>
             {linii.map((linie, i) => (
-              <div key={i} style={{ background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '10px', padding: '14px', marginBottom: '10px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '12px', color: 'var(--text-dim)', fontWeight: '600' }}>Medicament {i + 1}</span>
-                  {linii.length > 1 && <button type="button" onClick={() => stergeLinie(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-dim)', fontSize: '16px', lineHeight: 1 }}>×</button>}
+              <div key={i} className={s.medCard}>
+                <div className={s.medCardHeader}>
+                  <span className={s.medCardTitle}>Medicament {i + 1}</span>
+                  {linii.length > 1 && <button type="button" onClick={() => stergeLinie(i)} className={s.btnStergeMed}>×</button>}
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '0 12px' }}>
+                <div className={s.formGrid21}>
                   <div>
-                    <label style={labelStyle}>Denumire medicament *</label>
-                    <input value={linie.nume_medicament} onChange={e => updateLinie(i, 'nume_medicament', e.target.value)} style={inputStyle} placeholder="ex: Enalapril" required={i === 0} />
+                    <label className={s.formLabel}>Denumire medicament *</label>
+                    <input value={linie.nume_medicament} onChange={e => updateLinie(i, 'nume_medicament', e.target.value)} className={s.formInput} placeholder="ex: Enalapril" required={i === 0} />
                   </div>
                   <div>
-                    <label style={labelStyle}>Concentrație / formă</label>
-                    <input value={linie.concentratie} onChange={e => updateLinie(i, 'concentratie', e.target.value)} style={inputStyle} placeholder="ex: 10mg, comprimate" />
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '0 12px' }}>
-                  <div>
-                    <label style={labelStyle}>Doză și frecvență</label>
-                    <input value={linie.doza_frecventa} onChange={e => updateLinie(i, 'doza_frecventa', e.target.value)} style={inputStyle} placeholder="ex: 1cp/zi dimineata" />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Durată (zile)</label>
-                    <input type="number" min="1" value={linie.durata_zile} onChange={e => updateLinie(i, 'durata_zile', e.target.value)} style={inputStyle} placeholder="30" />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Cantitate (cutii)</label>
-                    <input type="number" min="1" value={linie.cantitate} onChange={e => updateLinie(i, 'cantitate', e.target.value)} style={inputStyle} />
+                    <label className={s.formLabel}>Concentrație / formă</label>
+                    <input value={linie.concentratie} onChange={e => updateLinie(i, 'concentratie', e.target.value)} className={s.formInput} placeholder="ex: 10mg, comprimate" />
                   </div>
                 </div>
-                <label style={labelStyle}>Observații medicament</label>
-                <input value={linie.observatii} onChange={e => updateLinie(i, 'observatii', e.target.value)} style={{ ...inputStyle, marginBottom: 0 }} placeholder="optional" />
+                <div className={s.formGrid211}>
+                  <div>
+                    <label className={s.formLabel}>Doză și frecvență</label>
+                    <input value={linie.doza_frecventa} onChange={e => updateLinie(i, 'doza_frecventa', e.target.value)} className={s.formInput} placeholder="ex: 1cp/zi dimineata" />
+                  </div>
+                  <div>
+                    <label className={s.formLabel}>Durată (zile)</label>
+                    <input type="number" min="1" value={linie.durata_zile} onChange={e => updateLinie(i, 'durata_zile', e.target.value)} className={s.formInput} placeholder="30" />
+                  </div>
+                  <div>
+                    <label className={s.formLabel}>Cantitate (cutii)</label>
+                    <input type="number" min="1" value={linie.cantitate} onChange={e => updateLinie(i, 'cantitate', e.target.value)} className={s.formInput} />
+                  </div>
+                </div>
+                <label className={s.formLabel}>Observații medicament</label>
+                <input value={linie.observatii} onChange={e => updateLinie(i, 'observatii', e.target.value)} className={s.formInput} style={{ marginBottom: 0 }} placeholder="optional" />
               </div>
             ))}
           </div>
-          {eroare && <div style={{ color: '#f87171', fontSize: '13px', marginBottom: '12px' }}>{eroare}</div>}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', paddingTop: '4px' }}>
-            <button type="button" onClick={onClose} style={{ padding: '8px 18px', fontSize: '13px', cursor: 'pointer', border: '1px solid var(--border)', borderRadius: '8px', background: 'transparent', color: 'var(--text-muted)' }}>Anulează</button>
-            <button type="submit" disabled={salvand} style={{ padding: '8px 18px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', opacity: salvand ? 0.6 : 1 }}>
+          {eroare && <div className={s.formError}>{eroare}</div>}
+          <div className={s.formActions}>
+            <button type="button" onClick={onClose} className={s.btnCancel}>Anulează</button>
+            <button type="submit" disabled={salvand} className={s.btnSave}>
               {salvand ? 'Se salvează...' : 'Salvează rețeta'}
             </button>
           </div>
         </form>
       </div>
     </div>
+  )
+}
+
+function InfoRow({ label, children }) {
+  return (
+    <div>
+      <p className={s.infoLabel}>{label}</p>
+      {children}
+    </div>
+  )
+}
+
+function InfoBlock({ label, text }) {
+  return (
+    <div>
+      <p className={s.infoLabelMb}>{label}</p>
+      <p className={s.infoText}>{text}</p>
+    </div>
+  )
+}
+
+function ModalConsultatie({ consultatie: c, onClose, onNavigate }) {
+  const [showReteta, setShowReteta] = useState(false)
+  return (
+    <>
+      <div className={s.modalOverlay}>
+        <div className={s.modalBox}>
+          <div className={s.modalHeader}>
+            <span className={s.modalTitle}>Consultație — {formatData(c.data_ora)}</span>
+            <button onClick={onClose} className={s.modalClose}>✕</button>
+          </div>
+          <div className={s.modalBody}>
+            <div className={s.modalGrid2}>
+              <InfoRow label="Pacient">
+                <button onClick={() => { onClose(); onNavigate && onNavigate('pacienti') }}
+                  className={s.btnPacient}>
+                  {c.pacient_nume || `#${c.pacient}`}
+                </button>
+              </InfoRow>
+              <InfoRow label="Medic">
+                <span style={{ color: 'var(--text-primary)', fontSize: '13px' }}>{c.medic_nume || `#${c.medic}`}</span>
+              </InfoRow>
+            </div>
+            {c.simptome      && <InfoBlock label="Simptome"      text={c.simptome} />}
+            {c.examen_clinic && <InfoBlock label="Examen clinic" text={c.examen_clinic} />}
+            {c.tratament     && <InfoBlock label="Tratament"     text={c.tratament} />}
+            {c.observatii    && <InfoBlock label="Observații"    text={c.observatii} />}
+            {c.diagnostice?.length > 0 && (
+              <div>
+                <p className={s.infoLabelMb}>Diagnostice</p>
+                <div className={s.diagModalWrap}>
+                  {c.diagnostice.map((d, i) => (
+                    <span key={i} className={s.diagModalBadge}>
+                      {d.cod_icd10 && `${d.cod_icd10} — `}{d.denumire}
+                      {d.tip === 'principal' && <span className={s.diagPrincipal}>(principal)</span>}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className={s.modalFooter}>
+            <button onClick={() => setShowReteta(true)} className={s.btnReteta}>+ Rețetă nouă</button>
+            <button onClick={onClose} className={s.btnClose}>Închide</button>
+          </div>
+        </div>
+      </div>
+      {showReteta && <ModalReteta pacientId={c.pacient} medicId={c.medic} consultatieId={c.id} onClose={() => setShowReteta(false)} onSaved={() => setShowReteta(false)} />}
+    </>
   )
 }
 
@@ -162,74 +219,67 @@ export default function Consultatii({ onNavigate }) {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', gap: '12px' }}>
-        <div style={{ position: 'relative', flex: 1, maxWidth: '380px' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+      <div className={s.pageHeader}>
+        <div className={s.searchWrap}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className={s.searchIcon}>
             <circle cx="11" cy="11" r="6" stroke="var(--text-dim)" strokeWidth="2"/>
             <path d="M16 16l4 4" stroke="var(--text-dim)" strokeWidth="2" strokeLinecap="round"/>
           </svg>
-          <input value={searchInput} onChange={e => setSearchInput(e.target.value)} placeholder="Cauta dupa pacient, simptome..."
-            style={{ width: '100%', padding: '9px 12px 9px 32px', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '9px', color: 'var(--text-primary)', fontSize: '13px', boxSizing: 'border-box', outline: 'none' }}
-            onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-            onBlur={e => e.target.style.borderColor = 'var(--border)'}
+          <input
+            value={searchInput}
+            onChange={e => setSearchInput(e.target.value)}
+            placeholder="Cauta dupa pacient, simptome..."
+            className={s.searchInput}
           />
         </div>
-        <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>{total} înregistrări</span>
+        <span className={s.totalLabel}>{total} înregistrări</span>
       </div>
 
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+      <div className={s.tableWrap}>
+        <table className={s.table}>
           <thead>
             <tr>
-              <th style={{...thStyle, width: '40px'}}>#</th>
-              <th style={thStyle}>Data</th>
-              <th style={thStyle}>Pacient</th>
-              <th style={thStyle}>Medic</th>
-              <th style={thStyle}>Simptome</th>
-              <th style={thStyle}>Diagnostice</th>
-              <th style={thStyle}>Acțiuni</th>
+              <th className={`${s.th} ${s['th--narrow']}`}>#</th>
+              <th className={s.th}>Data</th>
+              <th className={s.th}>Pacient</th>
+              <th className={s.th}>Medic</th>
+              <th className={s.th}>Simptome</th>
+              <th className={s.th}>Diagnostice</th>
+              <th className={s.th}>Acțiuni</th>
             </tr>
           </thead>
           <tbody>
-            {loading && <tr><td colSpan="7" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>Se încarcă...</td></tr>}
+            {loading && (
+              <tr><td colSpan="7" className={s['td--empty']}>Se încarcă...</td></tr>
+            )}
             {!loading && consultatii.length === 0 && (
-              <tr><td colSpan="7" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>
+              <tr><td colSpan="7" className={s['td--empty']}>
                 {search ? 'Nicio consultație găsită.' : 'Nu există consultații înregistrate.'}
               </td></tr>
             )}
             {!loading && consultatii.map((c, index) => (
-              <tr key={c.id} style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.12s' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                <td style={{ ...tdStyle, color: 'var(--text-dim)', textAlign: 'center', fontSize: '12px' }}>{index + 1}</td>
-                <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>{formatData(c.data_ora)}</td>
-                <td style={tdStyle}>
-                  <button onClick={() => onNavigate && onNavigate('pacienti')}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-light)', fontSize: '13px', padding: 0, fontWeight: '500' }}>
+              <tr key={c.id} className={s.tr}>
+                <td className={s['td--center']}>{index + 1}</td>
+                <td className={s['td--nowrap']}>{formatData(c.data_ora)}</td>
+                <td className={s.td}>
+                  <button onClick={() => onNavigate && onNavigate('pacienti')} className={s.btnPacient}>
                     {c.pacient_nume || `Pacient #${c.pacient}`}
                   </button>
                 </td>
-                <td style={tdStyle}>{c.medic_nume || `Medic #${c.medic}`}</td>
-                <td style={{ ...tdStyle, maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.simptome || '—'}</td>
-                <td style={tdStyle}>
+                <td className={s.td}>{c.medic_nume || `Medic #${c.medic}`}</td>
+                <td className={s['td--ellipsis']}>{c.simptome || '—'}</td>
+                <td className={s.td}>
                   {c.diagnostice?.length > 0 ? (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                    <div className={s.diagWrap}>
                       {c.diagnostice.slice(0, 2).map((d, i) => (
-                        <span key={i} style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: 'rgba(58,123,213,0.15)', color: 'var(--accent-light)' }}>
-                          {d.cod_icd10 || d.denumire}
-                        </span>
+                        <span key={i} className={s.diagBadge}>{d.cod_icd10 || d.denumire}</span>
                       ))}
-                      {c.diagnostice.length > 2 && <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>+{c.diagnostice.length - 2}</span>}
+                      {c.diagnostice.length > 2 && <span className={s.diagMore}>+{c.diagnostice.length - 2}</span>}
                     </div>
                   ) : '—'}
                 </td>
-                <td style={tdStyle}>
-                  <button onClick={() => setSelected(c)}
-                    style={{ padding: '5px 12px', borderRadius: '7px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-muted)', fontSize: '12px', cursor: 'pointer' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)' }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' }}>
-                    Detalii
-                  </button>
+                <td className={s.td}>
+                  <button onClick={() => setSelected(c)} className={s.btnDetalii}>Detalii</button>
                 </td>
               </tr>
             ))}
@@ -238,101 +288,16 @@ export default function Consultatii({ onNavigate }) {
       </div>
 
       {totalPagini > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', fontSize: '12px', color: 'var(--text-dim)' }}>
+        <div className={s.pagination}>
           <span>Pagina {pagina} din {totalPagini}</span>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button onClick={() => setPagina(p => Math.max(1, p - 1))} disabled={pagina === 1}
-              style={{ padding: '6px 14px', borderRadius: '7px', border: '1px solid var(--border)', background: 'transparent', color: pagina === 1 ? 'var(--text-dim)' : 'var(--text-muted)', fontSize: '12px', cursor: pagina === 1 ? 'default' : 'pointer' }}>
-              ← Anterior
-            </button>
-            <button onClick={() => setPagina(p => Math.min(totalPagini, p + 1))} disabled={pagina === totalPagini}
-              style={{ padding: '6px 14px', borderRadius: '7px', border: '1px solid var(--border)', background: 'transparent', color: pagina === totalPagini ? 'var(--text-dim)' : 'var(--text-muted)', fontSize: '12px', cursor: pagina === totalPagini ? 'default' : 'pointer' }}>
-              Următor →
-            </button>
+          <div className={s.paginationBtns}>
+            <button onClick={() => setPagina(p => Math.max(1, p - 1))} disabled={pagina === 1} className={s.btnPag}>← Anterior</button>
+            <button onClick={() => setPagina(p => Math.min(totalPagini, p + 1))} disabled={pagina === totalPagini} className={s.btnPag}>Următor →</button>
           </div>
         </div>
       )}
 
       {selected && <ModalConsultatie consultatie={selected} onClose={() => setSelected(null)} onNavigate={onNavigate} />}
-    </div>
-  )
-}
-
-function ModalConsultatie({ consultatie: c, onClose, onNavigate }) {
-  const [showReteta, setShowReteta] = useState(false)
-  return (
-    <>
-      <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', width: '100%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
-            <span style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '15px' }}>Consultație — {formatData(c.data_ora)}</span>
-            <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: '20px', cursor: 'pointer', lineHeight: 1 }}
-              onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}>✕</button>
-          </div>
-          <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <InfoRow label="Pacient">
-                <button onClick={() => { onClose(); onNavigate && onNavigate('pacienti') }}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-light)', fontSize: '13px', padding: 0 }}>
-                  {c.pacient_nume || `#${c.pacient}`}
-                </button>
-              </InfoRow>
-              <InfoRow label="Medic">
-                <span style={{ color: 'var(--text-primary)', fontSize: '13px' }}>{c.medic_nume || `#${c.medic}`}</span>
-              </InfoRow>
-            </div>
-            {c.simptome      && <InfoBlock label="Simptome"      text={c.simptome} />}
-            {c.examen_clinic && <InfoBlock label="Examen clinic" text={c.examen_clinic} />}
-            {c.tratament     && <InfoBlock label="Tratament"     text={c.tratament} />}
-            {c.observatii    && <InfoBlock label="Observații"    text={c.observatii} />}
-            {c.diagnostice?.length > 0 && (
-              <div>
-                <p style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>Diagnostice</p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {c.diagnostice.map((d, i) => (
-                    <span key={i} style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', background: 'rgba(58,123,213,0.15)', color: 'var(--accent-light)' }}>
-                      {d.cod_icd10 && `${d.cod_icd10} — `}{d.denumire}
-                      {d.tip === 'principal' && <span style={{ opacity: 0.6, marginLeft: '4px' }}>(principal)</span>}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-          <div style={{ padding: '14px 20px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <button onClick={() => setShowReteta(true)}
-              style={{ padding: '7px 16px', borderRadius: '8px', border: '1px solid var(--accent)', background: 'rgba(58,123,213,0.1)', color: 'var(--accent-light)', fontSize: '13px', cursor: 'pointer' }}>
-              + Rețetă nouă
-            </button>
-            <button onClick={onClose}
-              style={{ padding: '7px 18px', borderRadius: '8px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-muted)', fontSize: '13px', cursor: 'pointer' }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' }}>
-              Închide
-            </button>
-          </div>
-        </div>
-      </div>
-      {showReteta && <ModalReteta pacientId={c.pacient} medicId={c.medic} consultatieId={c.id} onClose={() => setShowReteta(false)} onSaved={() => setShowReteta(false)} />}
-    </>
-  )
-}
-
-function InfoRow({ label, children }) {
-  return (
-    <div>
-      <p style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>{label}</p>
-      {children}
-    </div>
-  )
-}
-
-function InfoBlock({ label, text }) {
-  return (
-    <div>
-      <p style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>{label}</p>
-      <p style={{ fontSize: '13px', color: 'var(--text-primary)', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', padding: '10px 12px', margin: 0, whiteSpace: 'pre-wrap' }}>{text}</p>
     </div>
   )
 }
