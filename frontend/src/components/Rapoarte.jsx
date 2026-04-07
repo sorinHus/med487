@@ -4,6 +4,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts'
 import api from '../api'
+import s from '../styles/Rapoarte.module.css'
 
 const CULORI = ['#3a7bd5','#34d399','#fbbf24','#f87171','#a78bfa','#60a5fa']
 const LUNI_RO = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec']
@@ -11,8 +12,8 @@ const LUNI_RO = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','No
 function TooltipCustom({ active, payload, label }) {
   if (!active || !payload?.length) return null
   return (
-    <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px' }}>
-      <div style={{ color: 'var(--text-muted)', marginBottom: '6px' }}>{label}</div>
+    <div className={s.tooltip}>
+      <div className={s.tooltipLabel}>{label}</div>
       {payload.map((p, i) => (
         <div key={i} style={{ color: p.color, fontWeight: '600' }}>{p.name}: {p.value}</div>
       ))}
@@ -92,47 +93,39 @@ export default function Rapoarte() {
     finally { setDescarcand(false) }
   }
 
-  const cardStyle = { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }
-  const titluStyle = { fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '20px' }
-  const inputStyle = { padding: '7px 12px', fontSize: '13px', background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)', outline: 'none' }
-
-  if (loading) return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '300px', color: 'var(--text-dim)' }}>
-      Se încarcă graficele...
-    </div>
-  )
+  if (loading) return <div className={s.loading}>Se încarcă graficele...</div>
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div className={s.root}>
 
       {/* Export XML CNAS */}
-      <div style={cardStyle}>
-        <div style={titluStyle}>Export XML raportare CNAS</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+      <div className={s.card}>
+        <div className={s.cardTitle}>Export XML raportare CNAS</div>
+        <div className={s.xmlControls}>
           <div>
-            <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Luna</label>
-            <select value={lunaXml} onChange={e => setLunaXml(parseInt(e.target.value))} style={inputStyle}>
+            <label className={s.xmlLabel}>Luna</label>
+            <select value={lunaXml} onChange={e => setLunaXml(parseInt(e.target.value))} className={s.xmlInput}>
               {LUNI_RO.map((l, i) => <option key={i+1} value={i+1}>{l}</option>)}
             </select>
           </div>
           <div>
-            <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Anul</label>
-            <input type="number" value={anXml} onChange={e => setAnXml(parseInt(e.target.value))} min="2020" max="2099" style={{ ...inputStyle, width: '90px' }} />
+            <label className={s.xmlLabel}>Anul</label>
+            <input type="number" value={anXml} onChange={e => setAnXml(parseInt(e.target.value))} min="2020" max="2099" className={s.xmlInputNr} />
           </div>
-          <div style={{ alignSelf: 'flex-end' }}>
-            <button onClick={descarcaXml} disabled={descarcand}
-              style={{ padding: '8px 20px', fontSize: '13px', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '8px', opacity: descarcand ? 0.6 : 1 }}>
+          <div className={s.xmlBtnWrap}>
+            <button onClick={descarcaXml} disabled={descarcand} className={s.btnDescarca}>
               {descarcand ? 'Se generează...' : '⬇ Descarcă XML'}
             </button>
           </div>
         </div>
-        <div style={{ fontSize: '12px', color: 'var(--text-dim)', marginTop: '10px' }}>
+        <div className={s.xmlNote}>
           Generează fișierul XML conform Anexei 006 CNAS (lista înscriși + concedii medicale din luna selectată).
         </div>
       </div>
 
-      <div style={cardStyle}>
-        <div style={titluStyle}>Consultații — ultimele 6 luni</div>
+      {/* Bar chart consultatii */}
+      <div className={s.card}>
+        <div className={s.cardTitle}>Consultații — ultimele 6 luni</div>
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={consultatiiLuna} margin={{ top: 4, right: 16, left: -10, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -144,9 +137,10 @@ export default function Rapoarte() {
         </ResponsiveContainer>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-        <div style={cardStyle}>
-          <div style={titluStyle}>Pacienți noi — ultimele 6 luni</div>
+      <div className={s.grid2}>
+        {/* Line chart pacienti noi */}
+        <div className={s.card}>
+          <div className={s.cardTitle}>Pacienți noi — ultimele 6 luni</div>
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={pacientiNoi} margin={{ top: 4, right: 16, left: -10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -158,10 +152,11 @@ export default function Rapoarte() {
           </ResponsiveContainer>
         </div>
 
-        <div style={cardStyle}>
-          <div style={titluStyle}>Programări pe status</div>
+        {/* Pie chart programari */}
+        <div className={s.card}>
+          <div className={s.cardTitle}>Programări pe status</div>
           {programariStatus.length === 0 ? (
-            <div style={{ color: 'var(--text-dim)', fontSize: '13px', textAlign: 'center', paddingTop: '80px' }}>Nicio programare înregistrată.</div>
+            <div className={s.pieEmpty}>Nicio programare înregistrată.</div>
           ) : (
             <ResponsiveContainer width="100%" height={240}>
               <PieChart>

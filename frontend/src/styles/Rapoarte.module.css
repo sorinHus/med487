@@ -1,0 +1,112 @@
+/* Rapoarte.module.css */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: var(--text-dim);
+}
+
+/* ── Card generic ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.cardTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+/* ── Grid 2 coloane ── */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* ── Export XML ── */
+.xmlControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.xmlLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+.xmlInput {
+  padding: 7px 12px;
+  font-size: 13px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  outline: none;
+}
+.xmlInputNr {
+  padding: 7px 12px;
+  font-size: 13px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  outline: none;
+  width: 90px;
+}
+.xmlBtnWrap {
+  align-self: flex-end;
+}
+.btnDescarca {
+  padding: 8px 20px;
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  transition: opacity 0.15s;
+}
+.btnDescarca:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.xmlNote {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 10px;
+}
+
+/* ── Pie empty state ── */
+.pieEmpty {
+  color: var(--text-dim);
+  font-size: 13px;
+  text-align: center;
+  padding-top: 80px;
+}
+
+/* ── Tooltip custom ── */
+.tooltip {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+}
+.tooltipLabel {
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
