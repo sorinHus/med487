@@ -383,3 +383,39 @@ class ModuleUtilizator(models.Model):
 
     def __str__(self):
         return f"Module {self.user.username}"
+
+class LogActivitate(models.Model):
+    ACTIUNI = [
+        ('login', 'Login'),
+        ('logout', 'Logout'),
+        ('creare_pacient', 'Creare pacient'),
+        ('modificare_pacient', 'Modificare pacient'),
+        ('stergere_pacient', 'Ștergere pacient'),
+        ('creare_consultatie', 'Creare consultație'),
+        ('creare_reteta', 'Creare rețetă'),
+        ('creare_trimitere', 'Creare trimitere'),
+        ('creare_concediu', 'Creare concediu medical'),
+        ('aprobare_cerere', 'Aprobare cerere pacient'),
+        ('respingere_cerere', 'Respingere cerere pacient'),
+        ('export_xml', 'Export XML CNAS'),
+        ('upload_document', 'Upload document pacient'),
+        ('stergere_document', 'Ștergere document pacient'),
+        ('import_pacienti', 'Import Excel pacienți'),
+        ('creare_user', 'Creare utilizator'),
+        ('stergere_user', 'Ștergere utilizator'),
+    ]
+
+    user       = models.ForeignKey(CustomUser, on_delete=models.SET_NULL,
+                                   null=True, related_name='loguri')
+    actiune    = models.CharField(max_length=50, choices=ACTIUNI)
+    descriere  = models.CharField(max_length=255, blank=True)
+    ip         = models.GenericIPAddressField(null=True, blank=True)
+    timestamp  = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+        verbose_name = 'Log activitate'
+        verbose_name_plural = 'Loguri activitate'
+
+    def __str__(self):
+        return f'{self.user} — {self.actiune} — {self.timestamp:%d.%m.%Y %H:%M}'        

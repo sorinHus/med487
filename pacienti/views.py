@@ -30,6 +30,16 @@ import os
 import uuid
 
 
+def log_actiune(request, actiune, descriere=''):
+    from .models import LogActivitate
+    ip = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() or request.META.get('REMOTE_ADDR')
+    LogActivitate.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        actiune=actiune,
+        descriere=descriere,
+        ip=ip or None,
+    )
+
 
 LUNI_RO = [
     '', 'ianuarie', 'februarie', 'martie', 'aprilie', 'mai', 'iunie',
@@ -54,6 +64,18 @@ class PacientViewSet(viewsets.ModelViewSet):
             )
         return qs
 
+    def perform_create(self, serializer):
+        instance = serializer.save(medic=self.request.user)
+        log_actiune(self.request, 'creare_pacient', f'{instance.nume} {instance.prenume}')
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        log_actiune(self.request, 'modificare_pacient', f'{instance.nume} {instance.prenume}')
+
+    def perform_destroy(self, instance):
+        log_actiune(self.request, 'stergere_pacient', f'{instance.nume} {instance.prenume}')
+        instance.delete()
+
     @action(detail=True, methods=['get'])
     def consultatii(self, request, pk=None):
         pacient = self.get_object()
@@ -77,7 +99,7 @@ class ConsulatieViewSet(viewsets.ModelViewSet):
         if data_inainte:
             qs = qs.filter(data_ora__date__lte=data_inainte)
         return qs
-    
+
     def perform_create(self, serializer):
         consultatie = serializer.save()
         try:
@@ -90,6 +112,7 @@ class ConsulatieViewSet(viewsets.ModelViewSet):
             ).update(status='finalizat')
         except Exception:
             pass
+        log_actiune(self.request, 'creare_consultatie', f'Pacient ID {consultatie.pacient_id}')
 
 
 class DiagnosticViewSet(viewsets.ModelViewSet):
@@ -130,6 +153,15 @@ class UserViewSet(viewsets.ModelViewSet):
         user.is_active = not user.is_active
         user.save()
         return Response({'is_active': user.is_active})
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        log_actiune(self.request, 'creare_user', f'{instance.username} ({instance.rol})')
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        log_actiune(request, 'stergere_user', f'{instance.username} ({instance.rol})')
+        return super().destroy(request, *args, **kwargs)
 
 
 class ProgramareViewSet(viewsets.ModelViewSet):
@@ -222,7 +254,6 @@ class ProgramareViewSet(viewsets.ModelViewSet):
         durata = 20
         tz = pytz.timezone('Europe/Bucharest')
 
-        # Citeste orarul din ConfiguratieCabinet
         ZILE_MAP = {0: 'luni', 1: 'marti', 2: 'miercuri', 3: 'joi', 4: 'vineri', 5: 'sambata', 6: 'duminica'}
         zi_nume = ZILE_MAP[data.weekday()]
 
@@ -322,6 +353,10 @@ class RetetaViewSet(viewsets.ModelViewSet):
             return RetetaCreateSerializer
         return RetetaSerializer
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        log_actiune(self.request, 'creare_reteta', f'{instance.numar_reteta} — {instance.pacient}')
+
 
 class LinieRetetaViewSet(viewsets.ModelViewSet):
     serializer_class = LinieRetetaSerializer
@@ -342,6 +377,10 @@ class ConcediuMedicalViewSet(viewsets.ModelViewSet):
             qs = qs.filter(pacient_id=pacient_id)
         return qs
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        log_actiune(self.request, 'creare_concediu', f'{instance.serie_numar} — {instance.pacient}')
+
 
 class TrimitereViewSet(viewsets.ModelViewSet):
     serializer_class = TrimitereSerializer
@@ -354,9 +393,12 @@ class TrimitereViewSet(viewsets.ModelViewSet):
             qs = qs.filter(pacient_id=pacient_id)
         return qs
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        log_actiune(self.request, 'creare_trimitere', f'{instance.numar_trimitere} — {instance.pacient}')
+
 
 def _varsta_din_cnp(cnp):
-    """Calculeaza varsta din CNP. Returneaza string sau ''."""
     try:
         if cnp and len(cnp) == 13:
             s = int(cnp[0])
@@ -565,25 +607,11 @@ def print_trimitere(request, pk):
 
     return render(request, 'pacienti/trimitere_simpla_print.html', context)
 
+
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 
-@require_GET
-def test_email(request):
-    from django.core.mail import send_mail
-    from django.conf import settings
-    try:
-        send_mail(
-            subject='Test email Railway',
-            message='Functioneaza!',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.EMAIL_CABINET],
-            fail_silently=False,
-        )
-        return JsonResponse({'ok': True})
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-    
+
 class ProfilMedicView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfilMedicSerializer
     permission_classes = [IsAuthenticated]
@@ -605,7 +633,8 @@ class SchimbareParolaView(APIView):
         user.set_password(serializer.validated_data['parola_noua'])
         user.save()
         return Response({'detail': 'Parola a fost schimbată cu succes.'})
-    
+
+
 class ModuleUtilizatorViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -617,11 +646,12 @@ class ModuleUtilizatorViewSet(viewsets.ViewSet):
         obj, _ = ModuleUtilizator.objects.get_or_create(user_id=pk)
         obj.active = request.data.get('active', [])
         obj.save()
-        return Response({'active': obj.active})  
+        return Response({'active': obj.active})
 
-from django.http import JsonResponse
-import urllib.request
+
 import json as json_module
+import urllib.request
+
 
 @api_view(['GET'])
 @permission_classes([permissions.AllowAny])
@@ -724,7 +754,6 @@ class InregistrarePacientView(APIView):
             return Response({'ok': True})
         except Exception as e:
             return Response({'error': str(e), 'trace': traceback.format_exc()}, status=500)
-            
 
 
 class AprobarePacientView(APIView):
@@ -738,8 +767,7 @@ class AprobarePacientView(APIView):
             return Response({'error': 'Cerere negăsită'}, status=404)
         user.aprobat = True
         user.save()
-
-        # Email confirmare
+        log_actiune(request, 'aprobare_cerere', f'{user.get_full_name()} ({user.username})')
         try:
             from django.core.mail import send_mail
             send_mail(
@@ -751,7 +779,6 @@ class AprobarePacientView(APIView):
             )
         except Exception:
             pass
-
         return Response({'ok': True})
 
     def delete(self, request, pk):
@@ -760,8 +787,10 @@ class AprobarePacientView(APIView):
         user = CustomUser.objects.filter(pk=pk, rol='pacient', aprobat=False).first()
         if not user:
             return Response({'error': 'Cerere negăsită'}, status=404)
+        log_actiune(request, 'respingere_cerere', f'{user.get_full_name()} ({user.username})')
         user.delete()
-        return Response({'ok': True})   
+        return Response({'ok': True})
+
 
 class PortalPacientView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -819,7 +848,9 @@ class PortalPacientView(APIView):
                 }
                 for r in retete
             ],
-        })         
+        })
+
+
 @method_decorator(ratelimit(key='ip', rate='3/h', method='POST', block=True), name='post')
 class ResetParolaView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -830,7 +861,7 @@ class ResetParolaView(APIView):
             return Response({'error': 'Username obligatoriu.'}, status=400)
         user = CustomUser.objects.filter(username=username).first()
         if not user or not user.email:
-            return Response({'ok': True})  # nu dezvaluim daca exista
+            return Response({'ok': True})
         import random, string
         from django.core.mail import send_mail
         parola_noua = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
@@ -846,14 +877,12 @@ class ResetParolaView(APIView):
             )
         except Exception:
             pass
-        return Response({'ok': True})    
+        return Response({'ok': True})
 
 
 from django.http import HttpResponse
-from django.utils.timezone import now
 import xml.etree.ElementTree as ET
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -879,7 +908,6 @@ def export_xml_raportare(request):
     physician.set('stencil', medic.parafa or '')
     physician.set('contractNo', config.nr_contract_cas or '')
 
-    # --- CAPITA: mișcări pacienți înscriși ---
     capita = ET.SubElement(physician, 'capita')
     pacienti = Pacient.objects.filter(medic=medic)
 
@@ -895,16 +923,11 @@ def export_xml_raportare(request):
         operations = ET.SubElement(enlisted, 'operations')
         op = ET.SubElement(operations, 'operation')
         op.set('AppID', f'OP-{p.id}')
-        op.set('moveType', '1')  # 1=INTRARE
+        op.set('moveType', '1')
         op.set('date', p.data_inregistrare.strftime('%Y-%m-%d'))
         op.set('event', '1')
 
-    # --- MEDICAL NOTES: concedii medicale din luna/an ---
-    concedii = ConcediuMedical.objects.filter(
-        medic=medic,
-        luna=luna,
-        an=an
-    )
+    concedii = ConcediuMedical.objects.filter(medic=medic, luna=luna, an=an)
 
     if concedii.exists():
         medicalNotes = ET.SubElement(physician, 'medicalNotes')
@@ -923,11 +946,14 @@ def export_xml_raportare(request):
     tree = ET.ElementTree(root)
     ET.indent(tree, space='  ')
 
+    log_actiune(request, 'export_xml', f'Anexa 006 — {luna:02d}/{an}')
+
     filename = f'raportare_MF_{an}_{luna:02d}.xml'
     response = HttpResponse(content_type='application/xml')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     ET.ElementTree(root).write(response, encoding='unicode', xml_declaration=True)
-    return response   
+    return response
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -947,9 +973,7 @@ def export_xml_concedii(request):
     medic = request.user
 
     concedii = ConcediuMedical.objects.filter(
-        medic=medic,
-        luna=luna,
-        an=an
+        medic=medic, luna=luna, an=an
     ).select_related('pacient')
 
     root = ET.Element('report')
@@ -986,11 +1010,14 @@ def export_xml_concedii(request):
 
     ET.indent(ET.ElementTree(root), space='  ')
 
+    log_actiune(request, 'export_xml', f'Anexa 010 — {luna:02d}/{an}')
+
     filename = f'concedii_MF_{an}_{luna:02d}.xml'
     response = HttpResponse(content_type='application/xml')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     ET.ElementTree(root).write(response, encoding='unicode', xml_declaration=True)
     return response
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -1054,7 +1081,6 @@ def import_pacienti_excel(request):
             if status not in STATUS_VALID:
                 status = 'activ'
 
-            # data_nastere din CNP
             try:
                 s = int(cnp[0])
                 an2 = int(cnp[1:3])
@@ -1065,39 +1091,30 @@ def import_pacienti_excel(request):
                 elif s in [5,6]: an_n = 2000 + an2
                 else: an_n = 1900 + an2
                 data_nastere = date(an_n, luna_n, zi_n)
-            except:
+            except Exception:
                 data_nastere = date(2000, 1, 1)
 
             try:
                 Pacient.objects.create(
-                    cnp=cnp,
-                    nume=nume,
-                    prenume=prenume,
-                    data_nastere=data_nastere,
-                    sex=sex,
-                    telefon=col(row, 'Telefon'),
-                    email=col(row, 'Email'),
-                    judet=col(row, 'Judet'),
-                    localitate=col(row, 'Localitate'),
-                    strada=col(row, 'Strada'),
-                    numar_strada=col(row, 'Nr.'),
-                    grup_sangvin=grup,
-                    alergii=col(row, 'Alergii'),
-                    status=status,
-                    medic=medic,
+                    cnp=cnp, nume=nume, prenume=prenume,
+                    data_nastere=data_nastere, sex=sex,
+                    telefon=col(row, 'Telefon'), email=col(row, 'Email'),
+                    judet=col(row, 'Judet'), localitate=col(row, 'Localitate'),
+                    strada=col(row, 'Strada'), numar_strada=col(row, 'Nr.'),
+                    grup_sangvin=grup, alergii=col(row, 'Alergii'),
+                    status=status, medic=medic,
                 )
                 importati += 1
             except Exception as e:
                 erori.append(f'Rândul {i} (CNP {cnp}): {str(e)}')
 
-        return Response({
-            'importati': importati,
-            'sarite': sarite,
-            'erori': erori,
-        })
+        log_actiune(request, 'import_pacienti', f'{importati} pacienți importați')
+
+        return Response({'importati': importati, 'sarite': sarite, 'erori': erori})
 
     except Exception as e:
-        return Response({'eroare': f'Eroare la citirea fișierului: {str(e)}'}, status=400)       
+        return Response({'eroare': f'Eroare la citirea fișierului: {str(e)}'}, status=400)
+
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -1145,18 +1162,14 @@ def documente_pacient(request, pacient_id):
             )
             url = f"{os.environ['R2_PUBLIC_URL']}/{key}"
             doc = DocumentPacient.objects.create(
-                pacient=pacient,
-                nume=nume,
-                fisier_url=url,
-                fisier_key=key,
-                marime=fisier.size,
-                incarcat_de=request.user,
+                pacient=pacient, nume=nume,
+                fisier_url=url, fisier_key=key,
+                marime=fisier.size, incarcat_de=request.user,
             )
+            log_actiune(request, 'upload_document', f'{doc.nume} — pacient ID {pacient_id}')
             return Response({
-                'id': doc.id,
-                'nume': doc.nume,
-                'fisier_url': doc.fisier_url,
-                'marime': doc.marime,
+                'id': doc.id, 'nume': doc.nume,
+                'fisier_url': doc.fisier_url, 'marime': doc.marime,
                 'incarcat_la': doc.incarcat_la,
             }, status=201)
         except Exception as e:
@@ -1182,5 +1195,25 @@ def sterge_document(request, doc_id):
         s3.delete_object(Bucket=os.environ['R2_BUCKET_NAME'], Key=doc.fisier_key)
     except Exception:
         pass
+    log_actiune(request, 'stergere_document', f'Document ID {doc_id}')
     doc.delete()
-    return Response(status=204)          
+    return Response(status=204)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def loguri_activitate(request):
+    from .models import LogActivitate
+    if request.user.rol != 'superadmin':
+        return Response({'detail': 'Acces interzis.'}, status=403)
+    loguri = LogActivitate.objects.select_related('user').all()[:500]
+    data = [{
+        'id': l.id,
+        'user': l.user.get_full_name() if l.user else '—',
+        'username': l.user.username if l.user else '—',
+        'actiune': l.actiune,
+        'descriere': l.descriere,
+        'ip': l.ip,
+        'timestamp': l.timestamp.strftime('%d.%m.%Y %H:%M:%S'),
+    } for l in loguri]
+    return Response(data)

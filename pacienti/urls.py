@@ -12,6 +12,7 @@ from .views import PortalPacientView
 from .views import export_xml_raportare, export_xml_concedii
 from .views import import_pacienti_excel
 from .views import documente_pacient, sterge_document
+from .views import loguri_activitate
 
 router = DefaultRouter()
 router.register('pacienti', PacientViewSet, basename='pacient')
@@ -43,5 +44,6 @@ urlpatterns = router.urls + [
     path('import-pacienti/', import_pacienti_excel),
     path('pacienti/<int:pacient_id>/documente/', documente_pacient),
     path('documente/<int:doc_id>/', sterge_document),
+    path('loguri/', loguri_activitate),
 ]
 
