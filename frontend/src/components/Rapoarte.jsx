@@ -43,6 +43,7 @@ export default function Rapoarte() {
   const [lunaXml, setLunaXml]                   = useState(lunaC)
   const [anXml, setAnXml]                       = useState(anC)
   const [descarcand, setDescarcand]             = useState(false)
+  const [descarcandConcedii, setDescarcandConcedii] = useState(false)
 
   useEffect(() => {
     const luni = getUltimele6Luni()
@@ -76,21 +77,30 @@ export default function Rapoarte() {
     fetchDate()
   }, [])
 
-  const descarcaXml = async () => {
-    setDescarcand(true)
+  const descarcaXml = async (tip) => {
+    const esteConcedii = tip === 'concedii'
+    if (esteConcedii) setDescarcandConcedii(true)
+    else setDescarcand(true)
     try {
       const token = localStorage.getItem('access')
       const apiBase = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
-      const url = `${apiBase}/export-xml/?luna=${lunaXml}&an=${anXml}`
+      const endpoint = esteConcedii ? 'export-xml-concedii' : 'export-xml'
+      const url = `${apiBase}/${endpoint}/?luna=${lunaXml}&an=${anXml}`
       const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } })
       if (!res.ok) { alert('Eroare la generarea XML.'); return }
       const blob = await res.blob()
       const link = document.createElement('a')
       link.href = URL.createObjectURL(blob)
-      link.download = `raportare_MF_${anXml}_${String(lunaXml).padStart(2,'0')}.xml`
+      const luna2 = String(lunaXml).padStart(2, '0')
+      link.download = esteConcedii
+        ? `concedii_MF_${anXml}_${luna2}.xml`
+        : `raportare_MF_${anXml}_${luna2}.xml`
       link.click()
-    } catch (err) { alert('Eroare la descărcarea XML.') }
-    finally { setDescarcand(false) }
+    } catch { alert('Eroare la descărcarea XML.') }
+    finally {
+      if (esteConcedii) setDescarcandConcedii(false)
+      else setDescarcand(false)
+    }
   }
 
   if (loading) return <div className={s.loading}>Se încarcă graficele...</div>
@@ -113,13 +123,17 @@ export default function Rapoarte() {
             <input type="number" value={anXml} onChange={e => setAnXml(parseInt(e.target.value))} min="2020" max="2099" className={s.xmlInputNr} />
           </div>
           <div className={s.xmlBtnWrap}>
-            <button onClick={descarcaXml} disabled={descarcand} className={s.btnDescarca}>
-              {descarcand ? 'Se generează...' : '⬇ Descarcă XML'}
+            <button onClick={() => descarcaXml('anexa006')} disabled={descarcand} className={s.btnDescarca}>
+              {descarcand ? 'Se generează...' : '⬇ Anexa 006 (înscriși)'}
+            </button>
+            <button onClick={() => descarcaXml('concedii')} disabled={descarcandConcedii} className={s.btnDescarcaSecundar}>
+              {descarcandConcedii ? 'Se generează...' : '⬇ Anexa 010 (concedii)'}
             </button>
           </div>
         </div>
         <div className={s.xmlNote}>
-          Generează fișierul XML conform Anexei 006 CNAS (lista înscriși + concedii medicale din luna selectată).
+          <strong>Anexa 006</strong> — lista înscriși + concedii (raportare generală) ·
+          <strong> Anexa 010</strong> — export dedicat concedii medicale din luna selectată
         </div>
       </div>
 

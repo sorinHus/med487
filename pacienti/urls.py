@@ -39,6 +39,7 @@ urlpatterns = router.urls + [
     path('portal-pacient/', PortalPacientView.as_view()),
     path('reset-parola/', ResetParolaView.as_view()),
     path('export-xml/', export_xml_raportare),
+    path('export-xml-concedii/', views.export_xml_concedii),
     path('import-pacienti/', import_pacienti_excel),
     path('pacienti/<int:pacient_id>/documente/', documente_pacient),
     path('documente/<int:doc_id>/', sterge_document),
