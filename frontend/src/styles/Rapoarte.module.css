@@ -68,21 +68,46 @@
   width: 90px;
 }
 .xmlBtnWrap {
-  align-self: flex-end;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
 }
+
 .btnDescarca {
-  padding: 8px 20px;
+  padding: 9px 16px;
   font-size: 13px;
   cursor: pointer;
   background: var(--accent);
-  color: #fff;
+  color: white;
   border: none;
   border-radius: 8px;
-  transition: opacity 0.15s;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.15s;
 }
 .btnDescarca:disabled {
   opacity: 0.6;
-  cursor: default;
+  cursor: not-allowed;
+}
+
+.btnDescarcaSecundar {
+  padding: 9px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  background: transparent;
+  color: #a78bfa;
+  border: 1px solid #a78bfa;
+  border-radius: 8px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.btnDescarcaSecundar:hover:not(:disabled) {
+  background: rgba(167,139,250,0.1);
+}
+.btnDescarcaSecundar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 .xmlNote {
   font-size: 12px;
