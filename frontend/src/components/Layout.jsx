@@ -46,7 +46,9 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
 
         {/* Logo */}
         <div style={{ padding: '16px', borderBottom: '1px solid var(--border)' }}>
-          <img src="/logo.png" alt="MED487" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          <a href="/" style={{ display: 'block' }}>
+            <img src="/logo.png" alt="MED487" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          </a>
         </div>
 
         {/* Nav */}
