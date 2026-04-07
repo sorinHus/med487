@@ -16,6 +16,25 @@ const TOATE_MODULELE = [
 const ROL_LABELS = { medic: 'Medic', asistent: 'Asistent', superadmin: 'Superadmin', pacient: 'Pacient' }
 const emptyForm = { username: '', first_name: '', last_name: '', email: '', rol: 'medic', password: '', telefon: '', parafa: '', cod_medic: '' }
 
+const ACTIUNE_LABELS = {
+  login: 'Login', logout: 'Logout',
+  creare_pacient: 'Creare pacient', modificare_pacient: 'Modificare pacient', stergere_pacient: 'Ștergere pacient',
+  creare_consultatie: 'Creare consultație', creare_reteta: 'Creare rețetă',
+  creare_trimitere: 'Creare trimitere', creare_concediu: 'Creare concediu',
+  aprobare_cerere: 'Aprobare cerere', respingere_cerere: 'Respingere cerere',
+  export_xml: 'Export XML', upload_document: 'Upload document', stergere_document: 'Ștergere document',
+  import_pacienti: 'Import pacienți', creare_user: 'Creare utilizator', stergere_user: 'Ștergere utilizator',
+}
+
+const ACTIUNE_COLOR = {
+  creare_pacient: '#34d399', modificare_pacient: '#60a5fa', stergere_pacient: '#f87171',
+  creare_consultatie: '#34d399', creare_reteta: '#34d399', creare_trimitere: '#34d399', creare_concediu: '#34d399',
+  aprobare_cerere: '#34d399', respingere_cerere: '#f87171',
+  export_xml: '#fbbf24', upload_document: '#a78bfa', stergere_document: '#f87171',
+  import_pacienti: '#fbbf24', creare_user: '#34d399', stergere_user: '#f87171',
+  login: '#60a5fa', logout: '#9ca3af',
+}
+
 function badgeClass(rol) {
   if (rol === 'superadmin') return s.badgeSuperadmin
   if (rol === 'medic')      return s.badgeMedic
@@ -37,6 +56,10 @@ export default function SuperadminPanel({ onLogout }) {
   const [setari, setSetari]         = useState(null)
   const [savingSetari, setSavingSetari] = useState(false)
   const [setariSaved, setSetariSaved]   = useState(false)
+  const [loguri, setLoguri]         = useState([])
+  const [loadingLoguri, setLoadingLoguri] = useState(false)
+  const [filtruActiune, setFiltruActiune] = useState('')
+  const [filtruUser, setFiltruUser]       = useState('')
 
   const fetchUseri = () => {
     api.get('/useri/').then(res => { setUseri(res.data.results || res.data); setLoading(false) })
@@ -44,10 +67,15 @@ export default function SuperadminPanel({ onLogout }) {
   const fetchModule = (userId) => {
     api.get(`/module/${userId}/`).then(res => setModule(prev => ({ ...prev, [userId]: res.data.active })))
   }
+  const fetchLoguri = () => {
+    setLoadingLoguri(true)
+    api.get('/loguri/').then(res => setLoguri(res.data)).catch(() => {}).finally(() => setLoadingLoguri(false))
+  }
 
   useEffect(() => { fetchUseri() }, [])
   useEffect(() => { if (tab === 'setari' && !setari) api.get('/configuratie/1/').then(res => setSetari(res.data)) }, [tab])
   useEffect(() => { if (tab === 'module') useri.filter(u => u.rol === 'medic' || u.rol === 'asistent').forEach(u => fetchModule(u.id)) }, [tab, useri])
+  useEffect(() => { if (tab === 'loguri') fetchLoguri() }, [tab])
 
   const toggleModul = async (userId, modKey) => {
     const current = module[userId] || []
@@ -86,10 +114,8 @@ export default function SuperadminPanel({ onLogout }) {
 
   const handleDelete = async (u) => {
     if (!window.confirm(`Ești sigur că vrei să ștergi contul lui ${u.first_name} ${u.last_name}? Acțiunea este ireversibilă.`)) return
-    try {
-      await api.delete(`/useri/${u.id}/`)
-      fetchUseri()
-    } catch { alert('Eroare la ștergere.') }
+    try { await api.delete(`/useri/${u.id}/`); fetchUseri() }
+    catch { alert('Eroare la ștergere.') }
   }
 
   const f = (field, val) => setForm(prev => ({ ...prev, [field]: val }))
@@ -103,6 +129,12 @@ export default function SuperadminPanel({ onLogout }) {
     } catch (err) { console.error('Eroare salvare setari:', err.response?.data || err.message); alert('Eroare la salvare.') }
     finally { setSavingSetari(false) }
   }
+
+  const loguriAfisate = loguri.filter(l => {
+    if (filtruActiune && l.actiune !== filtruActiune) return false
+    if (filtruUser && !l.username.toLowerCase().includes(filtruUser.toLowerCase()) && !l.user.toLowerCase().includes(filtruUser.toLowerCase())) return false
+    return true
+  })
 
   return (
     <div className={s.root}>
@@ -119,6 +151,7 @@ export default function SuperadminPanel({ onLogout }) {
           <button className={`${s.tab} ${tab === 'useri' ? s.tabActive : ''}`} onClick={() => setTab('useri')}>Utilizatori</button>
           <button className={`${s.tab} ${tab === 'module' ? s.tabActive : ''}`} onClick={() => setTab('module')}>Module</button>
           <button className={`${s.tab} ${tab === 'setari' ? s.tabActive : ''}`} onClick={() => setTab('setari')}>Setări globale</button>
+          <button className={`${s.tab} ${tab === 'loguri' ? s.tabActive : ''}`} onClick={() => setTab('loguri')}>Loguri activitate</button>
         </div>
 
         {/* ── Tab: Utilizatori ── */}
@@ -203,17 +236,11 @@ export default function SuperadminPanel({ onLogout }) {
                     return (
                       <div key={zi} className={s.orarRow}>
                         <div className={s.orarRowHeader}>
-                          <div
-                            onClick={toggleActiv}
-                            className={s.toggleTrack}
-                            style={{ background: ziConfig.activ ? 'var(--accent)' : 'var(--border)' }}
-                          >
+                          <div onClick={toggleActiv} className={s.toggleTrack} style={{ background: ziConfig.activ ? 'var(--accent)' : 'var(--border)' }}>
                             <div className={s.toggleThumb} style={{ left: ziConfig.activ ? '18px' : '2px' }} />
                           </div>
                           <span className={s.orarZiLabel} style={{ color: ziConfig.activ ? 'var(--text-primary)' : 'var(--text-dim)' }}>{zi}</span>
-                          {ziConfig.activ && (
-                            <button onClick={adaugaInterval} className={s.btnInterval}>+ interval</button>
-                          )}
+                          {ziConfig.activ && <button onClick={adaugaInterval} className={s.btnInterval}>+ interval</button>}
                         </div>
                         {ziConfig.activ && (
                           <div className={s.orarIntervale}>
@@ -238,11 +265,7 @@ export default function SuperadminPanel({ onLogout }) {
                   <input className={s.input} value={setari.email_contact || ''} onChange={e => setSetari(p => ({ ...p, email_contact: e.target.value }))} />
                   <label className={s.label}>Mod mentenanță</label>
                   <div className={s.mentenantaRow}>
-                    <div
-                      onClick={() => setSetari(p => ({ ...p, mod_mentenanta: !p.mod_mentenanta }))}
-                      className={s.toggleTrackLarge}
-                      style={{ background: setari.mod_mentenanta ? '#ef4444' : 'var(--border)' }}
-                    >
+                    <div onClick={() => setSetari(p => ({ ...p, mod_mentenanta: !p.mod_mentenanta }))} className={s.toggleTrackLarge} style={{ background: setari.mod_mentenanta ? '#ef4444' : 'var(--border)' }}>
                       <div className={s.toggleThumbLarge} style={{ left: setari.mod_mentenanta ? '22px' : '3px' }} />
                     </div>
                     <span className={s.mentenantaLabel} style={{ color: setari.mod_mentenanta ? '#f87171' : 'var(--text-dim)' }}>
@@ -265,9 +288,7 @@ export default function SuperadminPanel({ onLogout }) {
               <div className={s.moduleCardHeader}>
                 <div>
                   <div className={s.moduleCardName}>{u.first_name} {u.last_name}</div>
-                  <div className={s.moduleCardSub}>
-                    {u.username} · <span className={`${s.badge} ${badgeClass(u.rol)}`}>{ROL_LABELS[u.rol]}</span>
-                  </div>
+                  <div className={s.moduleCardSub}>{u.username} · <span className={`${s.badge} ${badgeClass(u.rol)}`}>{ROL_LABELS[u.rol]}</span></div>
                 </div>
                 {savingModule[u.id] && <span className={s.savingText}>Se salvează...</span>}
               </div>
@@ -284,6 +305,72 @@ export default function SuperadminPanel({ onLogout }) {
               </div>
             </div>
           ))}
+        </>}
+
+        {/* ── Tab: Loguri ── */}
+        {tab === 'loguri' && <>
+          <div className={s.topBar}>
+            <div className={s.pageTitle}>Loguri activitate</div>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <input
+                value={filtruUser}
+                onChange={e => setFiltruUser(e.target.value)}
+                placeholder="Caută utilizator..."
+                className={s.input}
+                style={{ marginBottom: 0, width: '180px' }}
+              />
+              <select value={filtruActiune} onChange={e => setFiltruActiune(e.target.value)} className={s.select} style={{ marginBottom: 0 }}>
+                <option value="">Toate acțiunile</option>
+                {Object.entries(ACTIUNE_LABELS).map(([val, lbl]) => (
+                  <option key={val} value={val}>{lbl}</option>
+                ))}
+              </select>
+              <button onClick={fetchLoguri} className={s.btnAdd}>↻ Refresh</button>
+            </div>
+          </div>
+          {loadingLoguri ? <div className={s.loading}>Se încarcă...</div> : (
+            <>
+              <div style={{ fontSize: '12px', color: 'var(--text-dim)', marginBottom: '10px' }}>
+                {loguriAfisate.length} înregistrări{filtruActiune || filtruUser ? ' (filtrat)' : ''}
+              </div>
+              <table className={s.table}>
+                <thead>
+                  <tr>
+                    <th className={s.th}>Data/Ora</th>
+                    <th className={s.th}>Utilizator</th>
+                    <th className={s.th}>Acțiune</th>
+                    <th className={s.th}>Detalii</th>
+                    <th className={s.th}>IP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loguriAfisate.length === 0 && (
+                    <tr><td colSpan={5} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>Niciun log găsit.</td></tr>
+                  )}
+                  {loguriAfisate.map(l => (
+                    <tr key={l.id}>
+                      <td className={s.tdMuted} style={{ whiteSpace: 'nowrap' }}>{l.timestamp}</td>
+                      <td className={s.td}>
+                        <div style={{ fontWeight: '500', fontSize: '13px' }}>{l.user}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--text-dim)' }}>{l.username}</div>
+                      </td>
+                      <td className={s.td}>
+                        <span style={{
+                          padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '600',
+                          background: `${ACTIUNE_COLOR[l.actiune] || '#9ca3af'}20`,
+                          color: ACTIUNE_COLOR[l.actiune] || '#9ca3af',
+                        }}>
+                          {ACTIUNE_LABELS[l.actiune] || l.actiune}
+                        </span>
+                      </td>
+                      <td className={s.tdMuted} style={{ fontSize: '12px', maxWidth: '240px' }}>{l.descriere || '—'}</td>
+                      <td className={s.tdMuted} style={{ fontSize: '11px', fontFamily: 'monospace' }}>{l.ip || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
         </>}
       </div>
 
