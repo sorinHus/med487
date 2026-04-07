@@ -1,0 +1,711 @@
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.btnBack {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 0;
+  line-height: 1;
+}
+.headerNume {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.headerSpacer {
+  flex: 1;
+}
+.btnEdit {
+  padding: 7px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+}
+.btnEditActive {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* ── Edit form ── */
+.editCard {
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.editTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-light);
+  margin-bottom: 16px;
+}
+.editAddressLabel {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.editAddressSection {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+/* ── Profile card ── */
+.profileTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.profileNume {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.profileId {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.fieldLabel {
+  font-size: 16px;
+  color: var(--text-dim);
+  margin-bottom: 3px;
+}
+.fieldValue {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+.fieldValueWarning {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: #fbbf24;
+}
+.fieldValueDim {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: var(--text-dim);
+}
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.statusSelect {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  cursor: pointer;
+  outline: none;
+}
+.statusSaving {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* ── Contact card ── */
+.contactTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+/* ── Section header ── */
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.btnNou {
+  padding: 7px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+}
+.btnNouToggle {
+  padding: 7px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.btnNouLabel {
+  padding: 7px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+}
+
+/* ── List rows ── */
+.listRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.listRowNume {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--accent-light);
+  margin-right: 10px;
+}
+.listRowDate {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.listRowDiag {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-left: 10px;
+}
+.badgeGratuit {
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(52,211,153,0.15);
+  color: #34d399;
+}
+.badgePlata {
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(107,114,128,0.15);
+  color: var(--text-muted);
+}
+.badgeSpecialist {
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(58,123,213,0.15);
+  color: var(--accent-light);
+}
+.badgeUrgent {
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(248,113,113,0.15);
+  color: #f87171;
+}
+.badgeConcediu {
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(251,191,36,0.15);
+  color: #fbbf24;
+}
+.btnPrint {
+  padding: 5px 12px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.printBtns {
+  display: flex;
+  gap: 6px;
+}
+.loadingText {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+.emptyText {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+/* ── Documente ── */
+.docRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.docLink {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--accent-light);
+  text-decoration: none;
+  margin-right: 10px;
+}
+.docMeta {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.btnStergeDoc {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* ── Consultatii ── */
+.consultatieRow {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+.consultatieRowHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+.consultatieData {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--accent-light);
+}
+.consultatieRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.consultatieMedic {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.consultatieBtns {
+  display: flex;
+  gap: 6px;
+}
+.btnReteta {
+  padding: 3px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  background: rgba(58,123,213,0.1);
+  color: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+}
+.btnTrimitere {
+  padding: 3px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  background: rgba(52,211,153,0.1);
+  color: #34d399;
+  border: 1px solid #34d399;
+  border-radius: 6px;
+}
+.btnConcediu {
+  padding: 3px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  background: rgba(251,191,36,0.1);
+  color: #fbbf24;
+  border: 1px solid #fbbf24;
+  border-radius: 6px;
+}
+.consultatieLine {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.consultatieDimLabel {
+  color: var(--text-dim);
+}
+.consultatieForm {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  margin-bottom: 20px;
+}
+
+/* ── Form fields (shared by modals + inline) ── */
+.label {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+.input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  outline: none;
+}
+.textarea {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  outline: none;
+  resize: vertical;
+}
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+.grid3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0 16px;
+}
+.grid4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0 12px;
+}
+.grid21 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0 12px;
+}
+.grid211 {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 0 12px;
+}
+.grid12 {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0 16px;
+}
+.errMsg {
+  color: #f87171;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.errMsgSmall {
+  color: #f87171;
+  font-size: 12px;
+  margin-top: -8px;
+  margin-bottom: 10px;
+}
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+.btnCancel {
+  padding: 8px 18px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+}
+.btnSave {
+  padding: 8px 18px;
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+}
+.btnSave:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Modal ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+}
+.modalSm  { max-width: 620px; }
+.modalMd  { max-width: 660px; }
+.modalLg  { max-width: 680px; }
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 1;
+}
+.modalTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+.btnClose {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  cursor: pointer;
+}
+.modalBody {
+  padding: 20px;
+}
+
+/* ── Sectiune label in modal ── */
+.sectLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+  margin-top: 4px;
+}
+
+/* ── Medicamente in reteta ── */
+.medicamenteSep {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+.medicamenteHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.medicamenteLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.btnAdaugaMed {
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  background: rgba(58,123,213,0.15);
+  color: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: 7px;
+}
+.medicamentCard {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.medicamentCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.medicamentCardLabel {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+.btnStergeMed {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* ── ICD10 search ── */
+.icd10Wrap {
+  margin-bottom: 12px;
+}
+.icd10Tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.icd10TagPrincipal {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(58,123,213,0.2);
+  color: var(--accent-light);
+  border: 1px solid var(--accent);
+}
+.icd10Tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(107,114,128,0.15);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.icd10PrincipalLabel {
+  font-size: 10px;
+  opacity: 0.7;
+}
+.btnStergeTag {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.7;
+}
+.icd10InputWrap {
+  position: relative;
+}
+.icd10Dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0; right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 4px;
+}
+.icd10Loading {
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.icd10Empty {
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.icd10Btn {
+  width: 100%;
+  text-align: left;
+  padding: 9px 14px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 13px;
+  transition: background 0.1s;
+}
+.icd10Btn:hover {
+  background: var(--bg-hover);
+}
+.icd10Cod {
+  color: var(--accent-light);
+  font-weight: 600;
+  margin-right: 8px;
+}
