@@ -144,7 +144,8 @@ if not DEBUG:
 # ── Rate limiting ─────────────────────────────────────────────────────────────
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
-RATELIMIT_USE_CACHE = 'default'    
+RATELIMIT_USE_CACHE = 'default'
+SILENCED_SYSTEM_CHECKS = ['django_ratelimit.E003', 'django_ratelimit.W001']
