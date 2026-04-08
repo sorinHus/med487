@@ -678,18 +678,18 @@
   left: 0;
   right: 0;
   z-index: 9999;
-  background: var(--bg-card, #1e2330);
-  border-top: 1px solid var(--border);
+  background: #1a2744;
+  border-top: 2px solid #3a7bd5;
   padding: 14px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
 }
 .cookieText {
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: #e2e8f0;
   margin: 0;
   line-height: 1.5;
 }
