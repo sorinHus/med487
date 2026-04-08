@@ -210,7 +210,7 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
                     <div className={s.ziRapidaNume}>{ZILE[d.getDay()].slice(0, 3)}</div>
                     <div className={s.ziRapidaData}>{d.getDate()} {LUNI[d.getMonth()]}</div>
                     {isAzi && <div className={s.ziRapidaAzi}>azi</div>}
-                    {eSarbatoare && <div className={s.ziRapidaSarb}>🎉</div>}
+                    {eSarbatoare && <div className={s.ziRapidaSarb}>{sarbatori[ds].slice(0, 6)}</div>}
                   </button>
                 )
               })}
