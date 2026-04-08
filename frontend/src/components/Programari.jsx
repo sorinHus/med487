@@ -32,6 +32,7 @@ function formatOra(dataOra) {
 }
 
 const ZILE_RO = ['Luni', 'Marti', 'Miercuri', 'Joi', 'Vineri', 'Sambata', 'Duminica']
+const ZILE_SCURT = ['Lu', 'Ma', 'Mi', 'Jo', 'Vi', 'Sa', 'Du']
 const LUNI_RO = ['ianuarie','februarie','martie','aprilie','mai','iunie','iulie','august','septembrie','octombrie','noiembrie','decembrie']
 
 const STATUS_STYLE = {
@@ -51,45 +52,233 @@ function Badge({ status }) {
   )
 }
 
-function ModalProgramare({ onClose, onSaved }) {
+// ── Calendar lunar mini ──────────────────────────────────────────────
+function CalendarLunar({ selectedDate, onSelectDate, programariExistente }) {
+  const today = new Date(); today.setHours(0,0,0,0)
+  const initDate = selectedDate ? new Date(selectedDate + 'T00:00:00') : new Date()
+  const [viewYear, setViewYear] = useState(initDate.getFullYear())
+  const [viewMonth, setViewMonth] = useState(initDate.getMonth())
+
+  const prevMonth = () => {
+    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1) }
+    else setViewMonth(m => m - 1)
+  }
+  const nextMonth = () => {
+    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1) }
+    else setViewMonth(m => m + 1)
+  }
+
+  // Zilele lunii curente
+  const firstDay = new Date(viewYear, viewMonth, 1)
+  const lastDay = new Date(viewYear, viewMonth + 1, 0)
+  // offset: luni=0 ... duminica=6
+  const startOffset = (firstDay.getDay() + 6) % 7
+  const totalCells = startOffset + lastDay.getDate()
+  const rows = Math.ceil(totalCells / 7)
+
+  const cells = []
+  for (let i = 0; i < rows * 7; i++) {
+    const dayNum = i - startOffset + 1
+    if (dayNum < 1 || dayNum > lastDay.getDate()) {
+      cells.push(null)
+    } else {
+      cells.push(dayNum)
+    }
+  }
+
+  // zilele care au deja programari (din saptamana curenta incarcata)
+  const zileOcupate = new Set(
+    (programariExistente || []).map(p => p.data_ora.slice(0, 10))
+  )
+
+  return (
+    <div className={s.calLunar}>
+      <div className={s.calLunar__header}>
+        <button type="button" className={s.calLunar__navBtn} onClick={prevMonth}>‹</button>
+        <span className={s.calLunar__title}>{LUNI_RO[viewMonth]} {viewYear}</span>
+        <button type="button" className={s.calLunar__navBtn} onClick={nextMonth}>›</button>
+      </div>
+      <div className={s.calLunar__grid}>
+        {ZILE_SCURT.map(z => (
+          <div key={z} className={s.calLunar__ziHeader}>{z}</div>
+        ))}
+        {cells.map((dayNum, idx) => {
+          if (!dayNum) return <div key={idx} className={s.calLunar__cellEmpty} />
+          const dateStr = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`
+          const cellDate = new Date(viewYear, viewMonth, dayNum)
+          const isPast = cellDate < today
+          const isSelected = dateStr === selectedDate
+          const isToday = formatDate(today) === dateStr
+          const areOcupata = zileOcupate.has(dateStr)
+
+          return (
+            <button
+              type="button"
+              key={idx}
+              disabled={isPast}
+              onClick={() => !isPast && onSelectDate(dateStr)}
+              className={[
+                s.calLunar__cell,
+                isPast ? s['calLunar__cell--past'] : '',
+                isSelected ? s['calLunar__cell--selected'] : '',
+                isToday && !isSelected ? s['calLunar__cell--today'] : '',
+              ].join(' ')}
+              title={dateStr}
+            >
+              {dayNum}
+              {areOcupata && !isPast && (
+                <span className={s.calLunar__dot} />
+              )}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// ── Grid sloturi ─────────────────────────────────────────────────────
+function GridSloturi({ data, oraSelectata, onSelectOra }) {
+  const [sloturi, setSloturi] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (!data) return
+    setLoading(true)
+    setSloturi(null)
+    setError(null)
+    api.get('/programari/slots_libere/', { params: { data, medic: 1 } })
+      .then(res => { setSloturi(res.data); setLoading(false) })
+      .catch(() => { setError('Nu s-au putut incarca sloturile.'); setLoading(false) })
+  }, [data])
+
+  if (!data) return null
+  if (loading) return <div className={s.sloturi__loading}>Se incarca sloturi...</div>
+  if (error) return <div className={s.sloturi__error}>{error}</div>
+  if (!sloturi || (!sloturi.libere?.length && !sloturi.ocupate?.length)) {
+    return <div className={s.sloturi__empty}>Nu există sloturi disponibile pentru această zi.</div>
+  }
+
+  const toate = [
+    ...(sloturi.libere || []).map(ora => ({ ora, liber: true })),
+    ...(sloturi.ocupate || []).map(ora => ({ ora, liber: false })),
+  ].sort((a, b) => a.ora.localeCompare(b.ora))
+
+  return (
+    <div className={s.sloturi}>
+      <div className={s.sloturi__label}>Sloturi disponibile</div>
+      <div className={s.sloturi__grid}>
+        {toate.map(({ ora, liber }) => {
+          const selected = oraSelectata === ora
+          return (
+            <button
+              type="button"
+              key={ora}
+              disabled={!liber}
+              onClick={() => liber && onSelectOra(ora)}
+              className={[
+                s.slot,
+                liber ? s['slot--liber'] : s['slot--ocupat'],
+                selected ? s['slot--selected'] : '',
+              ].join(' ')}
+              title={liber ? 'Liber — click pentru a selecta' : 'Ocupat'}
+            >
+              {ora}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// ── Modal adăugare programare ─────────────────────────────────────────
+function ModalProgramare({ onClose, onSaved, programariExistente }) {
+  const todayStr = formatDate(new Date())
+  const [selectedDate, setSelectedDate] = useState(todayStr)
+  const [selectedOra, setSelectedOra] = useState(null)
   const [form, setForm] = useState({
-    data_ora: new Date().toISOString().slice(0, 16),
     durata_min: 20, motiv: '', nume_pacient: '', telefon_pacient: '',
     email_pacient: '', medic: 1, status: 'programat',
   })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
+  const handleSelectOra = (ora) => {
+    setSelectedOra(ora)
+  }
+
   const handleSubmit = async (e) => {
-    e.preventDefault(); setSaving(true); setError(null)
-    try { await api.post('/programari/', form); setSaving(false); onSaved() }
-    // eslint-disable-next-line no-unused-vars
-    catch (err) { setError('Eroare la salvare. Verificati datele.'); setSaving(false) }
+    e.preventDefault()
+    if (!selectedDate || !selectedOra) {
+      setError('Selectati o zi si un slot orar.'); return
+    }
+    setSaving(true); setError(null)
+    const data_ora = `${selectedDate}T${selectedOra}`
+    try {
+      await api.post('/programari/', { ...form, data_ora })
+      setSaving(false); onSaved()
+    } catch {
+      setError('Eroare la salvare. Verificati datele.'); setSaving(false)
+    }
   }
 
   return (
     <div className={s.modalOverlay}>
-      <div className={s.modalBox}>
+      <div className={s.modalBox} style={{ maxWidth: 560 }}>
         <div className={s.modalHeader}>
           <span className={s.modalTitle}>Programare noua</span>
           <button onClick={onClose} className={s.modalClose}>×</button>
         </div>
         {error && <div className={s.modalError}>{error}</div>}
         <form onSubmit={handleSubmit}>
-          <div className={s.formGrid2}>
-            <div>
-              <label className={s.formLabel}>Data si ora *</label>
-              <input type="datetime-local" value={form.data_ora} onChange={e => setForm(p => ({ ...p, data_ora: e.target.value }))} required className={s.formInput} />
+
+          {/* Calendar + sloturi */}
+          <label className={s.formLabel}>Selectati ziua *</label>
+          <CalendarLunar
+            selectedDate={selectedDate}
+            onSelectDate={(d) => { setSelectedDate(d); setSelectedOra(null) }}
+            programariExistente={programariExistente}
+          />
+
+          {selectedDate && (
+            <div className={s.selectedDateLabel}>
+              Zi selectată: <strong>{selectedDate}</strong>
             </div>
+          )}
+
+          <GridSloturi
+            data={selectedDate}
+            oraSelectata={selectedOra}
+            onSelectOra={handleSelectOra}
+          />
+
+          {selectedOra && (
+            <div className={s.selectedSlotLabel}>
+              Ora selectată: <strong>{selectedOra}</strong>
+            </div>
+          )}
+
+          <div className={s.formGrid2} style={{ marginTop: 16 }}>
             <div>
               <label className={s.formLabel}>Durata (min)</label>
               <select value={form.durata_min} onChange={e => setForm(p => ({ ...p, durata_min: parseInt(e.target.value) }))} className={s.formInput}>
                 {[10,15,20,30,45,60].map(d => <option key={d} value={d}>{d} min</option>)}
               </select>
             </div>
+            <div>
+              <label className={s.formLabel}>Status</label>
+              <select value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value }))} className={s.formInput}>
+                <option value="programat">Programat</option>
+                <option value="confirmat">Confirmat</option>
+              </select>
+            </div>
           </div>
+
           <label className={s.formLabel}>Nume pacient *</label>
           <input value={form.nume_pacient} onChange={e => setForm(p => ({ ...p, nume_pacient: e.target.value }))} required placeholder="Nume si prenume" className={s.formInput} />
+
           <div className={s.formGrid2}>
             <div>
               <label className={s.formLabel}>Telefon</label>
@@ -100,16 +289,13 @@ function ModalProgramare({ onClose, onSaved }) {
               <input type="email" value={form.email_pacient} onChange={e => setForm(p => ({ ...p, email_pacient: e.target.value }))} className={s.formInput} />
             </div>
           </div>
+
           <label className={s.formLabel}>Motiv consultatie</label>
           <input value={form.motiv} onChange={e => setForm(p => ({ ...p, motiv: e.target.value }))} placeholder="ex. Control periodic, Reinnoire reteta..." className={s.formInput} />
-          <label className={s.formLabel}>Status</label>
-          <select value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value }))} className={s.formInput}>
-            <option value="programat">Programat</option>
-            <option value="confirmat">Confirmat</option>
-          </select>
+
           <div className={s.formActions}>
             <button type="button" onClick={onClose} className={s.btnCancel}>Anuleaza</button>
-            <button type="submit" disabled={saving} className={s.btnSave}>
+            <button type="submit" disabled={saving || !selectedOra} className={s.btnSave}>
               {saving ? 'Se salveaza...' : 'Salveaza'}
             </button>
           </div>
@@ -119,6 +305,7 @@ function ModalProgramare({ onClose, onSaved }) {
   )
 }
 
+// ── Rand programare ───────────────────────────────────────────────────
 function RandProgramare({ p, onStatusChange, index }) {
   const nume = p.pacient_nume_complet || p.nume_pacient || '—'
   const ora = formatOra(p.data_ora)
@@ -156,6 +343,7 @@ function RandProgramare({ p, onStatusChange, index }) {
   )
 }
 
+// ── Pagina principala ─────────────────────────────────────────────────
 export default function Programari() {
   const [monday, setMonday] = useState(() => getMondayOf(new Date()))
   const [programari, setProgramari] = useState([])
@@ -235,7 +423,14 @@ export default function Programari() {
         </div>
       )}
 
-      {showModal && <ModalProgramare key={modalKey} onClose={() => setShowModal(false)} onSaved={() => { setShowModal(false); fetchProgramari() }} />}
+      {showModal && (
+        <ModalProgramare
+          key={modalKey}
+          onClose={() => setShowModal(false)}
+          onSaved={() => { setShowModal(false); fetchProgramari() }}
+          programariExistente={programari}
+        />
+      )}
     </div>
   )
 }
