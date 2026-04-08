@@ -172,8 +172,14 @@ function ModalProgramare({ onClose, onSaved, programariExistente }) {
       .then(r => {
         console.log('ZILE LIBERE:', r.data)
         const map = {}
-        if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
-        console.log('MAP:', map)
+        if (Array.isArray(r.data)) r.data.forEach(z => {
+          if (Array.isArray(z.date)) {
+            z.date.forEach(d => {
+              const key = d.date.replace(/\//g, '-')
+              map[key] = z.name
+            })
+          }
+        })
         setSarbatori(map)
       })
       .catch(() => {})
@@ -276,8 +282,15 @@ function ModalEditare({ programare, onClose, onSaved, programariExistente }) {
       .then(r => {
         console.log('ZILE LIBERE:', r.data)
         const map = {}
-        if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
-        console.log('MAP:', map)
+        if (Array.isArray(r.data)) r.data.forEach(z => {
+          if (Array.isArray(z.date)) {
+            z.date.forEach(d => {
+              const key = d.date.replace(/\//g, '-')
+              map[key] = z.name
+            })
+          }
+        })
+        setSarbatori(map)
         setSarbatori(map)
       })
       .catch(() => {})
