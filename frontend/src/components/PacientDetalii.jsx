@@ -555,27 +555,6 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
         ))}
       </div>
 
-      {/* Rețete */}
-      <div className={s.section}>
-        <div className={s.sectionHeader}>
-          <span className={s.sectionTitle}>Rețete ({retete.length})</span>
-          {moduleActive.includes('retete') && <button onClick={() => setShowReteta(true)} className={s.btnNou}>+ Rețetă nouă</button>}
-        </div>
-        {loadingR && <p className={s.loadingText}>Se încarcă...</p>}
-        {!loadingR && retete.length === 0 && <p className={s.emptyText}>Nicio rețetă înregistrată.</p>}
-        {!loadingR && retete.map(r => (
-          <div key={r.id} className={s.listRow}>
-            <div>
-              <span className={s.listRowNume}>{r.numar_reteta}</span>
-              <span className={s.listRowDate}>{r.data_emiterii}</span>
-              {r.diagnostic && <span className={s.listRowDiag}>— {r.diagnostic}</span>}
-              <span className={r.gratuit === 'da' ? s.badgeGratuit : s.badgePlata}>{r.gratuit === 'da' ? 'Gratuit' : 'Cu plată'}</span>
-            </div>
-            <a href={`${API_BASE}/retete/${r.id}/print/`} target="_blank" rel="noreferrer" className={s.btnPrint}>🖨️ Print</a>
-          </div>
-        ))}
-      </div>
-
       {/* Alte fisiere */}
       <div className={s.section}>
         <div className={s.sectionHeader}>
@@ -597,6 +576,28 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
           </div>
         ))}
       </div>
+
+      {/* Rețete */}
+      <div className={s.section}>
+        <div className={s.sectionHeader}>
+          <span className={s.sectionTitle}>Rețete ({retete.length})</span>
+          {moduleActive.includes('retete') && <button onClick={() => setShowReteta(true)} className={s.btnNou}>+ Rețetă nouă</button>}
+        </div>
+        {loadingR && <p className={s.loadingText}>Se încarcă...</p>}
+        {!loadingR && retete.length === 0 && <p className={s.emptyText}>Nicio rețetă înregistrată.</p>}
+        {!loadingR && retete.map(r => (
+          <div key={r.id} className={s.listRow}>
+            <div>
+              <span className={s.listRowNume}>{r.numar_reteta}</span>
+              <span className={s.listRowDate}>{r.data_emiterii}</span>
+              {r.diagnostic && <span className={s.listRowDiag}>— {r.diagnostic}</span>}
+              <span className={r.gratuit === 'da' ? s.badgeGratuit : s.badgePlata}>{r.gratuit === 'da' ? 'Gratuit' : 'Cu plată'}</span>
+            </div>
+            <a href={`${API_BASE}/retete/${r.id}/print/`} target="_blank" rel="noreferrer" className={s.btnPrint}>🖨️ Print</a>
+          </div>
+        ))}
+      </div>
+      
 
       {/* Trimiteri */}
       <div className={s.section}>
