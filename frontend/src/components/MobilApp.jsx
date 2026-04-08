@@ -735,7 +735,10 @@ export default function MobilApp() {
             {user.rol === 'medic' ? ' • Dr.' : ''}
           </div>
         </div>
-        <button className={s.logoutBtn} onClick={handleLogout}>Ieșire</button>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <button className={s.addBtn} onClick={() => setShowModal(true)}>+</button>
+          <button className={s.logoutBtn} onClick={handleLogout}>Ieșire</button>
+        </div>
       </div>
 
       {/* NAVIGARE ZILE */}
@@ -752,15 +755,12 @@ export default function MobilApp() {
         <button className={s.dayNavBtn} onClick={() => changeDay(1)}>›</button>
       </div>
 
-      {/* BADGES + BUTON ADAUGARE */}
-      <div className={s.summaryRow}>
-        <div className={s.summary}>
-          <div className={`${s.badge} ${s.badgeTotal}`}><div className={s.badgeNum}>{total}</div><div className={s.badgeLabel}>Total</div></div>
-          <div className={`${s.badge} ${s.badgeOk}`}><div className={s.badgeNum}>{confirmate}</div><div className={s.badgeLabel}>Confirmate</div></div>
-          <div className={`${s.badge} ${s.badgePending}`}><div className={s.badgeNum}>{pending}</div><div className={s.badgeLabel}>În așteptare</div></div>
-          <div className={`${s.badge} ${s.badgeCancel}`}><div className={s.badgeNum}>{anulate}</div><div className={s.badgeLabel}>Anulate</div></div>
-        </div>
-        <button className={s.addBtn} onClick={() => setShowModal(true)}>+</button>
+      {/* BADGES */}
+      <div className={s.summary}>
+        <div className={`${s.badge} ${s.badgeTotal}`}><div className={s.badgeNum}>{total}</div><div className={s.badgeLabel}>Total</div></div>
+        <div className={`${s.badge} ${s.badgeOk}`}><div className={s.badgeNum}>{confirmate}</div><div className={s.badgeLabel}>Confirmate</div></div>
+        <div className={`${s.badge} ${s.badgePending}`}><div className={s.badgeNum}>{pending}</div><div className={s.badgeLabel}>În așteptare</div></div>
+        <div className={`${s.badge} ${s.badgeCancel}`}><div className={s.badgeNum}>{anulate}</div><div className={s.badgeLabel}>Anulate</div></div>
       </div>
 
       {/* LISTA */}
