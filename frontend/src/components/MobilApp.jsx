@@ -14,18 +14,24 @@ function formatDate(d) {
   return `${d.getDate()} ${LUNI[d.getMonth()]} ${d.getFullYear()}`
 }
 
+function getOra(data_ora) {
+  if (!data_ora) return '--:--'
+  const d = new Date(data_ora)
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+}
+
 const STATUS_LABELS = {
-  programata:  'Programată',
-  confirmata:  'Confirmată',
-  anulata:     'Anulată',
-  finalizata:  'Finalizată',
+  programat:  'Programat',
+  confirmat:  'Confirmat',
+  anulat:     'Anulat',
+  finalizat:  'Finalizat',
 }
 
 const STATUS_CLASS = {
-  programata: s.statusProgramata,
-  confirmata: s.statusConfirmata,
-  anulata:    s.statusAnulata,
-  finalizata: s.statusFinalizata,
+  programat: s.statusProgramata,
+  confirmat: s.statusConfirmata,
+  anulat:    s.statusAnulata,
+  finalizat: s.statusFinalizata,
 }
 
 /* ────────────────────────────────────────────
@@ -49,7 +55,6 @@ function LoginScreen({ onLogin }) {
       if (!res.ok) throw new Error()
       const data = await res.json()
 
-      // Verificam ca e medic/asistent
       const meRes = await fetch(`${API}/useri/me/`, {
         headers: { Authorization: `Bearer ${data.access}` }
       })
@@ -109,15 +114,14 @@ function LoginScreen({ onLogin }) {
    MAIN APP
 ──────────────────────────────────────────── */
 export default function MobilApp() {
-  const [user, setUser]             = useState(() => {
+  const [user, setUser] = useState(() => {
     try { return JSON.parse(localStorage.getItem('mobil_user')) } catch { return null }
   })
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [programari, setProgramari]     = useState([])
   const [loading, setLoading]           = useState(false)
-  const [updating, setUpdating]         = useState(null) // id-ul care se updateaza
+  const [updating, setUpdating]         = useState(null)
 
-  // Inregistrare Service Worker
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(() => {})
@@ -137,8 +141,7 @@ export default function MobilApp() {
       })
       const data = await res.json()
       const list = Array.isArray(data) ? data : data.results || []
-      // Sortam dupa ora
-      list.sort((a, b) => (a.ora || '').localeCompare(b.ora || ''))
+      list.sort((a, b) => (a.data_ora || '').localeCompare(b.data_ora || ''))
       setProgramari(list)
     } catch {
       setProgramari([])
@@ -171,7 +174,6 @@ export default function MobilApp() {
         },
         body: JSON.stringify({ status })
       })
-      // Actualizam local fara re-fetch
       setProgramari(prev => prev.map(p => p.id === id ? { ...p, status } : p))
     } catch {
       alert('Eroare la actualizare. Verifică conexiunea.')
@@ -188,11 +190,10 @@ export default function MobilApp() {
 
   if (!user) return <LoginScreen onLogin={setUser} />
 
-  // Statistici
-  const total      = programari.length
-  const confirmate = programari.filter(p => p.status === 'confirmata').length
-  const pending    = programari.filter(p => p.status === 'programata').length
-  const anulate    = programari.filter(p => p.status === 'anulata').length
+  const total     = programari.length
+  const confirmate = programari.filter(p => p.status === 'confirmat').length
+  const pending    = programari.filter(p => p.status === 'programat').length
+  const anulate    = programari.filter(p => p.status === 'anulat').length
 
   const isToday = toDateStr(selectedDate) === toDateStr(new Date())
 
@@ -219,11 +220,10 @@ export default function MobilApp() {
           </div>
           <div className={s.dayLabelName}>{ZILE[selectedDate.getDay()]}</div>
         </div>
-        {!isToday
-          ? <button className={s.todayBtn} onClick={goToday}>Azi</button>
-          : <button className={s.dayNavBtn} onClick={() => changeDay(1)}>›</button>
-        }
-        {isToday && <button className={s.dayNavBtn} onClick={() => changeDay(1)}>›</button>}
+        <button className={s.dayNavBtn} onClick={() => changeDay(1)}>›</button>
+        {!isToday && (
+          <button className={s.todayBtn} onClick={goToday}>Azi</button>
+        )}
       </div>
 
       {/* BADGES SUMAR */}
@@ -259,44 +259,40 @@ export default function MobilApp() {
           {programari.map(p => (
             <div key={p.id} className={s.card}>
               <div className={s.cardTop}>
-                {/* ORA */}
                 <div className={s.timeBlock}>
-                  <div className={s.timeText}>{p.ora ? p.ora.slice(0, 5) : '--:--'}</div>
+                  <div className={s.timeText}>{getOra(p.data_ora)}</div>
                   <div className={s.timeSub}>ora</div>
                 </div>
-                {/* INFO PACIENT */}
                 <div className={s.cardInfo}>
                   <div className={s.cardName}>
-                    {p.pacient_nume || p.pacient_name || `Pacient #${p.pacient}`}
+                    {p.pacient_nume_complet || p.nume_pacient || `Pacient #${p.pacient}`}
                   </div>
                   {p.motiv && <div className={s.cardMotiv}>{p.motiv}</div>}
                 </div>
-                {/* STATUS BADGE */}
                 <div className={`${s.statusBadge} ${STATUS_CLASS[p.status] || ''}`}>
                   {STATUS_LABELS[p.status] || p.status}
                 </div>
               </div>
 
-              {/* BUTOANE ACTIUNE */}
               <div className={s.actions}>
                 <button
                   className={`${s.actionBtn} ${s.btnConfirma}`}
-                  disabled={p.status === 'confirmata' || p.status === 'finalizata' || p.status === 'anulata' || updating === p.id}
-                  onClick={() => updateStatus(p.id, 'confirmata')}
+                  disabled={['confirmat','finalizat','anulat'].includes(p.status) || updating === p.id}
+                  onClick={() => updateStatus(p.id, 'confirmat')}
                 >
                   ✓ Confirmă
                 </button>
                 <button
                   className={`${s.actionBtn} ${s.btnFinalizeaza}`}
-                  disabled={p.status === 'finalizata' || p.status === 'anulata' || updating === p.id}
-                  onClick={() => updateStatus(p.id, 'finalizata')}
+                  disabled={['finalizat','anulat'].includes(p.status) || updating === p.id}
+                  onClick={() => updateStatus(p.id, 'finalizat')}
                 >
                   ✔ Finalizează
                 </button>
                 <button
                   className={`${s.actionBtn} ${s.btnAnuleaza}`}
-                  disabled={p.status === 'anulata' || p.status === 'finalizata' || updating === p.id}
-                  onClick={() => updateStatus(p.id, 'anulata')}
+                  disabled={['anulat','finalizat'].includes(p.status) || updating === p.id}
+                  onClick={() => updateStatus(p.id, 'anulat')}
                 >
                   ✕ Anulează
                 </button>
