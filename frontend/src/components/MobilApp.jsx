@@ -744,9 +744,12 @@ export default function MobilApp() {
         <div className={s.dayLabel}>
           <div className={s.dayLabelDate}>{isToday ? '📅 Azi, ' : ''}{formatDate(selectedDate)}</div>
           <div className={s.dayLabelName}>{ZILE[selectedDate.getDay()]}</div>
+          {!isToday && (
+            <button className={s.todayBtn} style={{ marginTop: 4, fontSize: 11, padding: '3px 10px' }}
+              onClick={() => setSelectedDate(new Date())}>↩ Azi</button>
+          )}
         </div>
         <button className={s.dayNavBtn} onClick={() => changeDay(1)}>›</button>
-        {!isToday && <button className={s.todayBtn} onClick={() => setSelectedDate(new Date())}>Azi</button>}
       </div>
 
       {/* BADGES + BUTON ADAUGARE */}
