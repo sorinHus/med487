@@ -22,6 +22,22 @@ const STATUS_LABELS = { programat: 'Programat', confirmat: 'Confirmat', anulat: 
 const STATUS_CLASS  = { programat: s.statusProgramata, confirmat: s.statusConfirmata, anulat: s.statusAnulata, finalizat: s.statusFinalizata }
 const ROL_LABEL     = { medic: 'Medic', asistent: 'Asistent', superadmin: 'Superadmin', pacient: 'Pacient' }
 
+function useSarbatori() {
+  const [sarbatori, setSarbatori] = useState({})
+  useEffect(() => {
+    const an = new Date().getFullYear()
+    fetch(`${API}/zile-libere/?year=${an}`)
+      .then(r => r.json())
+      .then(data => {
+        const map = {}
+        if (Array.isArray(data)) data.forEach(z => { map[z.date] = z.name })
+        setSarbatori(map)
+      })
+      .catch(() => {})
+  }, [])
+  return sarbatori
+}
+
 async function apiFetch(path, token, opts = {}) {
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) }
   if (token) headers.Authorization = `Bearer ${token}`
@@ -142,6 +158,7 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
 
   // Zile din luna curenta pentru selectie rapida
   const azi = new Date()
+  const sarbatori = useSarbatori()
   const zileRapide = []
   for (let i = 0; i < 14; i++) {
     const d = new Date(azi)
@@ -171,13 +188,22 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
               {zileRapide.map(d => {
                 const isSelected = toDateStr(d) === toDateStr(data)
                 const isAzi = toDateStr(d) === toDateStr(azi)
+                const ds = toDateStr(d)
+                const ziSapt = d.getDay()
+                const eWeekend = ziSapt === 0 || ziSapt === 6
+                const eSarbatoare = !!sarbatori[ds]
+                const eBlockat = eWeekend || eSarbatoare
+                const tooltipText = eSarbatoare ? sarbatori[ds] : eWeekend ? 'Weekend' : ''
                 return (
-                  <button key={toDateStr(d)}
-                    className={`${s.ziRapida} ${isSelected ? s.ziRapidaActive : ''}`}
-                    onClick={() => setData(new Date(d))}>
+                  <button key={ds}
+                    className={`${s.ziRapida} ${isSelected ? s.ziRapidaActive : ''} ${eBlockat ? s.ziRapidaBlockata : ''}`}
+                    onClick={() => !eBlockat && setData(new Date(d))}
+                    disabled={eBlockat}
+                    title={tooltipText}>
                     <div className={s.ziRapidaNume}>{ZILE[d.getDay()].slice(0, 3)}</div>
                     <div className={s.ziRapidaData}>{d.getDate()} {LUNI[d.getMonth()]}</div>
                     {isAzi && <div className={s.ziRapidaAzi}>azi</div>}
+                    {eSarbatoare && <div className={s.ziRapidaSarb}>🎉</div>}
                   </button>
                 )
               })}
@@ -264,6 +290,7 @@ function ModalEditareMobil({ token, user, programare, onClose, onSaved }) {
   const [err, setErr]         = useState('')
 
   const azi = new Date()
+  const sarbatori = useSarbatori()
   const zileRapide = []
   for (let i = 0; i < 14; i++) {
     const d = new Date(azi); d.setDate(azi.getDate() + i); zileRapide.push(d)

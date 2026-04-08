@@ -482,3 +482,17 @@
   cursor: pointer;
 }
 .btnEdit:hover { background: #1d4ed8; color: #fff; }
+
+.calLunar__cell--sarb {
+  .calLunar__cell {
+  position: relative;
+}
+  color: var(--accent) !important;
+}
+.calLunar__sarbIcon {
+  position: absolute;
+  bottom: 1px;
+  right: 2px;
+  font-size: 8px;
+  line-height: 1;
+}

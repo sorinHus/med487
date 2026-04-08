@@ -48,7 +48,7 @@ function Badge({ status }) {
 }
 
 /* ── Calendar lunar ── */
-function CalendarLunar({ selectedDate, onSelectDate, programariExistente }) {
+function CalendarLunar({ selectedDate, onSelectDate, programariExistente, sarbatori = {} }) {
   const today = new Date(); today.setHours(0,0,0,0)
   const initDate = selectedDate ? new Date(selectedDate + 'T00:00:00') : new Date()
   const [viewYear, setViewYear]   = useState(initDate.getFullYear())
@@ -83,17 +83,23 @@ function CalendarLunar({ selectedDate, onSelectDate, programariExistente }) {
           if (!dayNum) return <div key={idx} className={s.calLunar__cellEmpty} />
           const dateStr  = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`
           const cellDate = new Date(viewYear, viewMonth, dayNum)
-          const isPast   = cellDate < today
-          const isSelected = dateStr === selectedDate
-          const isToday  = formatDate(today) === dateStr
-          const areOcupata = zileOcupate.has(dateStr)
+          const isPast      = cellDate < today
+          const isSelected  = dateStr === selectedDate
+          const isToday     = formatDate(today) === dateStr
+          const areOcupata  = zileOcupate.has(dateStr)
+          const ziSapt      = cellDate.getDay()
+          const eWeekend    = ziSapt === 0 || ziSapt === 6
+          const eSarbatoare = !!sarbatori[dateStr]
+          const eBlockat    = eWeekend || eSarbatoare
+          const tooltipText = eSarbatoare ? sarbatori[dateStr] : eWeekend ? 'Weekend' : dateStr
           return (
-            <button type="button" key={idx} disabled={isPast}
-              onClick={() => !isPast && onSelectDate(dateStr)}
-              className={[s.calLunar__cell, isPast ? s['calLunar__cell--past'] : '', isSelected ? s['calLunar__cell--selected'] : '', isToday && !isSelected ? s['calLunar__cell--today'] : ''].join(' ')}
-              title={dateStr}>
+            <button type="button" key={idx} disabled={isPast || eBlockat}
+              onClick={() => !isPast && !eBlockat && onSelectDate(dateStr)}
+              className={[s.calLunar__cell, isPast || eBlockat ? s['calLunar__cell--past'] : '', isSelected ? s['calLunar__cell--selected'] : '', isToday && !isSelected ? s['calLunar__cell--today'] : '', eSarbatoare ? s['calLunar__cell--sarb'] : ''].join(' ')}
+              title={tooltipText}>
               {dayNum}
-              {areOcupata && !isPast && <span className={s.calLunar__dot} />}
+              {areOcupata && !isPast && !eBlockat && <span className={s.calLunar__dot} />}
+              {eSarbatoare && <span className={s.calLunar__sarbIcon}>🎉</span>}
             </button>
           )
         })}
@@ -158,6 +164,41 @@ function ModalProgramare({ onClose, onSaved, programariExistente }) {
   })
   const [saving, setSaving] = useState(false)
   const [error, setError]   = useState(null)
+  const [sarbatori, setSarbatori] = useState({})
+
+  useEffect(() => {
+    const an = new Date().getFullYear()
+    api.get(`/zile-libere/?year=${an}`)
+      .then(r => {
+        const map = {}
+        if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
+        setSarbatori(map)
+      })
+      .catch(() => {})
+  }, [])
+  
+  useEffect(() => {
+    const an = new Date().getFullYear()
+    api.get(`/zile-libere/?year=${an}`)
+      .then(r => {
+        const map = {}
+        if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
+        setSarbatori(map)
+      })
+      .catch(() => {})
+  }, [])
+  
+
+  useEffect(() => {
+    const an = new Date().getFullYear()
+    api.get(`/zile-libere/?year=${an}`)
+      .then(r => {
+        const map = {}
+        if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
+        setSarbatori(map)
+      })
+      .catch(() => {})
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -181,7 +222,8 @@ function ModalProgramare({ onClose, onSaved, programariExistente }) {
           <label className={s.formLabel}>Selectati ziua *</label>
           <CalendarLunar selectedDate={selectedDate}
             onSelectDate={(d) => { setSelectedDate(d); setSelectedOra(null) }}
-            programariExistente={programariExistente} />
+            programariExistente={programariExistente}
+            sarbatori={sarbatori} />
           {selectedDate && <div className={s.selectedDateLabel}>Zi selectată: <strong>{selectedDate}</strong></div>}
           <GridSloturi data={selectedDate} oraSelectata={selectedOra} onSelectOra={setSelectedOra} />
           {selectedOra && <div className={s.selectedSlotLabel}>Ora selectată: <strong>{selectedOra}</strong></div>}
@@ -246,6 +288,29 @@ function ModalEditare({ programare, onClose, onSaved, programariExistente }) {
   })
   const [saving, setSaving] = useState(false)
   const [error, setError]   = useState(null)
+  const [sarbatori, setSarbatori] = useState({})
+
+  useEffect(() => {
+    const an = new Date().getFullYear()
+    api.get(`/zile-libere/?year=${an}`)
+      .then(r => {
+        const map = {}
+        if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
+        setSarbatori(map)
+      })
+      .catch(() => {})
+  }, [])
+ 
+  useEffect(() => {
+    const an = new Date().getFullYear()
+    api.get(`/zile-libere/?year=${an}`)
+      .then(r => {
+        const map = {}
+        if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
+        setSarbatori(map)
+      })
+      .catch(() => {})
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -272,7 +337,8 @@ function ModalEditare({ programare, onClose, onSaved, programariExistente }) {
           <label className={s.formLabel}>Selectati ziua *</label>
           <CalendarLunar selectedDate={selectedDate}
             onSelectDate={(d) => { setSelectedDate(d); setSelectedOra(null) }}
-            programariExistente={programariExistente} />
+            programariExistente={programariExistente}
+            sarbatori={sarbatori} />
           {selectedDate && <div className={s.selectedDateLabel}>Zi selectată: <strong>{selectedDate}</strong></div>}
           <GridSloturi data={selectedDate} oraSelectata={selectedOra} onSelectOra={setSelectedOra}
             excludeOra={selectedDate === dateStr ? oraInit : null} />
