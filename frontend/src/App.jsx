@@ -138,7 +138,7 @@ function AppInterna() {
   if (!loggedIn) return <Login onLogin={() => setLoggedIn(true)} />
   if (loading)   return <div style={{ minHeight: '100vh', background: '#0f1117' }} />
 
-  if (user?.rol === 'superadmin') return <SuperadminPanel onLogout={handleLogout} />
+  if (user?.rol === 'superadmin') return <SuperadminPanel onLogout={handleLogout} user={user} />
   if (user?.rol === 'pacient')    return <PortalPacient user={user} onLogout={handleLogout} />
 
   return <AppMedic user={user} onLogout={handleLogout} />

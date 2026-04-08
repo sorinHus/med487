@@ -44,7 +44,7 @@ function badgeClass(rol) {
   return s.badgePacient
 }
 
-export default function SuperadminPanel({ onLogout }) {
+export default function SuperadminPanel({ onLogout, user }) {
   const [tab, setTab]             = useState('useri')
   const [useri, setUseri]         = useState([])
   const [loading, setLoading]     = useState(true)
@@ -62,6 +62,9 @@ export default function SuperadminPanel({ onLogout }) {
   const [loadingLoguri, setLoadingLoguri] = useState(false)
   const [filtruActiune, setFiltruActiune] = useState('')
   const [filtruUser, setFiltruUser]       = useState('')
+
+  
+  const mineId = user?.id
 
   const fetchUseri = () => {
     api.get('/useri/').then(res => { setUseri(res.data.results || res.data); setLoading(false) })
@@ -112,9 +115,14 @@ export default function SuperadminPanel({ onLogout }) {
     } finally { setSaving(false) }
   }
 
-  const handleToggleActiv = async (u) => { await api.post(`/useri/${u.id}/toggle_activ/`); fetchUseri() }
+  const handleToggleActiv = async (u) => {
+    if (u.id === mineId) { alert('Nu poți dezactiva propriul cont.'); return }
+    await api.post(`/useri/${u.id}/toggle_activ/`)
+    fetchUseri()
+  }
 
   const handleDelete = async (u) => {
+    if (u.id === mineId) { alert('Nu poți șterge propriul cont.'); return }
     if (!window.confirm(`Ești sigur că vrei să ștergi contul lui ${u.first_name} ${u.last_name}? Acțiunea este ireversibilă.`)) return
     try { await api.delete(`/useri/${u.id}/`); fetchUseri() }
     catch { alert('Eroare la ștergere.') }

@@ -85,9 +85,9 @@ function LoginScreen({ onLogin }) {
    SUPERADMIN — TAB UTILIZATORI
 ════════════════════════════════════════════ */
 function TabUtilizatori({ token }) {
-  const [useri, setUseri]       = useState([])
-  const [loading, setLoading]   = useState(true)
-  const [actiune, setActiune]   = useState(null) // { id, tip }
+  const [useri, setUseri]     = useState([])
+  const [loading, setLoading] = useState(true)
+  const mineId = JSON.parse(localStorage.getItem('mobil_user') || '{}').id
 
   const fetch_ = async () => {
     setLoading(true)
@@ -98,6 +98,7 @@ function TabUtilizatori({ token }) {
   useEffect(() => { fetch_() }, [])
 
   const toggleActiv = async (u) => {
+    if (u.id === mineId) { alert('Nu poți dezactiva propriul cont.'); return }
     try {
       await apiFetch(`/useri/${u.id}/toggle_activ/`, token, { method: 'POST' })
       setUseri(prev => prev.map(x => x.id === u.id ? { ...x, is_active: !x.is_active } : x))
@@ -105,6 +106,7 @@ function TabUtilizatori({ token }) {
   }
 
   const sterge = async (u) => {
+    if (u.id === mineId) { alert('Nu poți șterge propriul cont.'); return }
     if (!window.confirm(`Ștergi utilizatorul ${u.username}?`)) return
     try {
       await apiFetch(`/useri/${u.id}/`, token, { method: 'DELETE' })
@@ -128,11 +130,16 @@ function TabUtilizatori({ token }) {
             </span>
           </div>
           <div className={s.adminActions}>
-            <button className={`${s.adminBtn} ${u.is_active ? s.adminBtnWarn : s.adminBtnOk}`}
-              onClick={() => toggleActiv(u)}>
+            <button
+              className={`${s.adminBtn} ${u.is_active ? s.adminBtnWarn : s.adminBtnOk}`}
+              onClick={() => toggleActiv(u)}
+              disabled={u.id === mineId}>
               {u.is_active ? 'Dezactivează' : 'Activează'}
             </button>
-            <button className={`${s.adminBtn} ${s.adminBtnDanger}`} onClick={() => sterge(u)}>
+            <button
+              className={`${s.adminBtn} ${s.adminBtnDanger}`}
+              onClick={() => sterge(u)}
+              disabled={u.id === mineId}>
               Șterge
             </button>
           </div>
@@ -158,8 +165,11 @@ function TabModule({ token }) {
     const load = async () => {
       setLoading(true)
       try {
-        const data = await apiFetch('/useri/?rol=medic', token)
-        const list = data.results || []
+        const [d1, d2] = await Promise.all([
+            apiFetch('/useri/?rol=medic', token),
+            apiFetch('/useri/?rol=asistent', token),
+        ])
+        const list = [...(d1.results || []), ...(d2.results || [])]
         setUseri(list)
         const m = {}
         await Promise.all(list.map(async u => {
