@@ -346,7 +346,6 @@
       const isSat   = date.getDay() === 6
       const isSun   = date.getDay() === 0
       const dateStr = formatDate(date)
-      if (d === 12) console.log('ziua 12, dateStr:', dateStr, 'viewMonth:', viewMonth, 'viewYear:', viewYear)
       const isSel   = selectedDate === dateStr
       const isSarb  = zileSarbatoare.has(dateStr)
       const sarbNume = zileSarbatoare.get(dateStr) || ''
@@ -356,7 +355,10 @@
       else if (isToday)                 cls += ' today'
       if (isPast || isSun || isSat || isSarb) cls += ' disabled'
 
-      el.title = sarbNume || (isSun || isSat ? 'Weekend' : dateStr)
+      el.className = cls
+
+      if (sarbNume) el.title = sarbNume
+      else if (isSun || isSat) el.title = 'Weekend'
 
       if (!isPast && !isSun && !isSat && !isSarb) {
         el.onclick = () => selectDate(dateStr)
@@ -564,7 +566,6 @@
         data.forEach(s => s.date.forEach(d => zileSarbatoare.set(d.date.replace(/\//g, '-'), s.name)))
       } catch { /* ignoram eroarea */ }
     }
-    console.log('Sarbatori apr:', [...zileSarbatoare].filter(([k]) => k.startsWith('2026-04')))
     renderCalendar()
   }
 
