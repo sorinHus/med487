@@ -348,13 +348,14 @@
       const dateStr = formatDate(date)
       const isSel   = selectedDate === dateStr
       const isSarb  = zileSarbatoare.has(dateStr)
+      const sarbNume = zileSarbatoare.get(dateStr) || ''
 
       let cls = 'cal-day'
       if (isSel)                        cls += ' selected'
       else if (isToday)                 cls += ' today'
       if (isPast || isSun || isSat || isSarb) cls += ' disabled'
 
-      el.className = cls
+      el.title = sarbNume || (isSun || isSat ? 'Weekend' : dateStr)
 
       if (!isPast && !isSun && !isSat && !isSarb) {
         el.onclick = () => selectDate(dateStr)
@@ -551,7 +552,7 @@
   }
 
   // ── Zile libere ──
-  let zileSarbatoare = new Set()
+  let zileSarbatoare = new Map()
 
   async function loadSarbatori() {
     const years = [new Date().getFullYear(), new Date().getFullYear() + 1]
@@ -559,7 +560,7 @@
       try {
         const res = await fetch(`${API}/zile-libere/?year=${year}`)
         const data = await res.json()
-        data.forEach(s => s.date.forEach(d => zileSarbatoare.add(d.date.replace(/\//g, '-'))))
+        data.forEach(s => s.date.forEach(d => zileSarbatoare.set(d.date.replace(/\//g, '-'), s.name)))
       } catch { /* ignoram eroarea */ }
     }
     console.log('Sarbatori:', [...zileSarbatoare].slice(0, 5))
