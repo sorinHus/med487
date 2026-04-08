@@ -1140,11 +1140,13 @@ def documente_pacient(request, pacient_id):
             'marime': d.marime,
             'incarcat_la': d.incarcat_la,
             'incarcat_de': d.incarcat_de.get_full_name() if d.incarcat_de else '—',
+            'categorie': d.categorie,
         } for d in docs])
 
     if request.method == 'POST':
         fisier = request.FILES.get('fisier')
         nume = request.data.get('nume', fisier.name if fisier else 'Document')
+        categorie = request.data.get('categorie', 'document')
         if not fisier:
             return Response({'eroare': 'Niciun fișier trimis.'}, status=400)
         if fisier.size > 10 * 1024 * 1024:
@@ -1171,6 +1173,7 @@ def documente_pacient(request, pacient_id):
                 pacient=pacient, nume=nume,
                 fisier_url=url, fisier_key=key,
                 marime=fisier.size, incarcat_de=request.user,
+                categorie=categorie,
             )
             log_actiune(request, 'upload_document', f'{doc.nume} — pacient ID {pacient_id}')
             return Response({

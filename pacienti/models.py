@@ -359,6 +359,7 @@ class DocumentPacient(models.Model):
     fisier_key  = models.CharField(max_length=500, verbose_name='Cheie R2')
     marime      = models.PositiveIntegerField(default=0, verbose_name='Mărime (bytes)')
     incarcat_la = models.DateTimeField(auto_now_add=True)
+    categorie = models.CharField(max_length=50, default='document')
     incarcat_de = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                                     null=True, related_name='documente_incarcate')
 

@@ -380,12 +380,18 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
   const [salvandC, setSalvandC] = useState(false)
   const [documente, setDocumente] = useState([])
   const [incarcand, setIncarcand] = useState(false)
+  const [alteFisiere, setAlteFisiere] = useState([])
+  const [incarcandAlt, setIncarcandAlt] = useState(false)
 
   useEffect(() => { api.get(`/pacienti/${pacient.id}/consultatii/`).then(res => setConsultatii(res.data)).catch(console.error).finally(() => setLoadingC(false)) }, [pacient.id])
   useEffect(() => { api.get('/retete/', { params: { pacient: pacient.id } }).then(res => setRetete(Array.isArray(res.data) ? res.data : (res.data.results || []))).catch(console.error).finally(() => setLoadingR(false)) }, [pacient.id])
   useEffect(() => { api.get('/trimiteri/', { params: { pacient: pacient.id } }).then(res => setTrimiteri(Array.isArray(res.data) ? res.data : (res.data.results || []))).catch(console.error).finally(() => setLoadingT(false)) }, [pacient.id])
   useEffect(() => { api.get('/concedii/', { params: { pacient: pacient.id } }).then(res => setConcedii(Array.isArray(res.data) ? res.data : (res.data.results || []))).catch(console.error).finally(() => setLoadingCo(false)) }, [pacient.id])
-  useEffect(() => { api.get(`/pacienti/${pacient.id}/documente/`).then(res => setDocumente(res.data)).catch(console.error) }, [pacient.id])
+  useEffect(() => { api.get(`/pacienti/${pacient.id}/documente/`).then(res => {
+    const toate = Array.isArray(res.data) ? res.data : []
+    setDocumente(toate.filter(d => d.categorie === 'document' || !d.categorie))
+    setAlteFisiere(toate.filter(d => d.categorie === 'alt_fisier'))
+  }).catch(console.error) }, [pacient.id])
 
   const incarcaDocument = async (e) => {
     const fisier = e.target.files[0]; if (!fisier) return
