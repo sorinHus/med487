@@ -532,7 +532,8 @@ export default function MobilApp() {
   const [programari, setProgramari]     = useState([])
   const [loading, setLoading]           = useState(false)
   const [updating, setUpdating]         = useState(null)
-  const [showModal, setShowModal]       = useState(false)
+  const [showModal, setShowModal]         = useState(false)
+  const [editProgramare, setEditProgramare] = useState(null)
 
   useEffect(() => {
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {})
@@ -660,12 +661,25 @@ export default function MobilApp() {
                 <button className={`${s.actionBtn} ${s.btnAnuleaza}`}
                   disabled={['anulat','finalizat'].includes(p.status) || updating === p.id}
                   onClick={() => updateStatus(p.id, 'anulat')}>✕ Anulează</button>
+                <button className={`${s.actionBtn} ${s.btnEdit}`}
+                  onClick={() => setEditProgramare(p)}>✎</button>  
               </div>
             </div>
           ))}
         </div>
       )}
 
+      {/* MODAL EDITARE */}
+      {editProgramare && (
+        <ModalEditareMobil
+          token={token}
+          user={user}
+          programare={editProgramare}
+          onClose={() => setEditProgramare(null)}
+          onSaved={() => { setEditProgramare(null); fetchProgramari(selectedDate) }}
+        />
+      )}
+      
       {/* MODAL ADAUGARE */}
       {showModal && (
         <ModalAdaugare

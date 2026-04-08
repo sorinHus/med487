@@ -713,3 +713,15 @@
   color: var(--text-muted, #94a3b8);
   margin-bottom: -6px;
 }
+
+.btnEdit {
+  flex: 0 0 auto;
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid var(--border-color, #2d3748);
+  background: var(--bg-card, #252d3d);
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+}
