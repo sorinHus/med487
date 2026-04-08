@@ -327,3 +327,146 @@
 .btnSave:disabled {
   opacity: 0.6;
 }
+
+/* ── T92: Calendar lunar ── */
+.calLunar {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.calLunar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+.calLunar__title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+.calLunar__navBtn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 2px 10px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.calLunar__navBtn:hover { background: var(--bg-hover); }
+.calLunar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 8px;
+  gap: 2px;
+}
+.calLunar__ziHeader {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 4px 0;
+}
+.calLunar__cellEmpty { height: 32px; }
+.calLunar__cell {
+  position: relative;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1px;
+}
+.calLunar__cell:hover:not(:disabled) { background: var(--bg-hover); }
+.calLunar__cell--past { color: var(--text-muted, #999); cursor: not-allowed; opacity: 0.45; }
+.calLunar__cell--today {
+  background: rgba(58,123,213,0.12);
+  color: var(--primary, #3a7bd5);
+  font-weight: 700;
+}
+.calLunar__cell--selected {
+  background: var(--primary, #3a7bd5) !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+.calLunar__dot {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--primary, #3a7bd5);
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.calLunar__cell--selected .calLunar__dot { background: rgba(255,255,255,0.7); }
+
+/* ── T92: Sloturi ── */
+.sloturi { margin-bottom: 8px; }
+.sloturi__label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.sloturi__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.sloturi__loading, .sloturi__empty {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 8px 0;
+}
+.sloturi__error { font-size: 0.82rem; color: #f87171; padding: 8px 0; }
+
+.slot {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.slot--liber {
+  background: rgba(52,211,153,0.12);
+  color: #34d399;
+  border-color: rgba(52,211,153,0.35);
+}
+.slot--liber:hover { background: rgba(52,211,153,0.25); }
+.slot--ocupat {
+  background: var(--bg-secondary);
+  color: var(--text-muted, #999);
+  border-color: var(--border);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.slot--selected {
+  background: var(--primary, #3a7bd5) !important;
+  color: #fff !important;
+  border-color: var(--primary, #3a7bd5) !important;
+}
+
+/* ── T92: Labels selectie ── */
+.selectedDateLabel, .selectedSlotLabel {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin: 4px 0 8px;
+}
+.selectedDateLabel strong, .selectedSlotLabel strong {
+  color: var(--text-primary);
+}
