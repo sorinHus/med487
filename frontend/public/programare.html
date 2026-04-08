@@ -346,9 +346,9 @@
       const isSat   = date.getDay() === 6
       const isSun   = date.getDay() === 0
       const dateStr = formatDate(date)
+      if (d === 12) console.log('ziua 12, dateStr:', dateStr, 'viewMonth:', viewMonth, 'viewYear:', viewYear)
       const isSel   = selectedDate === dateStr
       const isSarb  = zileSarbatoare.has(dateStr)
-      if (d === 19) console.log('12 apr:', dateStr, zileSarbatoare.has(dateStr), zileSarbatoare.get(dateStr))
       const sarbNume = zileSarbatoare.get(dateStr) || ''
 
       let cls = 'cal-day'
