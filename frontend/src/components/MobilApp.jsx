@@ -662,7 +662,7 @@ export default function MobilApp() {
                   disabled={['anulat','finalizat'].includes(p.status) || updating === p.id}
                   onClick={() => updateStatus(p.id, 'anulat')}>✕ Anulează</button>
                 <button className={`${s.actionBtn} ${s.btnEdit}`}
-                  onClick={() => setEditProgramare(p)}>✎</button>  
+                  onClick={() => setEditProgramare(p)}>✎</button>
               </div>
             </div>
           ))}
