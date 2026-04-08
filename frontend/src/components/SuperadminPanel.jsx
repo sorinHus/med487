@@ -65,6 +65,7 @@ export default function SuperadminPanel({ onLogout, user }) {
 
   
   const mineId = user?.id
+  console.log('MINE ID:', mineId, 'USERI:', useri.map(u => u.id))
 
   const fetchUseri = () => {
     api.get('/useri/').then(res => { setUseri(res.data.results || res.data); setLoading(false) })
