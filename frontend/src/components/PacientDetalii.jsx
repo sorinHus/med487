@@ -576,6 +576,28 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
         ))}
       </div>
 
+      {/* Alte fisiere */}
+      <div className={s.section}>
+        <div className={s.sectionHeader}>
+          <span className={s.sectionTitle}>Alte fișiere ({alteFisiere.length})</span>
+          <label className={s.btnNouLabel}>
+            + Adaugă fișier
+            <input type="file" onChange={incarcaAltFisier} style={{ display: 'none' }} />
+          </label>
+        </div>
+        {incarcandAlt && <p className={s.loadingText}>Se încarcă...</p>}
+        {!incarcandAlt && alteFisiere.length === 0 && <p className={s.emptyText}>Niciun fișier înregistrat.</p>}
+        {alteFisiere.map(d => (
+          <div key={d.id} className={s.docRow}>
+            <div>
+              <a href={d.fisier_url} target="_blank" rel="noreferrer" className={s.docLink}>📎 {d.nume}</a>
+              <span className={s.docMeta}>{new Date(d.incarcat_la).toLocaleDateString('ro-RO')} · {Math.round(d.marime / 1024)} KB · {d.incarcat_de}</span>
+            </div>
+            <button onClick={() => stergeAltFisier(d.id)} className={s.btnStergeDoc}>×</button>
+          </div>
+        ))}
+      </div>
+
       {/* Trimiteri */}
       <div className={s.section}>
         <div className={s.sectionHeader}>
