@@ -204,7 +204,7 @@ export default function MobilApp() {
         <div>
           <div className={s.headerTitle}>🏥 MED487</div>
           <div className={s.headerSub}>
-            {user.first_name || user.username}
+            {user.last_name && user.first_name ? `${user.last_name} ${user.first_name}` : user.username}
             {user.rol === 'medic' ? ' • Dr.' : ''}
           </div>
         </div>
