@@ -336,3 +336,184 @@
   text-align: center;
   max-width: 280px;
 }
+
+/* ── ADMIN TABS ── */
+.adminTabs {
+  display: flex;
+  overflow-x: auto;
+  background: var(--bg-secondary, #1e2433);
+  border-bottom: 1px solid var(--border-color, #2d3748);
+  padding: 0 8px;
+  gap: 4px;
+}
+
+.adminTab {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted, #94a3b8);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.adminTabActive {
+  color: #60a5fa;
+  border-bottom-color: #2563eb;
+}
+
+.adminContent {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ── ADMIN CARDS ── */
+.adminList {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.adminCard {
+  background: var(--bg-card, #252d3d);
+  border: 1px solid var(--border-color, #2d3748);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.adminCardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.adminName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.adminSub {
+  font-size: 12px;
+  color: var(--text-muted, #94a3b8);
+  margin-top: 2px;
+}
+
+.adminActions {
+  display: flex;
+  gap: 8px;
+}
+
+.adminBtn {
+  flex: 1;
+  padding: 8px 4px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.adminBtnOk      { background: #065f46; color: #34d399; }
+.adminBtnWarn    { background: #78350f; color: #fbbf24; }
+.adminBtnDanger  { background: #7f1d1d; color: #f87171; }
+
+.badgeActiv   { background: #06452022; color: #34d399; border: 1px solid #10b98144; border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 600; }
+.badgeInactiv { background: #7f1d1d22; color: #f87171; border: 1px solid #ef444444; border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 600; }
+
+/* ── MODULE GRID ── */
+.moduleGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.moduleBtn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid;
+  cursor: pointer;
+}
+
+.moduleBtnOn  { background: #1d4ed822; color: #60a5fa; border-color: #2563eb55; }
+.moduleBtnOff { background: var(--bg-primary, #0f1117); color: var(--text-muted, #94a3b8); border-color: var(--border-color, #2d3748); }
+
+/* ── SETARI ── */
+.settingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-color, #2d3748);
+}
+
+.settingLabel {
+  font-size: 13px;
+  color: var(--text-muted, #94a3b8);
+  flex-shrink: 0;
+}
+
+.settingInput {
+  flex: 1;
+  background: var(--bg-primary, #0f1117);
+  border: 1px solid var(--border-color, #2d3748);
+  border-radius: 6px;
+  color: var(--text-primary, #f1f5f9);
+  font-size: 13px;
+  padding: 6px 8px;
+  text-align: right;
+}
+
+/* ── LOGURI ── */
+.logCard {
+  background: var(--bg-card, #252d3d);
+  border: 1px solid var(--border-color, #2d3748);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.logTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.logActiune {
+  font-size: 12px;
+  font-weight: 700;
+  color: #60a5fa;
+  background: #1d4ed822;
+  border-radius: 5px;
+  padding: 2px 7px;
+}
+
+.logTime {
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+}
+
+.logUser {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.logDesc {
+  font-size: 12px;
+  color: var(--text-muted, #94a3b8);
+}

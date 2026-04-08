@@ -9,34 +9,33 @@ const LUNI = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oc
 function toDateStr(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
-
 function formatDate(d) {
   return `${d.getDate()} ${LUNI[d.getMonth()]} ${d.getFullYear()}`
 }
-
 function getOra(data_ora) {
   if (!data_ora) return '--:--'
   const d = new Date(data_ora)
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
-const STATUS_LABELS = {
-  programat:  'Programat',
-  confirmat:  'Confirmat',
-  anulat:     'Anulat',
-  finalizat:  'Finalizat',
+const STATUS_LABELS = { programat: 'Programat', confirmat: 'Confirmat', anulat: 'Anulat', finalizat: 'Finalizat' }
+const STATUS_CLASS  = { programat: s.statusProgramata, confirmat: s.statusConfirmata, anulat: s.statusAnulata, finalizat: s.statusFinalizata }
+const ROL_LABEL     = { medic: 'Medic', asistent: 'Asistent', superadmin: 'Superadmin', pacient: 'Pacient' }
+
+/* ── helpers fetch ── */
+async function apiFetch(path, token, opts = {}) {
+  const res = await fetch(`${API}${path}`, {
+    ...opts,
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, ...(opts.headers || {}) },
+  })
+  if (!res.ok) throw new Error(res.status)
+  if (res.status === 204) return null
+  return res.json()
 }
 
-const STATUS_CLASS = {
-  programat: s.statusProgramata,
-  confirmat: s.statusConfirmata,
-  anulat:    s.statusAnulata,
-  finalizat: s.statusFinalizata,
-}
-
-/* ────────────────────────────────────────────
+/* ════════════════════════════════════════════
    LOGIN SCREEN
-──────────────────────────────────────────── */
+════════════════════════════════════════════ */
 function LoginScreen({ onLogin }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -44,34 +43,19 @@ function LoginScreen({ onLogin }) {
   const [loading, setLoading]   = useState(false)
 
   const handleLogin = async () => {
-    setErr('')
-    setLoading(true)
+    setErr(''); setLoading(true)
     try {
-      const res = await fetch(`${API}/token/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      })
-      if (!res.ok) throw new Error()
-      const data = await res.json()
-
-      const meRes = await fetch(`${API}/useri/me/`, {
-        headers: { Authorization: `Bearer ${data.access}` }
-      })
-      const me = await meRes.json()
+      const data = await apiFetch('/token/', null, { method: 'POST', body: JSON.stringify({ username, password }) })
+      const me   = await apiFetch('/useri/me/', data.access)
       if (!['medic', 'asistent', 'superadmin'].includes(me.rol)) {
         setErr('Această aplicație este doar pentru personalul medical.')
-        setLoading(false)
-        return
+        setLoading(false); return
       }
-
       localStorage.setItem('mobil_access',  data.access)
       localStorage.setItem('mobil_refresh', data.refresh)
       localStorage.setItem('mobil_user',    JSON.stringify(me))
       onLogin(me)
-    } catch {
-      setErr('Username sau parolă incorecte.')
-    }
+    } catch { setErr('Username sau parolă incorecte.') }
     setLoading(false)
   }
 
@@ -80,23 +64,10 @@ function LoginScreen({ onLogin }) {
       <div className={s.loginLogo}>🏥 MED487</div>
       <div className={s.loginCard}>
         <div className={s.loginTitle}>Acces personal medical</div>
-        <input
-          className={s.input}
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          autoCapitalize="none"
-          autoCorrect="off"
-        />
-        <input
-          className={s.input}
-          type="password"
-          placeholder="Parolă"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleLogin()}
-        />
+        <input className={s.input} type="text" placeholder="Username" value={username}
+          onChange={e => setUsername(e.target.value)} autoCapitalize="none" autoCorrect="off" />
+        <input className={s.input} type="password" placeholder="Parolă" value={password}
+          onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleLogin()} />
         {err && <div className={s.loginErr}>{err}</div>}
         <button className={s.loginBtn} onClick={handleLogin} disabled={loading}>
           {loading ? 'Se conectează...' : 'Intră în cont'}
@@ -110,9 +81,291 @@ function LoginScreen({ onLogin }) {
   )
 }
 
-/* ────────────────────────────────────────────
-   MAIN APP
-──────────────────────────────────────────── */
+/* ════════════════════════════════════════════
+   SUPERADMIN — TAB UTILIZATORI
+════════════════════════════════════════════ */
+function TabUtilizatori({ token }) {
+  const [useri, setUseri]       = useState([])
+  const [loading, setLoading]   = useState(true)
+  const [actiune, setActiune]   = useState(null) // { id, tip }
+
+  const fetch_ = async () => {
+    setLoading(true)
+    try { setUseri((await apiFetch('/useri/', token)).results || []) } catch {}
+    setLoading(false)
+  }
+
+  useEffect(() => { fetch_() }, [])
+
+  const toggleActiv = async (u) => {
+    try {
+      await apiFetch(`/useri/${u.id}/toggle_activ/`, token, { method: 'POST' })
+      setUseri(prev => prev.map(x => x.id === u.id ? { ...x, is_active: !x.is_active } : x))
+    } catch { alert('Eroare la actualizare.') }
+  }
+
+  const sterge = async (u) => {
+    if (!window.confirm(`Ștergi utilizatorul ${u.username}?`)) return
+    try {
+      await apiFetch(`/useri/${u.id}/`, token, { method: 'DELETE' })
+      setUseri(prev => prev.filter(x => x.id !== u.id))
+    } catch { alert('Eroare la ștergere.') }
+  }
+
+  if (loading) return <div className={s.loading}>Se încarcă...</div>
+
+  return (
+    <div className={s.adminList}>
+      {useri.map(u => (
+        <div key={u.id} className={s.adminCard}>
+          <div className={s.adminCardTop}>
+            <div>
+              <div className={s.adminName}>{u.last_name} {u.first_name}</div>
+              <div className={s.adminSub}>{u.username} · {ROL_LABEL[u.rol] || u.rol}</div>
+            </div>
+            <span className={u.is_active ? s.badgeActiv : s.badgeInactiv}>
+              {u.is_active ? 'Activ' : 'Inactiv'}
+            </span>
+          </div>
+          <div className={s.adminActions}>
+            <button className={`${s.adminBtn} ${u.is_active ? s.adminBtnWarn : s.adminBtnOk}`}
+              onClick={() => toggleActiv(u)}>
+              {u.is_active ? 'Dezactivează' : 'Activează'}
+            </button>
+            <button className={`${s.adminBtn} ${s.adminBtnDanger}`} onClick={() => sterge(u)}>
+              Șterge
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════
+   SUPERADMIN — TAB MODULE
+════════════════════════════════════════════ */
+const TOATE_MODULELE = ['retete', 'trimiteri', 'concedii', 'rapoarte', 'documente']
+const MODUL_LABEL    = { retete: 'Rețete', trimiteri: 'Trimiteri', concedii: 'Concedii medicale', rapoarte: 'Rapoarte', documente: 'Documente' }
+
+function TabModule({ token }) {
+  const [useri, setUseri]     = useState([])
+  const [module, setModule]   = useState({}) // { userId: [...] }
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving]   = useState(null)
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true)
+      try {
+        const data = await apiFetch('/useri/?rol=medic', token)
+        const list = data.results || []
+        setUseri(list)
+        const m = {}
+        await Promise.all(list.map(async u => {
+          try {
+            const r = await apiFetch(`/module/${u.id}/`, token)
+            m[u.id] = r.active || []
+          } catch { m[u.id] = [] }
+        }))
+        setModule(m)
+      } catch {}
+      setLoading(false)
+    }
+    load()
+  }, [])
+
+  const toggle = async (userId, modul) => {
+    const curent = module[userId] || []
+    const nou    = curent.includes(modul) ? curent.filter(x => x !== modul) : [...curent, modul]
+    setSaving(`${userId}-${modul}`)
+    try {
+      await apiFetch(`/module/${userId}/`, token, { method: 'PUT', body: JSON.stringify({ active: nou }) })
+      setModule(prev => ({ ...prev, [userId]: nou }))
+    } catch { alert('Eroare la salvare.') }
+    setSaving(null)
+  }
+
+  if (loading) return <div className={s.loading}>Se încarcă...</div>
+
+  return (
+    <div className={s.adminList}>
+      {useri.map(u => (
+        <div key={u.id} className={s.adminCard}>
+          <div className={s.adminName}>{u.last_name} {u.first_name}</div>
+          <div className={s.adminSub}>{u.username}</div>
+          <div className={s.moduleGrid}>
+            {TOATE_MODULELE.map(m => {
+              const activ = (module[u.id] || []).includes(m)
+              const key   = `${u.id}-${m}`
+              return (
+                <button key={m}
+                  className={`${s.moduleBtn} ${activ ? s.moduleBtnOn : s.moduleBtnOff}`}
+                  disabled={saving === key}
+                  onClick={() => toggle(u.id, m)}>
+                  {activ ? '✓ ' : ''}{MODUL_LABEL[m]}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════
+   SUPERADMIN — TAB SETARI
+════════════════════════════════════════════ */
+function TabSetari({ token }) {
+  const [cfg, setCfg]         = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving]   = useState(false)
+  const [ok, setOk]           = useState(false)
+
+  useEffect(() => {
+    apiFetch('/configuratie/', token).then(setCfg).catch(() => {}).finally(() => setLoading(false))
+  }, [])
+
+  const save = async () => {
+    setSaving(true); setOk(false)
+    try {
+      await apiFetch('/configuratie/', token, { method: 'PATCH', body: JSON.stringify({
+        denumire_unitate: cfg.denumire_unitate,
+        localitate: cfg.localitate,
+        telefon: cfg.telefon,
+        email_contact: cfg.email_contact,
+        durata_slot: cfg.durata_slot,
+        max_programari_zi: cfg.max_programari_zi,
+        mod_mentenanta: cfg.mod_mentenanta,
+        nr_contract_cas: cfg.nr_contract_cas,
+        cod_cas: cfg.cod_cas,
+      })})
+      setOk(true)
+      setTimeout(() => setOk(false), 2500)
+    } catch { alert('Eroare la salvare.') }
+    setSaving(false)
+  }
+
+  if (loading || !cfg) return <div className={s.loading}>Se încarcă...</div>
+
+  const field = (label, key, type = 'text') => (
+    <div className={s.settingRow}>
+      <label className={s.settingLabel}>{label}</label>
+      {type === 'checkbox'
+        ? <input type="checkbox" checked={!!cfg[key]} onChange={e => setCfg(p => ({ ...p, [key]: e.target.checked }))} />
+        : <input className={s.settingInput} type={type} value={cfg[key] || ''}
+            onChange={e => setCfg(p => ({ ...p, [key]: type === 'number' ? Number(e.target.value) : e.target.value }))} />
+      }
+    </div>
+  )
+
+  return (
+    <div className={s.adminList}>
+      <div className={s.adminCard}>
+        {field('Denumire unitate', 'denumire_unitate')}
+        {field('Localitate', 'localitate')}
+        {field('Telefon', 'telefon')}
+        {field('Email contact', 'email_contact')}
+        {field('Durată slot (min)', 'durata_slot', 'number')}
+        {field('Max programări/zi', 'max_programari_zi', 'number')}
+        {field('Nr. contract CAS', 'nr_contract_cas')}
+        {field('Cod CAS', 'cod_cas')}
+        <div className={s.settingRow}>
+          <label className={s.settingLabel}>Mod mentenanță</label>
+          <input type="checkbox" checked={!!cfg.mod_mentenanta}
+            onChange={e => setCfg(p => ({ ...p, mod_mentenanta: e.target.checked }))} />
+        </div>
+        <button className={s.loginBtn} onClick={save} disabled={saving}>
+          {saving ? 'Se salvează...' : ok ? '✓ Salvat!' : 'Salvează'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════
+   SUPERADMIN — TAB LOGURI
+════════════════════════════════════════════ */
+function TabLoguri({ token }) {
+  const [loguri, setLoguri]   = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const fetch_ = async () => {
+    setLoading(true)
+    try { setLoguri(await apiFetch('/loguri/', token)) } catch {}
+    setLoading(false)
+  }
+
+  useEffect(() => { fetch_() }, [])
+
+  if (loading) return <div className={s.loading}>Se încarcă...</div>
+
+  return (
+    <div className={s.adminList}>
+      <div style={{ textAlign: 'right', marginBottom: 8 }}>
+        <button className={s.todayBtn} onClick={fetch_}>↻ Refresh</button>
+      </div>
+      {loguri.map(l => (
+        <div key={l.id} className={s.logCard}>
+          <div className={s.logTop}>
+            <span className={s.logActiune}>{l.actiune}</span>
+            <span className={s.logTime}>{l.timestamp}</span>
+          </div>
+          <div className={s.logUser}>{l.user} ({l.username})</div>
+          {l.descriere && <div className={s.logDesc}>{l.descriere}</div>}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════
+   SUPERADMIN PANEL
+════════════════════════════════════════════ */
+const ADMIN_TABS = [
+  { id: 'utilizatori', label: '👥 Utilizatori' },
+  { id: 'module',      label: '🧩 Module' },
+  { id: 'setari',      label: '⚙️ Setări' },
+  { id: 'loguri',      label: '📋 Loguri' },
+]
+
+function SuperadminMobil({ token, user, onLogout }) {
+  const [tab, setTab] = useState('utilizatori')
+
+  return (
+    <div className={s.container}>
+      <div className={s.header}>
+        <div>
+          <div className={s.headerTitle}>🏥 MED487 Admin</div>
+          <div className={s.headerSub}>{user.last_name} {user.first_name}</div>
+        </div>
+        <button className={s.logoutBtn} onClick={onLogout}>Ieșire</button>
+      </div>
+
+      <div className={s.adminTabs}>
+        {ADMIN_TABS.map(t => (
+          <button key={t.id}
+            className={`${s.adminTab} ${tab === t.id ? s.adminTabActive : ''}`}
+            onClick={() => setTab(t.id)}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      <div className={s.adminContent}>
+        {tab === 'utilizatori' && <TabUtilizatori token={token} />}
+        {tab === 'module'      && <TabModule token={token} />}
+        {tab === 'setari'      && <TabSetari token={token} />}
+        {tab === 'loguri'      && <TabLoguri token={token} />}
+      </div>
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════
+   MAIN APP (MEDIC/ASISTENT)
+════════════════════════════════════════════ */
 export default function MobilApp() {
   const [user, setUser] = useState(() => {
     try { return JSON.parse(localStorage.getItem('mobil_user')) } catch { return null }
@@ -123,61 +376,40 @@ export default function MobilApp() {
   const [updating, setUpdating]         = useState(null)
 
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => {})
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {})
   }, [])
 
-  const getToken = () => localStorage.getItem('mobil_access')
+  const token = localStorage.getItem('mobil_access')
 
   const fetchProgramari = useCallback(async (date) => {
-    const token = getToken()
     if (!token) return
     setLoading(true)
     try {
-      const dateStr = toDateStr(date)
-      const res = await fetch(`${API}/programari/?data=${dateStr}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      const data = await res.json()
+      const data = await apiFetch(`/programari/?data=${toDateStr(date)}`, token)
       const list = Array.isArray(data) ? data : data.results || []
       list.sort((a, b) => (a.data_ora || '').localeCompare(b.data_ora || ''))
       setProgramari(list)
-    } catch {
-      setProgramari([])
-    }
+    } catch { setProgramari([]) }
     setLoading(false)
-  }, [])
+  }, [token])
 
   useEffect(() => {
-    if (user) fetchProgramari(selectedDate)
+    if (user && user.rol !== 'superadmin') fetchProgramari(selectedDate)
   }, [user, selectedDate, fetchProgramari])
 
-  const changeDay = (delta) => {
+  const changeDay = delta => {
     const d = new Date(selectedDate)
     d.setDate(d.getDate() + delta)
     setSelectedDate(d)
   }
 
-  const goToday = () => setSelectedDate(new Date())
-
   const updateStatus = async (id, status) => {
-    const token = getToken()
     if (!token) return
     setUpdating(id)
     try {
-      await fetch(`${API}/programari/${id}/`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ status })
-      })
+      await apiFetch(`/programari/${id}/`, token, { method: 'PATCH', body: JSON.stringify({ status }) })
       setProgramari(prev => prev.map(p => p.id === id ? { ...p, status } : p))
-    } catch {
-      alert('Eroare la actualizare. Verifică conexiunea.')
-    }
+    } catch { alert('Eroare la actualizare. Verifică conexiunea.') }
     setUpdating(null)
   }
 
@@ -190,12 +422,14 @@ export default function MobilApp() {
 
   if (!user) return <LoginScreen onLogin={setUser} />
 
-  const total     = programari.length
+  // Superadmin → panou dedicat
+  if (user.rol === 'superadmin') return <SuperadminMobil token={token} user={user} onLogout={handleLogout} />
+
+  const isToday    = toDateStr(selectedDate) === toDateStr(new Date())
+  const total      = programari.length
   const confirmate = programari.filter(p => p.status === 'confirmat').length
   const pending    = programari.filter(p => p.status === 'programat').length
   const anulate    = programari.filter(p => p.status === 'anulat').length
-
-  const isToday = toDateStr(selectedDate) === toDateStr(new Date())
 
   return (
     <div className={s.container}>
@@ -215,35 +449,19 @@ export default function MobilApp() {
       <div className={s.dayNav}>
         <button className={s.dayNavBtn} onClick={() => changeDay(-1)}>‹</button>
         <div className={s.dayLabel}>
-          <div className={s.dayLabelDate}>
-            {isToday ? '📅 Azi, ' : ''}{formatDate(selectedDate)}
-          </div>
+          <div className={s.dayLabelDate}>{isToday ? '📅 Azi, ' : ''}{formatDate(selectedDate)}</div>
           <div className={s.dayLabelName}>{ZILE[selectedDate.getDay()]}</div>
         </div>
         <button className={s.dayNavBtn} onClick={() => changeDay(1)}>›</button>
-        {!isToday && (
-          <button className={s.todayBtn} onClick={goToday}>Azi</button>
-        )}
+        {!isToday && <button className={s.todayBtn} onClick={() => setSelectedDate(new Date())}>Azi</button>}
       </div>
 
-      {/* BADGES SUMAR */}
+      {/* BADGES */}
       <div className={s.summary}>
-        <div className={`${s.badge} ${s.badgeTotal}`}>
-          <div className={s.badgeNum}>{total}</div>
-          <div className={s.badgeLabel}>Total</div>
-        </div>
-        <div className={`${s.badge} ${s.badgeOk}`}>
-          <div className={s.badgeNum}>{confirmate}</div>
-          <div className={s.badgeLabel}>Confirmate</div>
-        </div>
-        <div className={`${s.badge} ${s.badgePending}`}>
-          <div className={s.badgeNum}>{pending}</div>
-          <div className={s.badgeLabel}>În așteptare</div>
-        </div>
-        <div className={`${s.badge} ${s.badgeCancel}`}>
-          <div className={s.badgeNum}>{anulate}</div>
-          <div className={s.badgeLabel}>Anulate</div>
-        </div>
+        <div className={`${s.badge} ${s.badgeTotal}`}><div className={s.badgeNum}>{total}</div><div className={s.badgeLabel}>Total</div></div>
+        <div className={`${s.badge} ${s.badgeOk}`}><div className={s.badgeNum}>{confirmate}</div><div className={s.badgeLabel}>Confirmate</div></div>
+        <div className={`${s.badge} ${s.badgePending}`}><div className={s.badgeNum}>{pending}</div><div className={s.badgeLabel}>În așteptare</div></div>
+        <div className={`${s.badge} ${s.badgeCancel}`}><div className={s.badgeNum}>{anulate}</div><div className={s.badgeLabel}>Anulate</div></div>
       </div>
 
       {/* LISTA */}
@@ -264,38 +482,23 @@ export default function MobilApp() {
                   <div className={s.timeSub}>ora</div>
                 </div>
                 <div className={s.cardInfo}>
-                  <div className={s.cardName}>
-                    {p.pacient_nume_complet || p.nume_pacient || `Pacient #${p.pacient}`}
-                  </div>
+                  <div className={s.cardName}>{p.pacient_nume_complet || p.nume_pacient || `Pacient #${p.pacient}`}</div>
                   {p.motiv && <div className={s.cardMotiv}>{p.motiv}</div>}
                 </div>
                 <div className={`${s.statusBadge} ${STATUS_CLASS[p.status] || ''}`}>
                   {STATUS_LABELS[p.status] || p.status}
                 </div>
               </div>
-
               <div className={s.actions}>
-                <button
-                  className={`${s.actionBtn} ${s.btnConfirma}`}
+                <button className={`${s.actionBtn} ${s.btnConfirma}`}
                   disabled={['confirmat','finalizat','anulat'].includes(p.status) || updating === p.id}
-                  onClick={() => updateStatus(p.id, 'confirmat')}
-                >
-                  ✓ Confirmă
-                </button>
-                <button
-                  className={`${s.actionBtn} ${s.btnFinalizeaza}`}
+                  onClick={() => updateStatus(p.id, 'confirmat')}>✓ Confirmă</button>
+                <button className={`${s.actionBtn} ${s.btnFinalizeaza}`}
                   disabled={['finalizat','anulat'].includes(p.status) || updating === p.id}
-                  onClick={() => updateStatus(p.id, 'finalizat')}
-                >
-                  ✔ Finalizează
-                </button>
-                <button
-                  className={`${s.actionBtn} ${s.btnAnuleaza}`}
+                  onClick={() => updateStatus(p.id, 'finalizat')}>✔ Finalizează</button>
+                <button className={`${s.actionBtn} ${s.btnAnuleaza}`}
                   disabled={['anulat','finalizat'].includes(p.status) || updating === p.id}
-                  onClick={() => updateStatus(p.id, 'anulat')}
-                >
-                  ✕ Anulează
-                </button>
+                  onClick={() => updateStatus(p.id, 'anulat')}>✕ Anulează</button>
               </div>
             </div>
           ))}
