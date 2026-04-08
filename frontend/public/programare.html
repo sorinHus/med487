@@ -348,6 +348,7 @@
       const dateStr = formatDate(date)
       const isSel   = selectedDate === dateStr
       const isSarb  = zileSarbatoare.has(dateStr)
+      if (d === 19) console.log('19 apr:', dateStr, zileSarbatoare.has(dateStr), zileSarbatoare.get(dateStr))
       const sarbNume = zileSarbatoare.get(dateStr) || ''
 
       let cls = 'cal-day'
