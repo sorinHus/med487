@@ -65,7 +65,6 @@ export default function SuperadminPanel({ onLogout, user }) {
 
   
   const mineId = user?.id
-  console.log('MINE ID:', mineId, 'USERI:', useri.map(u => u.id))
 
   const fetchUseri = () => {
     api.get('/useri/').then(res => { setUseri(res.data.results || res.data); setLoading(false) })
@@ -193,8 +192,8 @@ export default function SuperadminPanel({ onLogout, user }) {
                     <td className={s.td}><span className={u.is_active ? s.badgeActiv : s.badgeInactiv}>{u.is_active ? 'Activ' : 'Inactiv'}</span></td>
                     <td className={s.td}>
                       <button className={s.btnAction} onClick={() => openEdit(u)}>Editează</button>
-                      <button className={s.btnAction} onClick={() => handleToggleActiv(u)}>{u.is_active ? 'Dezactivează' : 'Activează'}</button>
-                      <button className={s.btnDelete} onClick={() => handleDelete(u)}>Șterge</button>
+                      <button className={s.btnAction} onClick={() => handleToggleActiv(u)} disabled={u.id === mineId}>{u.is_active ? 'Dezactivează' : 'Activează'}</button>
+                      <button className={s.btnDelete} onClick={() => handleDelete(u)} disabled={u.id === mineId}>Șterge</button>
                     </td>
                   </tr>
                 ))}
