@@ -405,6 +405,26 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
     finally { setIncarcand(false); e.target.value = '' }
   }
 
+  const incarcaAltFisier = async (e) => {
+    const fisier = e.target.files[0]; if (!fisier) return
+    setIncarcandAlt(true)
+    try {
+      const formData = new FormData()
+      formData.append('fisier', fisier)
+      formData.append('nume', fisier.name)
+      formData.append('categorie', 'alt_fisier')
+      const res = await api.post(`/pacienti/${pacient.id}/documente/`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      setAlteFisiere(prev => [res.data, ...prev])
+    } catch { alert('Eroare la încărcarea fișierului.') }
+    finally { setIncarcandAlt(false); e.target.value = '' }
+  }
+
+  const stergeAltFisier = async (id) => {
+    if (!window.confirm('Ștergi acest fișier?')) return
+    try { await api.delete(`/documente/${id}/`); setAlteFisiere(prev => prev.filter(d => d.id !== id)) }
+    catch { alert('Eroare la ștergerea fișierului.') }
+  }
+
   const stergeDocument = async (id) => {
     if (!window.confirm('Ștergi acest document?')) return
     try { await api.delete(`/documente/${id}/`); setDocumente(prev => prev.filter(d => d.id !== id)) }
