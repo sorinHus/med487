@@ -422,6 +422,11 @@
   cursor: pointer;
 }
 
+.adminBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .adminBtnOk      { background: #065f46; color: #34d399; }
 .adminBtnWarn    { background: #78350f; color: #fbbf24; }
 .adminBtnDanger  { background: #7f1d1d; color: #f87171; }

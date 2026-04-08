@@ -161,6 +161,17 @@
   font-size: 0.78rem;
   margin-right: 0.4rem;
 }
+
+.btnAction:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btnDelete:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .btnDelete {
   background: transparent;
   border: 1px solid rgba(239,68,68,0.3);
@@ -170,6 +181,16 @@
   cursor: pointer;
   font-size: 0.78rem;
   margin-right: 0.4rem;
+}
+
+.btnAction:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btnDelete:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 /* ── Modal ── */
