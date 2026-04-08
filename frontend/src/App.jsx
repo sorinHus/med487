@@ -14,6 +14,7 @@ import SitePrezentare from './components/SitePrezentare'
 import SuperadminPanel from './components/SuperadminPanel'
 import CereriPacienti from './components/CereriPacienti'
 import PortalPacient from './components/PortalPacient'
+import MobilApp from './components/MobilApp'
 
 const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000
 const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
@@ -147,9 +148,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/*" element={<SitePrezentare />} />
-        <Route path="/app" element={<AppInterna />} />
-        <Route path="*"   element={<Navigate to="/" replace />} />
+        <Route path="/mobil" element={<MobilApp />} />
+        <Route path="/*"     element={<SitePrezentare />} />
+        <Route path="/app"   element={<AppInterna />} />
+        <Route path="*"      element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )
