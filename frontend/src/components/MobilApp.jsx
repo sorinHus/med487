@@ -30,7 +30,14 @@ function useSarbatori() {
       .then(r => r.json())
       .then(data => {
         const map = {}
-        if (Array.isArray(data)) data.forEach(z => { map[z.date] = z.name })
+        if (Array.isArray(data)) data.forEach(z => {
+          if (Array.isArray(z.date)) {
+            z.date.forEach(d => {
+              const key = d.date.replace(/\//g, '-')
+              map[key] = z.name
+            })
+          }
+        })
         setSarbatori(map)
       })
       .catch(() => {})
