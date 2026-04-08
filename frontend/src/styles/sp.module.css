@@ -612,3 +612,101 @@
   color: rgba(255,255,255,0.55);
   line-height: 1.5;
 }
+
+/* ── T56: Politică confidențialitate ── */
+.politicaWrap {
+  min-height: 60vh;
+  padding: 120px 24px 80px;
+  display: flex;
+  justify-content: center;
+}
+.politicaContent {
+  max-width: 760px;
+  width: 100%;
+  color: var(--text-primary);
+}
+.politicaTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+.politicaMeta {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+}
+.politicaContent h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 32px 0 10px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+}
+.politicaContent p {
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+.politicaContent ul {
+  margin: 8px 0 16px 20px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+.politicaContent a {
+  color: var(--primary, #3a7bd5);
+  text-decoration: underline;
+}
+
+/* ── T56: Footer links ── */
+.footerLinks {
+  margin: 8px 0;
+}
+.footerLink {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  opacity: 0.7;
+}
+.footerLink:hover { opacity: 1; text-decoration: underline; }
+
+/* ── T56: Cookie banner ── */
+.cookieBanner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: var(--bg-card, #1e2330);
+  border-top: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+}
+.cookieText {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+.cookieLink {
+  color: var(--primary, #3a7bd5);
+  text-decoration: underline;
+}
+.cookieBtn {
+  flex-shrink: 0;
+  background: var(--primary, #3a7bd5);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.cookieBtn:hover { opacity: 0.9; }

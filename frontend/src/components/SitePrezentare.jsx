@@ -4,6 +4,7 @@ import HomePage from './sp/HomePage'
 import DesprePage from './sp/DesprePage'
 import ServiciiPage from './sp/ServiciiPage'
 import ProgramContactPage from './sp/ProgramContactPage'
+import PoliticaPage from './sp/PoliticaPage'
 
 export default function SitePrezentare() {
   return (
@@ -13,6 +14,7 @@ export default function SitePrezentare() {
         <Route path="/despre" element={<DesprePage />} />
         <Route path="/servicii" element={<ServiciiPage />} />
         <Route path="/program" element={<ProgramContactPage />} />
+        <Route path="/politica-confidentialitate" element={<PoliticaPage />} />
       </Routes>
     </SpLayout>
   )

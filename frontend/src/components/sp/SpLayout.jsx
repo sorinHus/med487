@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import s from '../../styles/sp.module.css'
+import CookieBanner from './CookieBanner'
 
 export default function SpLayout({ children }) {
   const navRef = useRef(null)
@@ -70,8 +71,15 @@ export default function SpLayout({ children }) {
           Cabinet Medical Dr. Ion Popescu
           <span className={s.footerLogoSub}>Medicină de Familie · Cluj-Napoca</span>
         </div>
+        <div className={s.footerLinks}>
+          <Link to="/politica-confidentialitate" className={s.footerLink}>
+            Politică de confidențialitate
+          </Link>
+        </div>
         <p className={s.footerCopy}>© 2026 · Toate drepturile rezervate</p>
       </footer>
+
+      <CookieBanner />
     </div>
   )
 }
