@@ -564,7 +564,7 @@
         data.forEach(s => s.date.forEach(d => zileSarbatoare.set(d.date.replace(/\//g, '-'), s.name)))
       } catch { /* ignoram eroarea */ }
     }
-    console.log('Sarbatori:', [...zileSarbatoare].slice(0, 5))
+    console.log('Sarbatori apr:', [...zileSarbatoare].filter(([k]) => k.startsWith('2026-04')))
     renderCalendar()
   }
 
