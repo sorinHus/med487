@@ -156,14 +156,11 @@ function GridSloturi({ data, oraSelectata, onSelectOra }) {
   if (!data) return null
   if (loading) return <div className={s.sloturi__loading}>Se incarca sloturi...</div>
   if (error) return <div className={s.sloturi__error}>{error}</div>
-  if (!sloturi || (!sloturi.libere?.length && !sloturi.ocupate?.length)) {
+  if (!sloturi || !Array.isArray(sloturi) || sloturi.length === 0) {
     return <div className={s.sloturi__empty}>Nu există sloturi disponibile pentru această zi.</div>
   }
 
-  const toate = [
-    ...(sloturi.libere || []).map(ora => ({ ora, liber: true })),
-    ...(sloturi.ocupate || []).map(ora => ({ ora, liber: false })),
-  ].sort((a, b) => a.ora.localeCompare(b.ora))
+  const toate = sloturi
 
   return (
     <div className={s.sloturi}>
