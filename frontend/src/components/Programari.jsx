@@ -99,7 +99,7 @@ function CalendarLunar({ selectedDate, onSelectDate, programariExistente, sarbat
               title={tooltipText}>
               {dayNum}
               {areOcupata && !isPast && !eBlockat && <span className={s.calLunar__dot} />}
-              {eSarbatoare && <span className={s.calLunar__sarbIcon}>🎉</span>}
+              {eSarbatoare}
             </button>
           )
         })}
