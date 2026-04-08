@@ -170,35 +170,15 @@ function ModalProgramare({ onClose, onSaved, programariExistente }) {
     const an = new Date().getFullYear()
     api.get(`/zile-libere/?year=${an}`)
       .then(r => {
+        console.log('ZILE LIBERE:', r.data)
         const map = {}
         if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
+        console.log('MAP:', map)
         setSarbatori(map)
       })
       .catch(() => {})
   }, [])
   
-  useEffect(() => {
-    const an = new Date().getFullYear()
-    api.get(`/zile-libere/?year=${an}`)
-      .then(r => {
-        const map = {}
-        if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
-        setSarbatori(map)
-      })
-      .catch(() => {})
-  }, [])
-  
-
-  useEffect(() => {
-    const an = new Date().getFullYear()
-    api.get(`/zile-libere/?year=${an}`)
-      .then(r => {
-        const map = {}
-        if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
-        setSarbatori(map)
-      })
-      .catch(() => {})
-  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -294,23 +274,16 @@ function ModalEditare({ programare, onClose, onSaved, programariExistente }) {
     const an = new Date().getFullYear()
     api.get(`/zile-libere/?year=${an}`)
       .then(r => {
+        console.log('ZILE LIBERE:', r.data)
         const map = {}
         if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
+        console.log('MAP:', map)
         setSarbatori(map)
       })
       .catch(() => {})
   }, [])
  
-  useEffect(() => {
-    const an = new Date().getFullYear()
-    api.get(`/zile-libere/?year=${an}`)
-      .then(r => {
-        const map = {}
-        if (Array.isArray(r.data)) r.data.forEach(z => { map[z.date] = z.name })
-        setSarbatori(map)
-      })
-      .catch(() => {})
-  }, [])
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
