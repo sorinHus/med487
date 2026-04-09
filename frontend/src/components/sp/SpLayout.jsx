@@ -7,6 +7,7 @@ export default function SpLayout({ children }) {
   const navRef = useRef(null)
   const location = useLocation()
   const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -14,7 +15,9 @@ export default function SpLayout({ children }) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Închide drawer la schimbare pagină
   useEffect(() => {
+    setMenuOpen(false)
     window.scrollTo(0, 0)
     setTimeout(() => {
       const reveals = document.querySelectorAll(`.${s.reveal}`)
@@ -43,6 +46,8 @@ export default function SpLayout({ children }) {
             <span className={s.navLogoSub}>Medicină de Familie</span>
           </div>
         </Link>
+
+        {/* Desktop nav */}
         <ul className={s.navLinks}>
           <li><Link to="/despre" className={isActive('/despre')}>Despre</Link></li>
           <li><Link to="/servicii" className={isActive('/servicii')}>Servicii</Link></li>
@@ -60,7 +65,30 @@ export default function SpLayout({ children }) {
             </div>
           </li>
         </ul>
+
+        {/* Hamburger mobil */}
+        <button
+          className={s.navHamburger}
+          onClick={() => setMenuOpen(prev => !prev)}
+          aria-label="Meniu"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </nav>
+
+      {/* Drawer mobil */}
+      <div className={`${s.navDrawer} ${menuOpen ? s.open : ''}`}>
+        <Link to="/despre" className={isActive('/despre')}>Despre</Link>
+        <Link to="/servicii" className={isActive('/servicii')}>Servicii</Link>
+        <Link to="/program" className={isActive('/program')}>Program & Contact</Link>
+        <div className={s.navDrawerCont}>
+          <a href="/programare.html" className={s.btnNav} target="_blank">📅 Programare online →</a>
+          <Link to="/app" className={s.btnNav} style={{ background: '#2563a8' }}>🔑 Login</Link>
+          <a href="/inregistrare.html" className={s.btnSecondary}>📋 Înregistrare</a>
+        </div>
+      </div>
 
       <div className={s.page}>
         {children}

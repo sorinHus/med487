@@ -108,7 +108,6 @@
     .cal-day.selected { background: #1d4ed8; color: #fff !important; border-color: #1d4ed8; }
     .cal-day.disabled { color: #d1d5db; cursor: not-allowed; }
     .cal-day.empty    { cursor: default; }
-    
 
     /* Slots */
     .slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 4px; }
@@ -180,6 +179,124 @@
     /* Footer */
     footer {
       text-align: center; padding: 20px; font-size: 12px; color: #94a3b8;
+    }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════ */
+
+    /* Tablet ≤768px */
+    @media (max-width: 768px) {
+      .main {
+        padding: 20px 12px 40px;
+        align-items: flex-start;
+      }
+
+      .card {
+        border-radius: 12px;
+      }
+
+      .card-body {
+        padding: 20px 18px;
+      }
+
+      .step {
+        padding: 12px 6px;
+        font-size: 11px;
+      }
+
+      .step-num {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        margin-right: 4px;
+      }
+
+      .field-group {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .btn-row {
+        flex-direction: column-reverse;
+        gap: 8px;
+      }
+
+      .btn {
+        width: 100%;
+        text-align: center;
+        padding: 13px 16px;
+      }
+
+      .slots-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+
+      .slot {
+        padding: 11px 4px;
+        font-size: 12px;
+      }
+
+      .calendar-grid {
+        gap: 2px;
+      }
+
+      .cal-day {
+        padding: 9px 2px;
+        font-size: 13px;
+        border-radius: 6px;
+      }
+
+      .success {
+        padding: 28px 20px;
+      }
+    }
+
+    /* Mobile mic ≤400px */
+    @media (max-width: 400px) {
+      .header {
+        padding: 12px 16px;
+        gap: 10px;
+      }
+
+      .header img {
+        height: 38px;
+      }
+
+      .header-info h1 {
+        font-size: 15px;
+      }
+
+      .card-body {
+        padding: 16px 14px;
+      }
+
+      .card-title {
+        font-size: 15px;
+      }
+
+      .slots-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .cal-day {
+        font-size: 12px;
+        padding: 7px 1px;
+      }
+
+      .cal-day-name {
+        font-size: 10px;
+      }
+
+      /* Ascunde textul label din steps, pastreaza doar numarul */
+      .step {
+        font-size: 0;
+      }
+      .step-num {
+        font-size: 11px;
+        margin-right: 0;
+      }
     }
   </style>
 </head>
@@ -465,15 +582,15 @@
     if (!nume) { showError('Numele este obligatoriu.'); return }
     if (nume.length < 3) { showError('Numele trebuie sa aiba cel putin 3 caractere.'); return }
     if (!telefon) { showError('Telefonul este obligatoriu.'); return }
-    if (!/^[0-9+\s]{10,15}$/.test(telefon.replace(/\s/g, ''))) { 
-  showError('Telefon invalid — introduceti minim 10 cifre.'); return 
-}
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { 
-  showError('Adresa de email nu este valida.'); return 
-}
-    if (motiv && motiv.length > 255) { 
-  showError('Motivul nu poate depasi 255 de caractere.'); return 
-}
+    if (!/^[0-9+\s]{10,15}$/.test(telefon.replace(/\s/g, ''))) {
+      showError('Telefon invalid — introduceti minim 10 cifre.'); return
+    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('Adresa de email nu este valida.'); return
+    }
+    if (motiv && motiv.length > 255) {
+      showError('Motivul nu poate depasi 255 de caractere.'); return
+    }
 
     const btn = document.getElementById('btn-submit')
     btn.disabled = true
@@ -502,10 +619,10 @@
       })
 
       if (!res.ok) {
-          const errData = await res.json().catch(() => ({}))
-          console.error('Server error:', res.status, errData)
-          throw new Error('Server error')
-}
+        const errData = await res.json().catch(() => ({}))
+        console.error('Server error:', res.status, errData)
+        throw new Error('Server error')
+      }
 
       const d = new Date(state.selectedDate + 'T00:00:00')
       document.getElementById('success-detail').innerHTML =
@@ -570,33 +687,31 @@
   }
 
   // ── Asociere cont pacient ──
-let pacientLogat = null
+  let pacientLogat = null
 
-async function checkLogat() {
-  const token = localStorage.getItem('access')
-  if (!token) return
-  try {
-    const res = await fetch(`${API}/useri/me/`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    if (!res.ok) return
-    const user = await res.json()
-    if (user.rol !== 'pacient') return
-    // Obtine datele pacientului
-    const resPacient = await fetch(`${API}/portal-pacient/`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    pacientLogat = { token, user }
-    // Prefill nume din user
-    const nume = `${user.last_name} ${user.first_name}`.trim()
-    if (nume) document.getElementById('f-nume').value = nume
-    if (user.email) document.getElementById('f-email').value = user.email
-  } catch { /* ignoram */ }
-}
+  async function checkLogat() {
+    const token = localStorage.getItem('access')
+    if (!token) return
+    try {
+      const res = await fetch(`${API}/useri/me/`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (!res.ok) return
+      const user = await res.json()
+      if (user.rol !== 'pacient') return
+      await fetch(`${API}/portal-pacient/`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      pacientLogat = { token, user }
+      const nume = `${user.last_name} ${user.first_name}`.trim()
+      if (nume) document.getElementById('f-nume').value = nume
+      if (user.email) document.getElementById('f-email').value = user.email
+    } catch { /* ignoram */ }
+  }
 
-// Init
-loadSarbatori()
-checkLogat()
+  // Init
+  loadSarbatori()
+  checkLogat()
 </script>
 </body>
 </html>

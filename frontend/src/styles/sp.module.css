@@ -96,6 +96,71 @@
   transform: translateY(-1px);
 }
 
+/* ── Hamburger ── */
+.navHamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+.navHamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #1a3557;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* ── Mobile nav drawer ── */
+.navDrawer {
+  display: none;
+  position: fixed;
+  top: 68px; left: 0; right: 0;
+  background: rgba(250,248,244,0.98);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1.5rem 2rem;
+  z-index: 99;
+  flex-direction: column;
+  gap: 0;
+  box-shadow: 0 8px 32px rgba(26,53,87,0.12);
+}
+.navDrawer.open {
+  display: flex;
+}
+.navDrawer a,
+.navDrawer button {
+  display: block;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1a2332;
+  text-decoration: none;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  cursor: pointer;
+  text-align: left;
+}
+.navDrawer a:last-child {
+  border-bottom: none;
+}
+.navDrawer a:hover {
+  color: #2563a8;
+}
+.navDrawerCont {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 /* ── Dropdown ── */
 .dropdownWrap {
   position: relative;
@@ -710,3 +775,161 @@
   white-space: nowrap;
 }
 .cookieBtn:hover { opacity: 0.9; }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+
+/* ── Tablet ≤1024px ── */
+@media (max-width: 1024px) {
+  .nav {
+    padding: 0 2rem;
+  }
+
+  .heroInner {
+    gap: 3rem;
+  }
+
+  .despreGrid {
+    gap: 3rem;
+  }
+
+  .serviciiGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .programGrid {
+    gap: 2rem;
+  }
+
+  .section {
+    padding: 4rem 2rem;
+  }
+
+  .footer {
+    padding: 2rem;
+  }
+}
+
+/* ── Mobile ≤768px ── */
+@media (max-width: 768px) {
+  /* Nav */
+  .nav {
+    padding: 0 1.25rem;
+  }
+  .navLinks {
+    display: none;
+  }
+  .navHamburger {
+    display: flex;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 3rem 1.25rem 2rem;
+    min-height: auto;
+  }
+  .heroInner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .heroH1 {
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+  }
+  .heroCard {
+    /* Card apare sub text pe mobile */
+    order: 2;
+  }
+  .heroActions {
+    flex-direction: column;
+  }
+  .heroActions a {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Despre */
+  .despreGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .despreImgPlaceholder {
+    height: 220px;
+    font-size: 3.5rem;
+  }
+  .despreBadge {
+    bottom: -12px;
+    right: 12px;
+  }
+
+  /* Servicii */
+  .serviciiGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Program */
+  .programGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  /* Section */
+  .section {
+    padding: 3rem 1.25rem;
+  }
+  .sectionDesc {
+    max-width: 100%;
+  }
+
+  /* Footer */
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1.5rem 1.25rem;
+  }
+
+  /* Cookie banner */
+  .cookieBanner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .cookieBtn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Politica */
+  .politicaWrap {
+    padding: 100px 16px 60px;
+  }
+  .politicaTitle {
+    font-size: 1.5rem;
+  }
+}
+
+/* ── Mobile mic ≤480px ── */
+@media (max-width: 480px) {
+  .heroH1 {
+    font-size: 1.7rem;
+  }
+  .cardStats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  .statNum {
+    font-size: 1.1rem;
+  }
+  .statLabel {
+    font-size: 0.65rem;
+  }
+  .heroCard {
+    padding: 1.25rem;
+  }
+  .serviciuCard {
+    padding: 1.25rem 1rem;
+  }
+}
