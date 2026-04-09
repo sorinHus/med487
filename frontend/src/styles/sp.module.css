@@ -842,10 +842,12 @@
   }
   .heroActions {
     flex-direction: column;
+    width: 100%;
   }
   .heroActions a {
     width: 100%;
     justify-content: center;
+    box-sizing: border-box;
   }
 
   /* Despre */

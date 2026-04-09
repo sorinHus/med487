@@ -49,6 +49,7 @@ export default function SpLayout({ children }) {
 
         {/* Desktop nav */}
         <ul className={s.navLinks}>
+          <li><Link to="/" className={isActive('/')}>Acasă</Link></li>
           <li><Link to="/despre" className={isActive('/despre')}>Despre</Link></li>
           <li><Link to="/servicii" className={isActive('/servicii')}>Servicii</Link></li>
           <li><Link to="/program" className={isActive('/program')}>Program & Contact</Link></li>
@@ -80,6 +81,7 @@ export default function SpLayout({ children }) {
 
       {/* Drawer mobil */}
       <div className={`${s.navDrawer} ${menuOpen ? s.open : ''}`}>
+        <Link to="/" className={isActive('/')}>Acasă</Link>
         <Link to="/despre" className={isActive('/despre')}>Despre</Link>
         <Link to="/servicii" className={isActive('/servicii')}>Servicii</Link>
         <Link to="/program" className={isActive('/program')}>Program & Contact</Link>
