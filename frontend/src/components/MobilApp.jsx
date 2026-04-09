@@ -528,7 +528,7 @@ function TabModule({ token }) {
     <div className={s.adminList}>
       {useri.map(u => (
         <div key={u.id} className={s.adminCard}>
-          <div className={s.adminName}>{u.last_name} {u.first_name}</div>
+          <div className={s.adminName}>{u.first_name} {u.last_name}</div>
           <div className={s.adminSub}>{u.username}</div>
           <div className={s.moduleGrid}>
             {TOATE_MODULELE.map(m => {
@@ -668,7 +668,7 @@ function SuperadminMobil({ token, user, onLogout }) {
         <div>
           <img src="/logo.png" alt="MED487" style={{ width: '180px', marginBottom: '1.5rem' }} />
           <div className={s.headerTitle}>MED487 Admin</div>
-          <div className={s.headerSub}>{user.last_name} {user.first_name}</div>
+          <div className={s.headerSub}>{user.first_name} {user.last_name}</div>
         </div>
         <button className={s.logoutBtn} onClick={onLogout}>Ieșire</button>
       </div>
