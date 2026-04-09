@@ -454,7 +454,7 @@ function TabUtilizatori({ token }) {
         <div key={u.id} className={s.adminCard}>
           <div className={s.adminCardTop}>
             <div>
-              <div className={s.adminName}>{u.last_name} {u.first_name}</div>
+              <div className={s.adminName}>{u.first_name} {u.last_name}</div>
               <div className={s.adminSub}>{u.username} · {ROL_LABEL[u.rol] || u.rol}</div>
             </div>
             <span className={u.is_active ? s.badgeActiv : s.badgeInactiv}>
