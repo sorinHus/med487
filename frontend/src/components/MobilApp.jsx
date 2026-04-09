@@ -82,7 +82,7 @@ function LoginScreen({ onLogin }) {
 
   return (
     <div className={s.loginWrap}>
-      <div className={s.loginLogo}>🏥 MED487</div>
+      <img src="/logo.png" alt="MED487" style={{ width: '180px', marginBottom: '1.5rem' }} />
       <div className={s.loginCard}>
         <div className={s.loginTitle}>Acces personal medical</div>
         <input className={s.input} type="text" placeholder="Username" value={username}
