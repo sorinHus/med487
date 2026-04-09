@@ -86,10 +86,12 @@ export default function SpLayout({ children }) {
         <Link to="/servicii" className={isActive('/servicii')}>Servicii</Link>
         <Link to="/program" className={isActive('/program')}>Program & Contact</Link>
         <div className={s.navDrawerCont}>
-          <a href="/programare.html" className={s.btnNav} target="_blank">📅 Programare online →</a>
-          <Link to="/app" className={s.btnNav} style={{ background: '#2563a8' }}>🔑 Login</Link>
-          <a href="/inregistrare.html" className={s.btnSecondary}>📋 Înregistrare</a>
-        </div>
+          <a href="/programare.html" className={s.btnPrimary} style={{ justifyContent: 'center', fontSize: '1rem', padding: '0.9rem' }}>
+            📅 Programare online
+          </a>
+          <Link to="/app" className={s.btnNav} style={{ background: '#2563a8', justifyContent: 'center' }}>🔑 Login</Link>
+          <a href="/inregistrare.html" className={s.btnSecondary} style={{ justifyContent: 'center' }}>📋 Înregistrare</a>
+      </div>
       </div>
 
       <div className={s.page}>
