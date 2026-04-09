@@ -666,7 +666,8 @@ function SuperadminMobil({ token, user, onLogout }) {
     <div className={s.container}>
       <div className={s.header}>
         <div>
-          <div className={s.headerTitle}>🏥 MED487 Admin</div>
+          <img src="/logo.png" alt="MED487" style={{ width: '180px', marginBottom: '1.5rem' }} />
+          <div className={s.headerTitle}>MED487 Admin</div>
           <div className={s.headerSub}>{user.last_name} {user.first_name}</div>
         </div>
         <button className={s.logoutBtn} onClick={onLogout}>Ieșire</button>
@@ -763,10 +764,10 @@ export default function MobilApp() {
       {/* HEADER */}
       <div className={s.header}>
         <div>
-          <div className={s.headerTitle}>🏥 MED487</div>
+          <img src="/logo.png" alt="MED487" style={{ width: '180px', marginBottom: '1.5rem' }} />
           <div className={s.headerSub}>
-            {user.last_name && user.first_name ? `${user.last_name} ${user.first_name}` : user.username}
             {user.rol === 'medic' ? ' • Dr.' : ''}
+            {user.last_name && user.first_name ? `${user.last_name} ${user.first_name}` : user.username}
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
