@@ -11,31 +11,39 @@ A web application for managing a family medicine practice. Built with Django 6 +
 - Django REST Framework
 - PostgreSQL
 - JWT Authentication (simplejwt — access 8h / refresh 7 days)
-- django-filter, django-cors-headers, anymail (Resend)
+- django-filter, django-cors-headers, anymail (Resend), boto3 (Cloudflare R2), openpyxl, django-ratelimit
 
 **Frontend**
 - React 19 + Vite 8
 - Axios 1.13
 - React Router DOM
 - Recharts
-- Dark theme with inline styles
+- CSS Modules (all components)
+- Dark/light theme via CSS variables
 
 ---
 
 ## Implemented Features
 
 - **Authentication** — JWT with automatic refresh, role-based access (superadmin / medic / asistent / pacient), auto logout after 2h inactivity
-- **Patients** — Full CRUD, Romanian CNP validation, address with county/locality dropdowns (42 counties, 13,812 localities)
+- **Patients** — Full CRUD, Romanian CNP validation, address with county/locality dropdowns (42 counties, 13,812 localities), sortable/filterable list, configurable columns, Excel import/export, `nume_anterior` field
 - **Consultations** — Per-patient history, ICD-10 integration (1,009 codes), primary/secondary diagnoses
-- **Appointments** — Weekly calendar, public online booking, email notifications, legal holiday blocking, configurable weekly schedule
+- **Appointments** — Weekly calendar with lunar view + free slots, public online booking, email notifications, legal holiday blocking, configurable weekly schedule, edit/cancel
 - **Medical Prescriptions** — Line-item model, auto-numbering RX00001/2026, print/PDF template
-- **Medical Leave** — Full CNAS form model, dot matrix print template with calibration mode
+- **Medical Leave** — Full CNAS form model, dot matrix print template with calibration mode, XML export (Anexa 010)
 - **Referrals** — Specialist referral model, print templates (simple + CNAS)
+- **CNAS Reporting** — XML export Anexa 006 (consultations) and Anexa 010 (medical leave)
+- **Document Upload** — Per-patient file upload stored on Cloudflare R2; separate "Dosar scanat" and "Alte fișiere" sections
 - **Doctor Profile** — Personal data + password change
 - **Module System** — Per-user active module management, sidebar filtered by active modules
-- **Superadmin Panel** — User management, module activation, global settings (cabinet info, slot duration, maintenance mode, weekly schedule)
-- **Public Site** — Presentation site (light mode) with hero, services, schedule, and contact sections; schedule loaded from DB
-- **Public Booking** — Standalone HTML page, blocks weekends + legal holidays, 30-day limit, slots from API
+- **Superadmin Panel** — User management (CRUD + activate/deactivate), module activation, global settings (cabinet info, slot duration, maintenance mode, weekly schedule)
+- **Patient Portal** — Self-registration with CNP-based username (family members sharing email supported), staff approval flow, portal with appointments/consultations/prescriptions (read-only)
+- **Public Site** — Presentation site (light mode) with separate React Router pages (Home, About, Services, Schedule/Contact); hamburger menu on mobile; fully responsive
+- **Public Booking** — Standalone HTML page (`programare.html`), blocks weekends + legal holidays, 30-day limit, slots from API; fully responsive; associates booking with logged-in patient account
+- **Mobile PWA** — Installable PWA at `/mobil`; appointments view + status change + add/edit; file upload; superadmin panel; separate JWT token
+- **Activity Logs** — Last 500 actions visible to superadmin, timestamps in Europe/Bucharest timezone
+- **Rate Limiting** — Public endpoints protected via django-ratelimit
+- **GDPR** — Privacy policy page, cookie consent banner
 
 ---
 
@@ -43,95 +51,76 @@ A web application for managing a family medicine practice. Built with Django 6 +
 
 ```
 cabinet-medical/
-├── backend/                  # Django project settings
+├── backend/
 │   ├── settings.py
 │   └── urls.py
-├── pacienti/                 # Main application
-│   ├── models.py             # CustomUser, Pacient, Consultatie, Reteta, ConcediuMedical, Trimitere, ConfiguratieCabinet, ModuleUtilizator
+├── pacienti/
+│   ├── models.py
 │   ├── serializers.py
 │   ├── views.py
 │   ├── urls.py
-│   ├── migrations/           # 0001–0013
+│   ├── migrations/           # 0001–0020
 │   ├── fixtures/
 │   │   └── diagnostice_fixture.json   # 1,009 ICD-10 codes
-│   └── templates/
-│       └── pacienti/
-│           ├── reteta_print.html
-│           ├── concediu_print.html
-│           ├── trimitere_simpla_print.html
-│           └── trimitere_cnas_print.html
+│   └── templates/pacienti/
+│       ├── reteta_print.html
+│       ├── concediu_print.html
+│       ├── trimitere_simpla_print.html
+│       └── trimitere_cnas_print.html
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
+│   │   │   ├── sp/           # Site prezentare (SpLayout, HomePage, DesprePage, ServiciiPage, ProgramContactPage, PoliticaPage, CookieBanner)
 │   │   │   ├── AdresaFields.jsx
+│   │   │   ├── CereriPacienti.jsx
+│   │   │   ├── Consultatii.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Layout.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── MobilApp.jsx
+│   │   │   ├── PacientDetalii.jsx
+│   │   │   ├── PacientForm.jsx
+│   │   │   ├── PacientList.jsx
+│   │   │   ├── PortalPacient.jsx
+│   │   │   ├── ProfilMedic.jsx
+│   │   │   ├── Programari.jsx
+│   │   │   ├── Rapoarte.jsx
 │   │   │   ├── SitePrezentare.jsx
 │   │   │   └── SuperadminPanel.jsx
+│   │   ├── styles/           # CSS Modules (ComponentName.module.css for each component; sp.module.css shared for sp/)
 │   │   ├── utils/
 │   │   │   ├── cnp.js
 │   │   │   └── romania_geo.js
-│   │   ├── App.jsx           # React Router: / → SitePrezentare, /app → AppInterna
+│   │   ├── App.jsx
 │   │   ├── api.js
 │   │   └── auth.js
 │   └── public/
-│       └── programare.html   # Public booking (no authentication)
-└── .env                      # Environment variables (not in repo)
+│       ├── programare.html   # Public booking (responsive, no auth required)
+│       ├── inregistrare.html # Patient self-registration
+│       ├── manifest.json     # PWA manifest
+│       └── _redirects        # Cloudflare Pages SPA routing
+└── .env
 ```
 
 ---
 
-## Local Setup
+## Production Deploy
 
-### Requirements
-- Python 3.12+
-- Node.js 20+
-- PostgreSQL 15+
+| Service | URL |
+|---------|-----|
+| Frontend | https://med487.pages.dev (Cloudflare Pages) |
+| Backend | https://web-production-26811.up.railway.app (Railway) |
+| DB | PostgreSQL on Railway |
+| Storage | Cloudflare R2 (`med487-documente`) |
 
-### Backend
-
-```bash
-git clone https://github.com/sorinHus/med487.git
-cd med487/cabinet-medical
-
-python -m venv venv
-venv\Scripts\activate        # Windows
-# source venv/bin/activate   # Linux/Mac
-
-pip install -r requirements.txt
-
-cp .env.example .env
-# Edit .env with your PostgreSQL and email credentials
-
-python manage.py migrate
-python manage.py loaddata pacienti/fixtures/diagnostice_fixture.json
-python manage.py createsuperuser
-python manage.py runserver
+**Railway start command:**
+```
+python manage.py migrate && python manage.py loaddata pacienti/fixtures/diagnostice_fixture.json && gunicorn backend.wsgi --bind 0.0.0.0:$PORT --timeout 120 --workers 2
 ```
 
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
+**Cloudflare Pages env:**
 ```
-
-App available at `http://localhost:5173`.
-
----
-
-## Environment Variables (.env)
-
-```env
-SECRET_KEY=your-secret-key
-DEBUG=True
-DATABASE_NAME=med487
-DATABASE_USER=your-db-user
-DATABASE_PASSWORD=your-db-password
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-RESEND_API_KEY=your-resend-key
-DEFAULT_FROM_EMAIL=onboarding@resend.dev
-EMAIL_CABINET=your-email@gmail.com
+VITE_API_URL=https://web-production-26811.up.railway.app/api
 ```
 
 ---
@@ -140,14 +129,14 @@ EMAIL_CABINET=your-email@gmail.com
 
 | Role | Access |
 |------|--------|
-| `superadmin` | Platform administration: users, modules, global settings |
+| `superadmin` | Platform administration: users, modules, global settings, activity logs |
 | `medic` | Full application access |
 | `asistent` | Limited access based on modules activated by superadmin |
-| `pacient` | Personal portal: consultations, prescriptions, appointments |
+| `pacient` | Personal portal: consultations, prescriptions, appointments; username = CNP |
 
 ---
 
-## API Endpoints
+## API Endpoints (selected)
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -155,36 +144,39 @@ EMAIL_CABINET=your-email@gmail.com
 | POST | `/api/token/refresh/` | Refresh token |
 | GET/POST | `/api/pacienti/` | List/create patients |
 | GET/PUT/PATCH/DELETE | `/api/pacienti/{id}/` | Patient detail/edit/delete |
-| GET | `/api/pacienti/{id}/consultatii/` | Consultations per patient |
+| GET/POST | `/api/pacienti/{id}/documente/` | Patient documents (R2) |
+| DELETE | `/api/documente/{id}/` | Delete document |
 | GET/POST | `/api/consultatii/` | List/create consultations |
 | GET/POST | `/api/programari/` | List/create appointments |
 | GET | `/api/programari/slots_libere/?data=YYYY-MM-DD` | Free slots (public) |
 | GET | `/api/configuratie/` | Cabinet configuration (public GET) |
-| PUT/PATCH | `/api/configuratie/1/` | Update configuration |
 | GET/POST | `/api/retete/` | List/create prescriptions |
-| GET | `/api/retete/{id}/print/` | Prescription print preview |
+| GET | `/api/retete/{id}/print/` | Prescription print |
 | GET/POST | `/api/concedii/` | List/create medical leave |
-| GET | `/api/concedii/{id}/print/` | Medical leave print preview |
+| GET | `/api/concedii/{id}/print/` | Medical leave print |
 | GET/POST | `/api/trimiteri/` | List/create referrals |
-| GET | `/api/trimiteri/{id}/print/` | Referral print preview |
+| GET | `/api/trimiteri/{id}/print/` | Referral print |
+| GET | `/api/export-xml/?luna=&an=` | XML Anexa 006 CNAS |
+| GET | `/api/export-xml-concedii/?luna=&an=` | XML Anexa 010 CNAS |
+| POST | `/api/import-pacienti/` | Excel patient import |
 | GET/PATCH | `/api/profil/` | Doctor profile |
-| POST | `/api/profil/schimbare-parola/` | Change password |
 | GET/PUT | `/api/module/{id}/` | Active modules per user |
 | GET | `/api/zile-libere/?year=YYYY` | Romanian legal holidays (public) |
+| POST | `/api/inregistrare/` | Patient self-registration (public) |
+| GET | `/api/portal-pacient/` | Patient portal data |
+| POST | `/api/reset-parola/` | Password reset by username (public) |
+| GET | `/api/loguri/` | Activity logs (superadmin only) |
 
 ---
 
 ## Print Documents
 
-Prescriptions, medical leave, and referrals print directly from the browser (Print → Save as PDF).
-
 **Prescription:** `/api/retete/{id}/print/`
 
 **Medical leave:** `/api/concedii/{id}/print/`
-Dot matrix calibration mode: `/api/concedii/{id}/print/?calibrare`
+Dot matrix calibration: `/api/concedii/{id}/print/?calibrare`
 
 **Referral (simple):** `/api/trimiteri/{id}/print/?tip=simplu`
-
 **Referral (CNAS):** `/api/trimiteri/{id}/print/?tip=cnas`
 
 ---
@@ -199,24 +191,17 @@ Dot matrix calibration mode: `/api/concedii/{id}/print/?calibrare`
 | F4 | Prescriptions, Referrals, Medical Leave | ✅ Done |
 | F5 | Dashboard, Reports, Roles, Modules | ✅ Done |
 | F6 | Public site, Superadmin, Deployment | ✅ Done |
-| F9 | Configurable schedule, Theme system, Patient portal | 🔄 In progress |
+| F7 | Patient portal, PWA mobile, CNAS export | ✅ Done |
+| F8 | CSS Modules, responsive, activity logs | ✅ Done |
 
 ---
 
 ## Backlog (post-demo)
 
-- **T64** — Dark/light theme system (CSS variables, all components use inline styles)
-- **T67** — Patient portal with public registration and doctor approval flow
-- **T68** — Public booking with patient account association
-- **T56** — GDPR — data policy, access logging
-- **T57** — End-to-end testing
-- **T58** — Mobile responsive
-- **T63b** — Configurable alternate schedule (done)
-- **T70** — SIUI integration (CNAS reporting)
-- **T71** — Electronic prescription (PES)
-- **T72** — Health card integration
-- **T73** — Rate limiting on public endpoints
-- **T77** — Document upload per patient
+- **T38** — CNAS referral form coordinate calibration (requires form scan)
+- **T71** — Electronic prescription PES (requires CNAS contract)
+- **T72** — Health card integration (requires eCard.SDK + physical reader)
+- **T89** — Automated testing: pytest backend + Vitest/Playwright frontend (recommended: GitHub Actions)
 
 ---
 
