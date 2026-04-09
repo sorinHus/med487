@@ -766,8 +766,8 @@ export default function MobilApp() {
         <div>
           <img src="/logo.png" alt="MED487" style={{ width: '180px', marginBottom: '1.5rem' }} />
           <div className={s.headerSub}>
-            {user.rol === 'medic' ? ' • Dr.' : ''}
-            {user.last_name && user.first_name ? `${user.last_name} ${user.first_name}` : user.username}
+            {user.rol === 'medic' ? ' • Dr. ' : ''}
+            {user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : user.username}
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
