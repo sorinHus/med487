@@ -11,10 +11,9 @@ from pacienti.models import (
 )
 import zoneinfo
 
-TZ       = zoneinfo.ZoneInfo('Europe/Bucharest')
-MEDIC_ID = 1
-START    = date(2026, 4, 15)
-END      = date(2026, 5, 15)
+TZ    = zoneinfo.ZoneInfo('Europe/Bucharest')
+START = date(2026, 3, 15)
+END   = date(2026, 4, 15)
 
 MOTIVE = [
     'Control periodic', 'Reînnoire rețetă', 'Dureri de cap',
@@ -51,9 +50,9 @@ TRATAMENTE = [
 ]
 
 try:
-    medic = CustomUser.objects.get(id=MEDIC_ID)
+    medic = CustomUser.objects.get(username='ion.popescu')
 except CustomUser.DoesNotExist:
-    print(f"EROARE: Nu exista user cu id={MEDIC_ID}")
+    print("EROARE: Nu exista user ion.popescu")
     sys.exit(1)
 
 pacienti = list(Pacient.objects.filter(medic=medic))
@@ -66,12 +65,10 @@ if not pacienti:
 print(f"Medic: {medic.first_name} {medic.last_name} (id={medic.id})")
 print(f"Pacienti disponibili: {len(pacienti)}")
 
-# Incearca sa gaseasca diagnostice — orice diagnostic din DB
 diagnostice = list(Diagnostic.objects.all()[:20])
 print(f"Diagnostice disponibile: {len(diagnostice)}")
 
-# Sterge date existente in perioada
-print("Sterg date existente in perioada 15 apr - 15 mai...")
+print("Sterg date existente in perioada...")
 Consultatie.objects.filter(
     medic=medic,
     data_ora__date__gte=START,
@@ -116,10 +113,8 @@ while d <= END:
         if Programare.objects.filter(medic=medic, data_ora=dt).exists():
             continue
 
-        if d < azi:
+        if d <= azi:
             status = 'finalizat' if random.random() < 0.80 else 'anulat'
-        elif d == azi:
-            status = random.choice(['programat', 'confirmat', 'finalizat'])
         else:
             status = random.choices(['programat', 'confirmat'], weights=[60, 40])[0]
 
@@ -137,8 +132,7 @@ while d <= END:
         )
         prog_create += 1
 
-        # Consultatie la ~50% din programarile finalizate din trecut
-        if status == 'finalizat' and d < azi and random.random() < 0.50:
+        if status == 'finalizat' and d <= azi and random.random() < 0.50:
             cons = Consultatie.objects.create(
                 pacient=pacient,
                 medic=medic,
@@ -148,7 +142,6 @@ while d <= END:
                 tratament=TRATAMENTE[idx],
                 observatii='Pacient cooperant. Urmează tratamentul prescris.',
             )
-            # Adauga diagnostic daca exista in DB
             if diagnostice:
                 DiagnosticConsultatie.objects.create(
                     consultatie=cons,
