@@ -64,17 +64,17 @@ if not pacienti:
 print(f"Medic: {medic.first_name} {medic.last_name} (id={medic.id})")
 print(f"Pacienti disponibili: {len(pacienti)}")
 
-# ── Fetch diagnostice disponibile ──────────────────────
+# ── Fetch diagnostice disponibile (camp = cod_icd10) ───
 diagnostice = []
 for cod in DIAGNOSTICE_CODURI:
-    d = Diagnostic.objects.filter(cod=cod).first()
+    d = Diagnostic.objects.filter(cod_icd10=cod).first()
     if not d:
-        d = Diagnostic.objects.filter(cod__startswith=cod[:3]).first()
+        d = Diagnostic.objects.filter(cod_icd10__startswith=cod[:3]).first()
     if d:
         diagnostice.append(d)
 print(f"Diagnostice disponibile: {len(diagnostice)}")
 
-# ── Sloturi orare 08:00-17:40 la 20 min ────────────────
+# ── Sloturi orare 08:00-11:40 si 13:00-16:40 la 20 min ─
 def get_sloturi():
     slots = []
     for h in range(8, 12):
@@ -87,13 +87,12 @@ def get_sloturi():
 
 SLOTURI = get_sloturi()
 
-azi          = date.today()
-prog_create  = 0
-cons_create  = 0
+azi         = date.today()
+prog_create = 0
+cons_create = 0
 
 d = START
 while d <= END:
-    # Sari weekend
     if d.weekday() >= 5:
         d += timedelta(days=1)
         continue
@@ -105,11 +104,9 @@ while d <= END:
         dt      = datetime.combine(d, slot, tzinfo=TZ)
         pacient = random.choice(pacienti)
 
-        # Nu suprascriem sloturi deja ocupate
         if Programare.objects.filter(medic=medic, data_ora=dt).exists():
             continue
 
-        # Status în funcție de dată
         if d < azi:
             status = 'finalizat' if random.random() < 0.80 else 'anulat'
         elif d == azi:
@@ -129,7 +126,6 @@ while d <= END:
         )
         prog_create += 1
 
-        # Consultatie la ~50% din programarile finalizate din trecut
         if status == 'finalizat' and d < azi and random.random() < 0.50 and diagnostice:
             diag = random.choice(diagnostice)
             cons = Consultatie.objects.create(
