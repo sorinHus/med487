@@ -24,12 +24,6 @@ MOTIVE = [
     'Probleme digestive', 'Vertij', 'Palpitații',
 ]
 
-DIAGNOSTICE_CODURI = [
-    'J00', 'J06.9', 'J11.1', 'K29.7', 'M54.5',
-    'I10', 'R51', 'R05', 'K21.0', 'M79.3',
-    'J20.9', 'R42', 'I49.9', 'K59.0', 'R53',
-]
-
 SIMPTOME = [
     'Dureri de cap, febră 38.5°C, rinoree, tuse seacă.',
     'Dureri lombare cu iradiere în membrul inferior drept.',
@@ -72,7 +66,11 @@ if not pacienti:
 print(f"Medic: {medic.first_name} {medic.last_name} (id={medic.id})")
 print(f"Pacienti disponibili: {len(pacienti)}")
 
-# Sterge programarile si consultatiile existente in perioada
+# Incearca sa gaseasca diagnostice — orice diagnostic din DB
+diagnostice = list(Diagnostic.objects.all()[:20])
+print(f"Diagnostice disponibile: {len(diagnostice)}")
+
+# Sterge date existente in perioada
 print("Sterg date existente in perioada 15 apr - 15 mai...")
 Consultatie.objects.filter(
     medic=medic,
@@ -85,15 +83,6 @@ Programare.objects.filter(
     data_ora__date__lte=END
 ).delete()
 print("Sterse.")
-
-diagnostice = []
-for cod in DIAGNOSTICE_CODURI:
-    d = Diagnostic.objects.filter(cod_icd10=cod).first()
-    if not d:
-        d = Diagnostic.objects.filter(cod_icd10__startswith=cod[:3]).first()
-    if d:
-        diagnostice.append(d)
-print(f"Diagnostice disponibile: {len(diagnostice)}")
 
 def get_sloturi():
     slots = []
@@ -148,8 +137,8 @@ while d <= END:
         )
         prog_create += 1
 
-        if status == 'finalizat' and d < azi and random.random() < 0.50 and diagnostice:
-            diag = random.choice(diagnostice)
+        # Consultatie la ~50% din programarile finalizate din trecut
+        if status == 'finalizat' and d < azi and random.random() < 0.50:
             cons = Consultatie.objects.create(
                 pacient=pacient,
                 medic=medic,
@@ -159,11 +148,13 @@ while d <= END:
                 tratament=TRATAMENTE[idx],
                 observatii='Pacient cooperant. Urmează tratamentul prescris.',
             )
-            DiagnosticConsultatie.objects.create(
-                consultatie=cons,
-                diagnostic=diag,
-                tip='principal',
-            )
+            # Adauga diagnostic daca exista in DB
+            if diagnostice:
+                DiagnosticConsultatie.objects.create(
+                    consultatie=cons,
+                    diagnostic=random.choice(diagnostice),
+                    tip='principal',
+                )
             cons_create += 1
 
     d += timedelta(days=1)
