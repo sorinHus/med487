@@ -30,15 +30,30 @@ DIAGNOSTICE_CODURI = [
     'J20.9', 'R42', 'I49.9', 'K59.0', 'R53',
 ]
 
-OBS_LIST = [
-    'Pacient cooperant. Se recomandă repaus.',
-    'Stare generală bună. Continuă tratamentul.',
-    'Simptome ameliorate față de consultația anterioară.',
-    'Se recomandă analize suplimentare.',
-    'Pacient cu evoluție favorabilă.',
-    'Tratament modificat conform rezultatelor.',
-    'Se recomandă consultație de specialitate.',
-    'Fără modificări semnificative.',
+SIMPTOME = [
+    'Dureri de cap, febră 38.5°C, rinoree, tuse seacă.',
+    'Dureri lombare cu iradiere în membrul inferior drept.',
+    'Tuse productivă, expectorație mucoasă, febră 37.8°C.',
+    'Dureri epigastrice postprandiale, greață, vărsături ocazionale.',
+    'Tensiune arterială 160/95 mmHg la domiciliu. Cefalee occipitală.',
+    'Control periodic. Pacient cu DZ tip 2 cunoscut.',
+    'Disurie, polakiurie, urină tulbure. Debut acum 2 zile.',
+    'Dispnee de efort, junghi toracic stâng.',
+    'Anxietate, insomnie, iritabilitate crescută.',
+    'Control de rutină. Fără acuze subiective.',
+]
+
+TRATAMENTE = [
+    'Antibioterapie, antiinflamatoare, repaus la domiciliu.',
+    'Antiinflamatoare AINS, miorelaxante, fizioterapie recomandată.',
+    'Antibioterapie 7 zile, mucolitice, hidratare corespunzătoare.',
+    'Inhibitori de pompă de protoni, regim alimentar.',
+    'Ajustare schemă antihipertensivă, monitorizare TA zilnic.',
+    'Continuare Metformin, dietă hipoglucidică.',
+    'Antibioterapie, antialgice, hidratare abundentă.',
+    'Bronhodilatatoare, corticosteroizi inhalatori.',
+    'Anxiolitice, psihoterapie recomandată.',
+    'Reînnoire rețetă medicamente cronice. Continuare schemă actuală.',
 ]
 
 try:
@@ -47,7 +62,6 @@ except CustomUser.DoesNotExist:
     print(f"EROARE: Nu exista user cu id={MEDIC_ID}")
     sys.exit(1)
 
-# Fetch pacienti — toti din DB daca medicul are mai putin de 3
 pacienti = list(Pacient.objects.filter(medic=medic))
 if len(pacienti) < 3:
     pacienti = list(Pacient.objects.all())
@@ -58,8 +72,13 @@ if not pacienti:
 print(f"Medic: {medic.first_name} {medic.last_name} (id={medic.id})")
 print(f"Pacienti disponibili: {len(pacienti)}")
 
-# Sterge programarile existente in perioada pentru a evita duplicate
-print("Sterg programari existente in perioada 15 apr - 15 mai...")
+# Sterge programarile si consultatiile existente in perioada
+print("Sterg date existente in perioada 15 apr - 15 mai...")
+Consultatie.objects.filter(
+    medic=medic,
+    data_ora__date__gte=START,
+    data_ora__date__lte=END
+).delete()
 Programare.objects.filter(
     medic=medic,
     data_ora__date__gte=START,
@@ -67,7 +86,6 @@ Programare.objects.filter(
 ).delete()
 print("Sterse.")
 
-# Fetch diagnostice
 diagnostice = []
 for cod in DIAGNOSTICE_CODURI:
     d = Diagnostic.objects.filter(cod_icd10=cod).first()
@@ -116,6 +134,8 @@ while d <= END:
         else:
             status = random.choices(['programat', 'confirmat'], weights=[60, 40])[0]
 
+        idx = random.randint(0, len(SIMPTOME) - 1)
+
         prog = Programare.objects.create(
             medic=medic,
             pacient=pacient,
@@ -133,9 +153,11 @@ while d <= END:
             cons = Consultatie.objects.create(
                 pacient=pacient,
                 medic=medic,
-                data=d,
-                observatii=random.choice(OBS_LIST),
-                programare=prog,
+                data_ora=dt,
+                simptome=SIMPTOME[idx],
+                examen_clinic='Stare generală bună. TA 120/80 mmHg. AV 72/min.',
+                tratament=TRATAMENTE[idx],
+                observatii='Pacient cooperant. Urmează tratamentul prescris.',
             )
             DiagnosticConsultatie.objects.create(
                 consultatie=cons,
