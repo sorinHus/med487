@@ -102,12 +102,43 @@
       text-align: center; padding: 8px 4px; border-radius: 8px;
       font-size: 13px; cursor: pointer; color: #374151;
       transition: all 0.15s; border: 2px solid transparent;
+      position: relative;
     }
     .cal-day:hover:not(.disabled):not(.empty):not(.selected) { background: #eff6ff; color: #1d4ed8; }
     .cal-day.today    { font-weight: 700; color: #1d4ed8; }
-    .cal-day.selected { background: #1d4ed8; color: #fff !important; border-color: #1d4ed8; }
+    .cal-day.selected { background: #1d4ed8 !important; color: #fff !important; border-color: #1d4ed8 !important; }
     .cal-day.disabled { color: #d1d5db; cursor: not-allowed; }
     .cal-day.empty    { cursor: default; }
+
+    /* Disponibilitate zile — fundal colorat discret */
+    .cal-day.avail-verde    { background: #dcfce7; color: #166534; }
+    .cal-day.avail-galben   { background: #fef9c3; color: #854d0e; }
+    .cal-day.avail-portocaliu { background: #ffedd5; color: #9a3412; }
+    .cal-day.avail-rosu     { background: #fee2e2; color: #991b1b; }
+
+    /* Punct mic indicator sub cifra */
+    .cal-day .avail-dot {
+      display: block;
+      width: 5px; height: 5px; border-radius: 50%;
+      margin: 2px auto 0;
+    }
+    .avail-verde    .avail-dot { background: #16a34a; }
+    .avail-galben   .avail-dot { background: #ca8a04; }
+    .avail-portocaliu .avail-dot { background: #ea580c; }
+    .avail-rosu     .avail-dot { background: #dc2626; }
+
+    /* Legenda disponibilitate */
+    .avail-legenda {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      margin-top: 12px; font-size: 11px; color: #64748b;
+      align-items: center;
+    }
+    .avail-legenda-item {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .avail-legenda-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
 
     /* Slots */
     .slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 4px; }
@@ -184,119 +215,35 @@
     /* ═══════════════════════════════════════
        RESPONSIVE
        ═══════════════════════════════════════ */
-
-    /* Tablet ≤768px */
     @media (max-width: 768px) {
-      .main {
-        padding: 20px 12px 40px;
-        align-items: flex-start;
-      }
-
-      .card {
-        border-radius: 12px;
-      }
-
-      .card-body {
-        padding: 20px 18px;
-      }
-
-      .step {
-        padding: 12px 6px;
-        font-size: 11px;
-      }
-
-      .step-num {
-        width: 18px;
-        height: 18px;
-        font-size: 10px;
-        margin-right: 4px;
-      }
-
-      .field-group {
-        grid-template-columns: 1fr;
-        gap: 0;
-      }
-
-      .btn-row {
-        flex-direction: column-reverse;
-        gap: 8px;
-      }
-
-      .btn {
-        width: 100%;
-        text-align: center;
-        padding: 13px 16px;
-      }
-
-      .slots-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
-      }
-
-      .slot {
-        padding: 11px 4px;
-        font-size: 12px;
-      }
-
-      .calendar-grid {
-        gap: 2px;
-      }
-
-      .cal-day {
-        padding: 9px 2px;
-        font-size: 13px;
-        border-radius: 6px;
-      }
-
-      .success {
-        padding: 28px 20px;
-      }
+      .main { padding: 20px 12px 40px; align-items: flex-start; }
+      .card { border-radius: 12px; }
+      .card-body { padding: 20px 18px; }
+      .step { padding: 12px 6px; font-size: 11px; }
+      .step-num { width: 18px; height: 18px; font-size: 10px; margin-right: 4px; }
+      .field-group { grid-template-columns: 1fr; gap: 0; }
+      .btn-row { flex-direction: column-reverse; gap: 8px; }
+      .btn { width: 100%; text-align: center; padding: 13px 16px; }
+      .slots-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .slot { padding: 11px 4px; font-size: 12px; }
+      .calendar-grid { gap: 2px; }
+      .cal-day { padding: 9px 2px; font-size: 13px; border-radius: 6px; }
+      .success { padding: 28px 20px; }
+      .avail-legenda { gap: 8px; }
     }
 
-    /* Mobile mic ≤400px */
     @media (max-width: 400px) {
-      .header {
-        padding: 12px 16px;
-        gap: 10px;
-      }
-
-      .header img {
-        height: 38px;
-      }
-
-      .header-info h1 {
-        font-size: 15px;
-      }
-
-      .card-body {
-        padding: 16px 14px;
-      }
-
-      .card-title {
-        font-size: 15px;
-      }
-
-      .slots-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .cal-day {
-        font-size: 12px;
-        padding: 7px 1px;
-      }
-
-      .cal-day-name {
-        font-size: 10px;
-      }
-
-      /* Ascunde textul label din steps, pastreaza doar numarul */
-      .step {
-        font-size: 0;
-      }
-      .step-num {
-        font-size: 11px;
-        margin-right: 0;
-      }
+      .header { padding: 12px 16px; gap: 10px; }
+      .header img { height: 38px; }
+      .header-info h1 { font-size: 15px; }
+      .card-body { padding: 16px 14px; }
+      .card-title { font-size: 15px; }
+      .slots-grid { grid-template-columns: repeat(3, 1fr); }
+      .cal-day { font-size: 12px; padding: 7px 1px; }
+      .cal-day-name { font-size: 10px; }
+      .step { font-size: 0; }
+      .step-num { font-size: 11px; margin-right: 0; }
+      .avail-legenda { display: none; }
     }
   </style>
 </head>
@@ -339,6 +286,22 @@
         <button class="nav-btn" onclick="changeMonth(1)">&#8250;</button>
       </div>
       <div class="calendar-grid" id="cal-grid"></div>
+
+      <!-- Legenda disponibilitate -->
+      <div class="avail-legenda">
+        <div class="avail-legenda-item">
+          <div class="avail-legenda-dot" style="background:#16a34a;"></div> Sloturi disponibile (&gt;50%)
+        </div>
+        <div class="avail-legenda-item">
+          <div class="avail-legenda-dot" style="background:#ca8a04;"></div> Partial (~50%)
+        </div>
+        <div class="avail-legenda-item">
+          <div class="avail-legenda-dot" style="background:#ea580c;"></div> Putine (&lt;50%)
+        </div>
+        <div class="avail-legenda-item">
+          <div class="avail-legenda-dot" style="background:#dc2626;"></div> Complet ocupat
+        </div>
+      </div>
 
       <div class="btn-row" style="margin-top: 20px;">
         <button class="btn btn-primary" id="btn-next-1" onclick="goToStep2()" disabled>
@@ -425,8 +388,55 @@
     currentStep: 1,
   }
 
+  // Cache disponibilitate: { 'YYYY-MM-DD': 'verde'|'galben'|'portocaliu'|'rosu'|null }
+  let availCache = {}
+
+  function getAvailClass(libere, total) {
+    if (total === 0) return null
+    if (libere === 0) return 'avail-rosu'
+    const pct = libere / total
+    if (pct > 0.5) return 'avail-verde'
+    if (pct >= 0.4) return 'avail-galben'
+    return 'avail-portocaliu'
+  }
+
+  // Incarca disponibilitatea pentru toate zilele vizibile din luna curenta
+  async function loadAvailForMonth(year, month) {
+    const today = new Date()
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    const maxDate = new Date(todayStart); maxDate.setDate(maxDate.getDate() + 30)
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+    const toFetch = []
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(year, month, d)
+      if (date < todayStart || date > maxDate) continue
+      const dow = date.getDay()
+      if (dow === 0 || dow === 6) continue
+      const ds = formatDate(date)
+      if (zileSarbatoare.has(ds)) continue
+      if (availCache[ds] !== undefined) continue
+      toFetch.push(ds)
+    }
+
+    if (toFetch.length === 0) return
+
+    await Promise.all(toFetch.map(async ds => {
+      try {
+        const res = await fetch(`${API}/programari/slots_libere/?data=${ds}&medic=${MEDIC_ID}`)
+        const slots = await res.json()
+        if (!Array.isArray(slots) || slots.length === 0) { availCache[ds] = null; return }
+        const libere = slots.filter(s => s.liber).length
+        availCache[ds] = getAvailClass(libere, slots.length)
+      } catch { availCache[ds] = null }
+    }))
+
+    // Re-randam calendarul cu noile date
+    renderCalendar(false)
+  }
+
   // ── Calendar ──
-  function renderCalendar() {
+  function renderCalendar(triggerFetch = true) {
     const { viewYear, viewMonth, today, selectedDate } = state
     document.getElementById('cal-title').textContent = `${LUNI[viewMonth]} ${viewYear}`
 
@@ -453,7 +463,6 @@
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(viewYear, viewMonth, d)
       const el = document.createElement('div')
-      el.textContent = d
 
       const isToday = date.toDateString() === today.toDateString()
       const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate())
@@ -468,34 +477,46 @@
       const sarbNume = zileSarbatoare.get(dateStr) || ''
 
       let cls = 'cal-day'
-      if (isSel)                        cls += ' selected'
-      else if (isToday)                 cls += ' today'
+      if (isSel)                              cls += ' selected'
+      else if (isToday)                       cls += ' today'
       if (isPast || isSun || isSat || isSarb) cls += ' disabled'
+
+      // Colorare disponibilitate (doar zile active, neselectate)
+      if (!isSel && !isPast && !isSun && !isSat && !isSarb) {
+        const ac = availCache[dateStr]
+        if (ac) cls += ' ' + ac
+      }
 
       el.className = cls
 
+      // Continut: cifra + punct indicator
+      el.innerHTML = `${d}<span class="avail-dot"></span>`
+
       if (sarbNume) el.title = sarbNume
       else if (isSun || isSat) el.title = 'Weekend'
+      else if (!isPast && availCache[dateStr] === 'avail-rosu') el.title = 'Complet ocupat'
 
       if (!isPast && !isSun && !isSat && !isSarb) {
         el.onclick = () => selectDate(dateStr)
       }
       grid.appendChild(el)
     }
+
+    if (triggerFetch) loadAvailForMonth(viewYear, viewMonth)
   }
 
   function selectDate(dateStr) {
     state.selectedDate = dateStr
     state.selectedSlot = null
     document.getElementById('btn-next-1').disabled = false
-    renderCalendar()
+    renderCalendar(false)
   }
 
   function changeMonth(dir) {
     state.viewMonth += dir
     if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear++ }
     if (state.viewMonth < 0)  { state.viewMonth = 11; state.viewYear-- }
-    renderCalendar()
+    renderCalendar(true)
   }
 
   // ── Slots ──
@@ -638,6 +659,9 @@
       })
       document.getElementById('step-success').style.display = ''
 
+      // Invalidam cache-ul pentru ziua programata (s-a ocupat un slot)
+      delete availCache[state.selectedDate]
+
     } catch {
       showError('Eroare la trimiterea programarii. Incercati din nou sau sunati la cabinet.')
       btn.disabled = false
@@ -661,7 +685,7 @@
     document.getElementById('step-success').style.display = 'none'
     document.getElementById('btn-next-1').disabled = true
     goToStep(1)
-    renderCalendar()
+    renderCalendar(true)
   }
 
   function formatDate(date) {
@@ -681,9 +705,9 @@
         const res = await fetch(`${API}/zile-libere/?year=${year}`)
         const data = await res.json()
         data.forEach(s => s.date.forEach(d => zileSarbatoare.set(d.date.replace(/\//g, '-'), s.name)))
-      } catch { /* ignoram eroarea */ }
+      } catch { /* ignoram */ }
     }
-    renderCalendar()
+    renderCalendar(true)
   }
 
   // ── Asociere cont pacient ──

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import s from '../styles/MobilApp.module.css'
 
 const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
@@ -21,6 +21,9 @@ function getOra(data_ora) {
 const STATUS_LABELS = { programat: 'Programat', confirmat: 'Confirmat', anulat: 'Anulat', finalizat: 'Finalizat' }
 const STATUS_CLASS  = { programat: s.statusProgramata, confirmat: s.statusConfirmata, anulat: s.statusAnulata, finalizat: s.statusFinalizata }
 const ROL_LABEL     = { medic: 'Medic', asistent: 'Asistent', superadmin: 'Superadmin', pacient: 'Pacient' }
+
+// Callback global de logout — setat de MobilApp la mount
+let _globalLogout = null
 
 function useSarbatori() {
   const [sarbatori, setSarbatori] = useState({})
@@ -49,6 +52,11 @@ async function apiFetch(path, token, opts = {}) {
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) }
   if (token) headers.Authorization = `Bearer ${token}`
   const res = await fetch(`${API}${path}`, { ...opts, headers })
+  if (res.status === 401) {
+    // Token expirat — logout automat
+    if (_globalLogout) _globalLogout()
+    throw new Error('401')
+  }
   if (!res.ok) throw new Error(res.status)
   if (res.status === 204) return null
   return res.json()
@@ -76,7 +84,10 @@ function LoginScreen({ onLogin }) {
       localStorage.setItem('mobil_refresh', data.refresh)
       localStorage.setItem('mobil_user',    JSON.stringify(me))
       onLogin(me)
-    } catch { setErr('Username sau parolă incorecte.') }
+    } catch (e) {
+      if (e.message === '401') return // handleLogout deja apelat
+      setErr('Username sau parolă incorecte.')
+    }
     setLoading(false)
   }
 
@@ -106,7 +117,7 @@ function LoginScreen({ onLogin }) {
    MODAL ADAUGARE PROGRAMARE
 ════════════════════════════════════════════ */
 function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
-  const [step, setStep]         = useState('data') // data → slot → form → saving
+  const [step, setStep]         = useState('data')
   const [data, setData]         = useState(selectedDate)
   const [slots, setSlots]       = useState([])
   const [loadingSlots, setLoadingSlots] = useState(false)
@@ -122,7 +133,9 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
     try {
       const res = await apiFetch(`/programari/slots_libere/?data=${toDateStr(d)}&medic=${user.id}`, token)
       setSlots(res)
-    } catch { setErr('Nu s-au putut încărca sloturile.') }
+    } catch (e) {
+      if (e.message !== '401') setErr('Nu s-au putut încărca sloturile.')
+    }
     setLoadingSlots(false)
     setStep('slot')
   }
@@ -159,11 +172,12 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
         })
       })
       onSaved()
-    } catch { setErr('Eroare la salvare. Încearcă din nou.') }
+    } catch (e) {
+      if (e.message !== '401') setErr('Eroare la salvare. Încearcă din nou.')
+    }
     setSaving(false)
   }
 
-  // Zile din luna curenta pentru selectie rapida
   const azi = new Date()
   const sarbatori = useSarbatori()
   const zileRapide = []
@@ -176,7 +190,6 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
   return (
     <div className={s.overlay} onClick={e => e.target === e.currentTarget && onClose()}>
       <div className={s.modal}>
-        {/* HEADER MODAL */}
         <div className={s.modalHeader}>
           <div className={s.modalTitle}>
             {step === 'data' && '📅 Selectează data'}
@@ -188,7 +201,6 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
 
         {err && <div className={s.loginErr} style={{ margin: '0 0 12px' }}>{err}</div>}
 
-        {/* STEP 1: DATA */}
         {step === 'data' && (
           <div className={s.modalBody}>
             <div className={s.zileRapide}>
@@ -221,7 +233,6 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
           </div>
         )}
 
-        {/* STEP 2: SLOT */}
         {step === 'slot' && (
           <div className={s.modalBody}>
             <button className={s.backBtn} onClick={() => setStep('data')}>← Schimbă data</button>
@@ -234,24 +245,21 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
                 <button className={s.backBtn} onClick={() => setStep('data')}>← Alege altă dată</button>
               </div>
             ) : (
-              <>
-                <div className={s.sloturiGrid}>
-                  {slots.map(slot => (
-                    <button key={slot.ora}
-                      className={`${s.slotBtn} ${slot.liber ? s.slotLiber : s.slotOcupat}`}
-                      onClick={() => handleSelectSlot(slot)}
-                      disabled={!slot.liber}>
-                      {slot.ora}
-                      {!slot.liber && <div className={s.slotOcupatLabel}>ocupat</div>}
-                    </button>
-                  ))}
-                </div>
-              </>
+              <div className={s.sloturiGrid}>
+                {slots.map(slot => (
+                  <button key={slot.ora}
+                    className={`${s.slotBtn} ${slot.liber ? s.slotLiber : s.slotOcupat}`}
+                    onClick={() => handleSelectSlot(slot)}
+                    disabled={!slot.liber}>
+                    {slot.ora}
+                    {!slot.liber && <div className={s.slotOcupatLabel}>ocupat</div>}
+                  </button>
+                ))}
+              </div>
             )}
           </div>
         )}
 
-        {/* STEP 3: FORM */}
         {step === 'form' && (
           <div className={s.modalBody}>
             <button className={s.backBtn} onClick={() => setStep('slot')}>← Schimbă ora</button>
@@ -309,7 +317,9 @@ function ModalEditareMobil({ token, user, programare, onClose, onSaved }) {
       const res = await apiFetch(`/programari/slots_libere/?data=${toDateStr(d)}&medic=${user.id}`, token)
       const origDate = toDateStr(new Date(programare.data_ora))
       setSlots(res.map(sl => toDateStr(d) === origDate && sl.ora === oraInit ? { ...sl, liber: true } : sl))
-    } catch { setErr('Nu s-au putut încărca sloturile.') }
+    } catch (e) {
+      if (e.message !== '401') setErr('Nu s-au putut încărca sloturile.')
+    }
     setLoadingSlots(false)
   }
 
@@ -331,7 +341,9 @@ function ModalEditareMobil({ token, user, programare, onClose, onSaved }) {
         })
       })
       onSaved()
-    } catch { setErr('Eroare la salvare. Încearcă din nou.') }
+    } catch (e) {
+      if (e.message !== '401') setErr('Eroare la salvare. Încearcă din nou.')
+    }
     setSaving(false)
   }
 
@@ -702,12 +714,25 @@ export default function MobilApp() {
   const [programari, setProgramari]     = useState([])
   const [loading, setLoading]           = useState(false)
   const [updating, setUpdating]         = useState(null)
-  const [showModal, setShowModal]         = useState(false)
+  const [showModal, setShowModal]       = useState(false)
   const [editProgramare, setEditProgramare] = useState(null)
 
   useEffect(() => {
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {})
   }, [])
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('mobil_access')
+    localStorage.removeItem('mobil_refresh')
+    localStorage.removeItem('mobil_user')
+    setUser(null)
+  }, [])
+
+  // Înregistrăm handleLogout global pentru apiFetch
+  useEffect(() => {
+    _globalLogout = handleLogout
+    return () => { _globalLogout = null }
+  }, [handleLogout])
 
   const token = localStorage.getItem('mobil_access')
 
@@ -739,15 +764,10 @@ export default function MobilApp() {
     try {
       await apiFetch(`/programari/${id}/`, token, { method: 'PATCH', body: JSON.stringify({ status }) })
       setProgramari(prev => prev.map(p => p.id === id ? { ...p, status } : p))
-    } catch { alert('Eroare la actualizare. Verifică conexiunea.') }
+    } catch (e) {
+      if (e.message !== '401') alert('Eroare la actualizare. Verifică conexiunea.')
+    }
     setUpdating(null)
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('mobil_access')
-    localStorage.removeItem('mobil_refresh')
-    localStorage.removeItem('mobil_user')
-    setUser(null)
   }
 
   if (!user) return <LoginScreen onLogin={setUser} />
@@ -761,7 +781,6 @@ export default function MobilApp() {
 
   return (
     <div className={s.container}>
-      {/* HEADER */}
       <div className={s.header}>
         <div>
           <img src="/logo.png" alt="MED487" style={{ width: '180px', marginBottom: '1.5rem' }} />
@@ -776,7 +795,6 @@ export default function MobilApp() {
         </div>
       </div>
 
-      {/* NAVIGARE ZILE */}
       <div className={s.dayNav}>
         <button className={s.dayNavBtn} onClick={() => changeDay(-1)}>‹</button>
         <div className={s.dayLabel}>
@@ -790,7 +808,6 @@ export default function MobilApp() {
         <button className={s.dayNavBtn} onClick={() => changeDay(1)}>›</button>
       </div>
 
-      {/* BADGES */}
       <div className={s.summary}>
         <div className={`${s.badge} ${s.badgeTotal}`}><div className={s.badgeNum}>{total}</div><div className={s.badgeLabel}>Total</div></div>
         <div className={`${s.badge} ${s.badgeOk}`}><div className={s.badgeNum}>{confirmate}</div><div className={s.badgeLabel}>Confirmate</div></div>
@@ -798,7 +815,6 @@ export default function MobilApp() {
         <div className={`${s.badge} ${s.badgeCancel}`}><div className={s.badgeNum}>{anulate}</div><div className={s.badgeLabel}>Anulate</div></div>
       </div>
 
-      {/* LISTA */}
       {loading ? (
         <div className={s.loading}>Se încarcă...</div>
       ) : programari.length === 0 ? (
@@ -842,7 +858,6 @@ export default function MobilApp() {
         </div>
       )}
 
-      {/* MODAL EDITARE */}
       {editProgramare && (
         <ModalEditareMobil
           token={token}
@@ -852,8 +867,7 @@ export default function MobilApp() {
           onSaved={() => { setEditProgramare(null); fetchProgramari(selectedDate) }}
         />
       )}
-      
-      {/* MODAL ADAUGARE */}
+
       {showModal && (
         <ModalAdaugare
           token={token}
