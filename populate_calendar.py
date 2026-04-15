@@ -1,8 +1,3 @@
-"""
-Script one-time: adauga programari + consultatii demo
-pe perioada 15 aprilie - 15 mai 2026, pentru pacientii existenti.
-Rulare: Start Command Railway -> python populate_calendar.py
-"""
 import os, sys, django, random
 from datetime import date, timedelta, time, datetime
 
@@ -46,16 +41,15 @@ OBS_LIST = [
     'Fără modificări semnificative.',
 ]
 
-# ── Validare medic ──────────────────────────────────────
 try:
     medic = CustomUser.objects.get(id=MEDIC_ID)
 except CustomUser.DoesNotExist:
     print(f"EROARE: Nu exista user cu id={MEDIC_ID}")
     sys.exit(1)
 
-# ── Fetch pacienti ──────────────────────────────────────
+# Fetch pacienti — toti din DB daca medicul are mai putin de 3
 pacienti = list(Pacient.objects.filter(medic=medic))
-if not pacienti:
+if len(pacienti) < 3:
     pacienti = list(Pacient.objects.all())
 if not pacienti:
     print("EROARE: Nu exista pacienti in baza de date.")
@@ -64,7 +58,16 @@ if not pacienti:
 print(f"Medic: {medic.first_name} {medic.last_name} (id={medic.id})")
 print(f"Pacienti disponibili: {len(pacienti)}")
 
-# ── Fetch diagnostice disponibile (camp = cod_icd10) ───
+# Sterge programarile existente in perioada pentru a evita duplicate
+print("Sterg programari existente in perioada 15 apr - 15 mai...")
+Programare.objects.filter(
+    medic=medic,
+    data_ora__date__gte=START,
+    data_ora__date__lte=END
+).delete()
+print("Sterse.")
+
+# Fetch diagnostice
 diagnostice = []
 for cod in DIAGNOSTICE_CODURI:
     d = Diagnostic.objects.filter(cod_icd10=cod).first()
@@ -74,7 +77,6 @@ for cod in DIAGNOSTICE_CODURI:
         diagnostice.append(d)
 print(f"Diagnostice disponibile: {len(diagnostice)}")
 
-# ── Sloturi orare 08:00-11:40 si 13:00-16:40 la 20 min ─
 def get_sloturi():
     slots = []
     for h in range(8, 12):
@@ -83,7 +85,7 @@ def get_sloturi():
     for h in range(13, 17):
         for m in (0, 20, 40):
             slots.append(time(h, m))
-    return slots  # 12 sloturi/zi
+    return slots
 
 SLOTURI = get_sloturi()
 
