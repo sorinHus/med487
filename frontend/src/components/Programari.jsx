@@ -431,12 +431,26 @@ export default function Programari() {
   }
 
   const fetchProgramari = async () => {
-    setLoading(true)
-    try {
-      const res = await api.get('/programari/', { params: { saptamana: formatDate(monday) } })
-      setProgramari(Array.isArray(res.data) ? res.data : (res.data.results || []))
-    } finally { setLoading(false) }
-  }
+  setLoading(true)
+  try {
+    let url = `/programari/?saptamana=${formatDate(monday)}`
+    let toate = []
+    while (url) {
+      const res = await api.get(url)
+      const data = res.data
+      const results = Array.isArray(data) ? data : (data.results || [])
+      toate = [...toate, ...results]
+      // dacă există pagina următoare, extragem doar path-ul relativ
+      if (data.next) {
+        const nextUrl = new URL(data.next)
+        url = nextUrl.pathname.replace('/api', '') + nextUrl.search
+      } else {
+        url = null
+      }
+    }
+    setProgramari(toate)
+  } finally { setLoading(false) }
+}
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchProgramari() }, [monday])
