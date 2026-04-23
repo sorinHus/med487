@@ -180,7 +180,7 @@ class ProgramareViewSet(viewsets.ModelViewSet):
             qs = qs.filter(data_ora__date=data)
         saptamana = self.request.query_params.get('saptamana')
         if saptamana:
-            from datetime import datetime
+            from datetime import datetime, timedelta, date
             start = datetime.strptime(saptamana, '%Y-%m-%d').date()
             end = start + timedelta(days=6)
             qs = qs.filter(data_ora__date__range=[start, end])
@@ -246,7 +246,7 @@ class ProgramareViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny])
     def slots_libere(self, request):
-        from datetime import datetime, time
+        from datetime import datetime, timedelta, date, time
         import pytz
         data_str = request.query_params.get('data')
         if not data_str:
