@@ -114,6 +114,12 @@ function AppInterna() {
     }
   }, [loggedIn])
 
+  useEffect(() => {
+    const handler = () => { setLoggedIn(false); setUser(null) }
+    window.addEventListener('auth:session-expired', handler)
+    return () => window.removeEventListener('auth:session-expired', handler)
+  }, [])
+
   // Check existing cookie session on mount
   useEffect(() => {
     api.get('/useri/me/').then(res => {

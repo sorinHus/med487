@@ -17,7 +17,7 @@ api.interceptors.response.use(
         await axios.post(`${BASE}/token/refresh/`, {}, { withCredentials: true })
         return api(original)
       } catch {
-        window.location.href = '/app'
+        window.dispatchEvent(new CustomEvent('auth:session-expired'))
       }
     }
     return Promise.reject(error)
