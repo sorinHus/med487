@@ -7,7 +7,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 from django.utils.decorators import method_decorator
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken as JWTRefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
@@ -31,15 +30,6 @@ from django.contrib.auth.hashers import make_password
 import boto3
 import os
 import uuid
-
-
-class CookieJWTAuthentication(JWTAuthentication):
-    def authenticate(self, request):
-        raw_token = request.COOKIES.get('access')
-        if raw_token is None:
-            return None
-        validated_token = self.get_validated_token(raw_token)
-        return self.get_user(validated_token), validated_token
 
 
 def _set_token_cookies(response, access, refresh=None):
