@@ -1,15 +1,9 @@
 import api from './api'
 
 export const login = async (username, password) => {
-  const response = await api.post('/token/', { username, password })
-  localStorage.setItem('access', response.data.access)
-  localStorage.setItem('refresh', response.data.refresh)
-  return response.data
+  await api.post('token/', { username, password })
 }
 
-export const logout = () => {
-  localStorage.removeItem('access')
-  localStorage.removeItem('refresh')
+export const logout = async () => {
+  try { await api.post('logout/') } catch {}
 }
-
-export const getToken = () => localStorage.getItem('access')

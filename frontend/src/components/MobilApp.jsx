@@ -48,12 +48,25 @@ function useSarbatori() {
   return sarbatori
 }
 
-async function apiFetch(path, token, opts = {}) {
+async function apiFetch(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) }
-  if (token) headers.Authorization = `Bearer ${token}`
-  const res = await fetch(`${API}${path}`, { ...opts, headers })
+  const res = await fetch(`${API}${path}`, { ...opts, headers, credentials: 'include' })
   if (res.status === 401) {
-    // Token expirat — logout automat
+    // Try token refresh before logging out
+    try {
+      const ref = await fetch(`${API}/token/refresh/`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      })
+      if (ref.ok) {
+        const retry = await fetch(`${API}${path}`, { ...opts, headers, credentials: 'include' })
+        if (retry.status === 401) { if (_globalLogout) _globalLogout(); throw new Error('401') }
+        if (!retry.ok) throw new Error(retry.status)
+        if (retry.status === 204) return null
+        return retry.json()
+      }
+    } catch (e) { if (e.message === '401') throw e }
     if (_globalLogout) _globalLogout()
     throw new Error('401')
   }
@@ -74,18 +87,17 @@ function LoginScreen({ onLogin }) {
   const handleLogin = async () => {
     setErr(''); setLoading(true)
     try {
-      const data = await apiFetch('/token/', null, { method: 'POST', body: JSON.stringify({ username, password }) })
-      const me   = await apiFetch('/useri/me/', data.access)
+      await apiFetch('/token/', { method: 'POST', body: JSON.stringify({ username, password }) })
+      const me = await apiFetch('/useri/me/')
       if (!['medic', 'asistent', 'superadmin'].includes(me.rol)) {
+        await apiFetch('/logout/', { method: 'POST' })
         setErr('Această aplicație este doar pentru personalul medical.')
         setLoading(false); return
       }
-      localStorage.setItem('mobil_access',  data.access)
-      localStorage.setItem('mobil_refresh', data.refresh)
-      localStorage.setItem('mobil_user',    JSON.stringify(me))
+      localStorage.setItem('mobil_user', JSON.stringify(me))
       onLogin(me)
     } catch (e) {
-      if (e.message === '401') return // handleLogout deja apelat
+      if (e.message === '401') return
       setErr('Username sau parolă incorecte.')
     }
     setLoading(false)
@@ -116,7 +128,7 @@ function LoginScreen({ onLogin }) {
 /* ════════════════════════════════════════════
    MODAL ADAUGARE PROGRAMARE
 ════════════════════════════════════════════ */
-function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
+function ModalAdaugare({ user, selectedDate, onClose, onSaved }) {
   const [step, setStep]         = useState('data')
   const [data, setData]         = useState(selectedDate)
   const [slots, setSlots]       = useState([])
@@ -131,7 +143,7 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
   const fetchSlots = async (d) => {
     setLoadingSlots(true); setSlots([]); setSlotSel(null)
     try {
-      const res = await apiFetch(`/programari/slots_libere/?data=${toDateStr(d)}&medic=${user.id}`, token)
+      const res = await apiFetch(`/programari/slots_libere/?data=${toDateStr(d)}&medic=${user.id}`)
       setSlots(res)
     } catch (e) {
       if (e.message !== '401') setErr('Nu s-au putut încărca sloturile.')
@@ -159,7 +171,7 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
       const dt = new Date(data)
       dt.setHours(parseInt(h), parseInt(m), 0, 0)
       const data_ora = dt.toISOString()
-      await apiFetch('/programari/', token, {
+      await apiFetch('/programari/', {
         method: 'POST',
         body: JSON.stringify({
           medic: user.id,
@@ -288,7 +300,7 @@ function ModalAdaugare({ token, user, selectedDate, onClose, onSaved }) {
 /* ════════════════════════════════════════════
    MODAL EDITARE PROGRAMARE (MOBIL)
 ════════════════════════════════════════════ */
-function ModalEditareMobil({ token, user, programare, onClose, onSaved }) {
+function ModalEditareMobil({ user, programare, onClose, onSaved }) {
   const dataOraInit = new Date(programare.data_ora)
   const oraInit     = `${String(dataOraInit.getHours()).padStart(2,'0')}:${String(dataOraInit.getMinutes()).padStart(2,'0')}`
 
@@ -314,7 +326,7 @@ function ModalEditareMobil({ token, user, programare, onClose, onSaved }) {
   const fetchSlots = async (d) => {
     setLoadingSlots(true); setSlots([])
     try {
-      const res = await apiFetch(`/programari/slots_libere/?data=${toDateStr(d)}&medic=${user.id}`, token)
+      const res = await apiFetch(`/programari/slots_libere/?data=${toDateStr(d)}&medic=${user.id}`)
       const origDate = toDateStr(new Date(programare.data_ora))
       setSlots(res.map(sl => toDateStr(d) === origDate && sl.ora === oraInit ? { ...sl, liber: true } : sl))
     } catch (e) {
@@ -329,7 +341,7 @@ function ModalEditareMobil({ token, user, programare, onClose, onSaved }) {
     try {
       const [h, m] = slotSel.split(':')
       const dt = new Date(data); dt.setHours(parseInt(h), parseInt(m), 0, 0)
-      await apiFetch(`/programari/${programare.id}/`, token, {
+      await apiFetch(`/programari/${programare.id}/`, {
         method: 'PATCH',
         body: JSON.stringify({
           data_ora: dt.toISOString(),
@@ -428,14 +440,14 @@ function ModalEditareMobil({ token, user, programare, onClose, onSaved }) {
 /* ════════════════════════════════════════════
    SUPERADMIN — TAB UTILIZATORI
 ════════════════════════════════════════════ */
-function TabUtilizatori({ token }) {
+function TabUtilizatori() {
   const [useri, setUseri]     = useState([])
   const [loading, setLoading] = useState(true)
   const mineId = JSON.parse(localStorage.getItem('mobil_user') || '{}').id
 
   const fetch_ = async () => {
     setLoading(true)
-    try { setUseri((await apiFetch('/useri/', token)).results || []) } catch {}
+    try { setUseri((await apiFetch('/useri/')).results || []) } catch {}
     setLoading(false)
   }
 
@@ -444,7 +456,7 @@ function TabUtilizatori({ token }) {
   const toggleActiv = async (u) => {
     if (u.id === mineId) { alert('Nu poți dezactiva propriul cont.'); return }
     try {
-      await apiFetch(`/useri/${u.id}/toggle_activ/`, token, { method: 'POST' })
+      await apiFetch(`/useri/${u.id}/toggle_activ/`, { method: 'POST' })
       setUseri(prev => prev.map(x => x.id === u.id ? { ...x, is_active: !x.is_active } : x))
     } catch { alert('Eroare la actualizare.') }
   }
@@ -453,7 +465,7 @@ function TabUtilizatori({ token }) {
     if (u.id === mineId) { alert('Nu poți șterge propriul cont.'); return }
     if (!window.confirm(`Ștergi utilizatorul ${u.username}?`)) return
     try {
-      await apiFetch(`/useri/${u.id}/`, token, { method: 'DELETE' })
+      await apiFetch(`/useri/${u.id}/`, { method: 'DELETE' })
       setUseri(prev => prev.filter(x => x.id !== u.id))
     } catch { alert('Eroare la ștergere.') }
   }
@@ -495,7 +507,7 @@ function TabUtilizatori({ token }) {
 const TOATE_MODULELE = ['retete', 'trimiteri', 'concedii', 'rapoarte', 'documente']
 const MODUL_LABEL    = { retete: 'Rețete', trimiteri: 'Trimiteri', concedii: 'Concedii medicale', rapoarte: 'Rapoarte', documente: 'Documente' }
 
-function TabModule({ token }) {
+function TabModule() {
   const [useri, setUseri]     = useState([])
   const [module, setModule]   = useState({})
   const [loading, setLoading] = useState(true)
@@ -506,14 +518,14 @@ function TabModule({ token }) {
       setLoading(true)
       try {
         const [d1, d2] = await Promise.all([
-          apiFetch('/useri/?rol=medic', token),
-          apiFetch('/useri/?rol=asistent', token),
+          apiFetch('/useri/?rol=medic'),
+          apiFetch('/useri/?rol=asistent'),
         ])
         const list = [...(d1.results || []), ...(d2.results || [])]
         setUseri(list)
         const m = {}
         await Promise.all(list.map(async u => {
-          try { const r = await apiFetch(`/module/${u.id}/`, token); m[u.id] = r.active || [] }
+          try { const r = await apiFetch(`/module/${u.id}/`); m[u.id] = r.active || [] }
           catch { m[u.id] = [] }
         }))
         setModule(m)
@@ -528,7 +540,7 @@ function TabModule({ token }) {
     const nou    = curent.includes(modul) ? curent.filter(x => x !== modul) : [...curent, modul]
     setSaving(`${userId}-${modul}`)
     try {
-      await apiFetch(`/module/${userId}/`, token, { method: 'PUT', body: JSON.stringify({ active: nou }) })
+      await apiFetch(`/module/${userId}/`, { method: 'PUT', body: JSON.stringify({ active: nou }) })
       setModule(prev => ({ ...prev, [userId]: nou }))
     } catch { alert('Eroare la salvare.') }
     setSaving(null)
@@ -564,20 +576,20 @@ function TabModule({ token }) {
 /* ════════════════════════════════════════════
    SUPERADMIN — TAB SETARI
 ════════════════════════════════════════════ */
-function TabSetari({ token }) {
+function TabSetari() {
   const [cfg, setCfg]         = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving]   = useState(false)
   const [ok, setOk]           = useState(false)
 
   useEffect(() => {
-    apiFetch('/configuratie/', token).then(setCfg).catch(() => {}).finally(() => setLoading(false))
+    apiFetch('/configuratie/').then(setCfg).catch(() => {}).finally(() => setLoading(false))
   }, [])
 
   const save = async () => {
     setSaving(true); setOk(false)
     try {
-      await apiFetch('/configuratie/', token, { method: 'PATCH', body: JSON.stringify({
+      await apiFetch('/configuratie/', { method: 'PATCH', body: JSON.stringify({
         denumire_unitate: cfg.denumire_unitate, localitate: cfg.localitate,
         telefon: cfg.telefon, email_contact: cfg.email_contact,
         durata_slot: cfg.durata_slot, max_programari_zi: cfg.max_programari_zi,
@@ -628,13 +640,13 @@ function TabSetari({ token }) {
 /* ════════════════════════════════════════════
    SUPERADMIN — TAB LOGURI
 ════════════════════════════════════════════ */
-function TabLoguri({ token }) {
+function TabLoguri() {
   const [loguri, setLoguri]   = useState([])
   const [loading, setLoading] = useState(true)
 
   const fetch_ = async () => {
     setLoading(true)
-    try { setLoguri(await apiFetch('/loguri/', token)) } catch {}
+    try { setLoguri(await apiFetch('/loguri/')) } catch {}
     setLoading(false)
   }
 
@@ -671,7 +683,7 @@ const ADMIN_TABS = [
   { id: 'loguri',      label: '📋 Loguri' },
 ]
 
-function SuperadminMobil({ token, user, onLogout }) {
+function SuperadminMobil({ user, onLogout }) {
   const [tab, setTab] = useState('utilizatori')
 
   return (
@@ -694,10 +706,10 @@ function SuperadminMobil({ token, user, onLogout }) {
         ))}
       </div>
       <div className={s.adminContent}>
-        {tab === 'utilizatori' && <TabUtilizatori token={token} />}
-        {tab === 'module'      && <TabModule token={token} />}
-        {tab === 'setari'      && <TabSetari token={token} />}
-        {tab === 'loguri'      && <TabLoguri token={token} />}
+        {tab === 'utilizatori' && <TabUtilizatori />}
+        {tab === 'module'      && <TabModule />}
+        {tab === 'setari'      && <TabSetari />}
+        {tab === 'loguri'      && <TabLoguri />}
       </div>
     </div>
   )
@@ -722,8 +734,7 @@ export default function MobilApp() {
   }, [])
 
   const handleLogout = useCallback(() => {
-    localStorage.removeItem('mobil_access')
-    localStorage.removeItem('mobil_refresh')
+    apiFetch('/logout/', { method: 'POST' }).catch(() => {})
     localStorage.removeItem('mobil_user')
     setUser(null)
   }, [])
@@ -734,19 +745,17 @@ export default function MobilApp() {
     return () => { _globalLogout = null }
   }, [handleLogout])
 
-  const token = localStorage.getItem('mobil_access')
-
   const fetchProgramari = useCallback(async (date) => {
-    if (!token) return
+    if (!user) return
     setLoading(true)
     try {
-      const data = await apiFetch(`/programari/?data=${toDateStr(date)}`, token)
+      const data = await apiFetch(`/programari/?data=${toDateStr(date)}`)
       const list = Array.isArray(data) ? data : data.results || []
       list.sort((a, b) => (a.data_ora || '').localeCompare(b.data_ora || ''))
       setProgramari(list)
     } catch { setProgramari([]) }
     setLoading(false)
-  }, [token])
+  }, [user])
 
   useEffect(() => {
     if (user && user.rol !== 'superadmin') fetchProgramari(selectedDate)
@@ -759,10 +768,9 @@ export default function MobilApp() {
   }
 
   const updateStatus = async (id, status) => {
-    if (!token) return
     setUpdating(id)
     try {
-      await apiFetch(`/programari/${id}/`, token, { method: 'PATCH', body: JSON.stringify({ status }) })
+      await apiFetch(`/programari/${id}/`, { method: 'PATCH', body: JSON.stringify({ status }) })
       setProgramari(prev => prev.map(p => p.id === id ? { ...p, status } : p))
     } catch (e) {
       if (e.message !== '401') alert('Eroare la actualizare. Verifică conexiunea.')
@@ -771,7 +779,7 @@ export default function MobilApp() {
   }
 
   if (!user) return <LoginScreen onLogin={setUser} />
-  if (user.rol === 'superadmin') return <SuperadminMobil token={token} user={user} onLogout={handleLogout} />
+  if (user.rol === 'superadmin') return <SuperadminMobil user={user} onLogout={handleLogout} />
 
   const isToday    = toDateStr(selectedDate) === toDateStr(new Date())
   const total      = programari.length
@@ -860,7 +868,6 @@ export default function MobilApp() {
 
       {editProgramare && (
         <ModalEditareMobil
-          token={token}
           user={user}
           programare={editProgramare}
           onClose={() => setEditProgramare(null)}
@@ -870,7 +877,6 @@ export default function MobilApp() {
 
       {showModal && (
         <ModalAdaugare
-          token={token}
           user={user}
           selectedDate={selectedDate}
           onClose={() => setShowModal(false)}

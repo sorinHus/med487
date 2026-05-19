@@ -82,13 +82,12 @@ export default function Rapoarte() {
     if (esteConcedii) setDescarcandConcedii(true)
     else setDescarcand(true)
     try {
-      const token = localStorage.getItem('access')
-      const apiBase = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
       const endpoint = esteConcedii ? 'export-xml-concedii' : 'export-xml'
-      const url = `${apiBase}/${endpoint}/?luna=${lunaXml}&an=${anXml}`
-      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } })
-      if (!res.ok) { alert('Eroare la generarea XML.'); return }
-      const blob = await res.blob()
+      const res = await api.get(`/${endpoint}/`, {
+        params: { luna: lunaXml, an: anXml },
+        responseType: 'blob',
+      })
+      const blob = res.data
       const link = document.createElement('a')
       link.href = URL.createObjectURL(blob)
       const luna2 = String(lunaXml).padStart(2, '0')

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
+import api from '../api'
 import s from '../styles/CereriPacienti.module.css'
-
-const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
 
 export default function CereriPacienti({ onActiune }) {
   const [cereri, setCereri] = useState([])
@@ -13,46 +12,30 @@ export default function CereriPacienti({ onActiune }) {
 
   const fetchCereri = async () => {
     setLoading(true)
-    const token = localStorage.getItem('access')
     try {
-      const r = await fetch(`${API}/useri/?rol=pacient&aprobat=false`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      const data = await r.json()
-      console.log('cereri data:', data)
-      setCereri(Array.isArray(data) ? data : data.results || [])
-    } catch (e) {
-      console.log('cereri error:', e)
+      const r = await api.get('/useri/', { params: { rol: 'pacient', aprobat: 'false' } })
+      setCereri(Array.isArray(r.data) ? r.data : r.data.results || [])
+    } catch {
       setCereri([])
-    }
-    finally { setLoading(false) }
+    } finally { setLoading(false) }
   }
 
   const actiune = async (pk, tip) => {
     if (processing) return
     setProcessing(pk)
-    const token = localStorage.getItem('access')
     try {
-      const r = await fetch(`${API}/cereri/${pk}/aprobare/`, {
-        method: tip === 'aprobare' ? 'POST' : 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      console.log('status:', r.status, 'ok:', r.ok)
-      const body = await r.json()
-      console.log('body:', body)
-      if (r.ok) {
-        setMsg(tip === 'aprobare' ? 'Cont aprobat. Email trimis pacientului.' : 'Cerere respinsă.')
-        setCereri(prev => prev.filter(c => c.id !== pk))
-        if (onActiune) onActiune()
-        setTimeout(() => setMsg(null), 3000)
+      if (tip === 'aprobare') {
+        await api.post(`/cereri/${pk}/aprobare/`)
       } else {
-        setMsg('Eroare. Încearcă din nou.')
+        await api.delete(`/cereri/${pk}/aprobare/`)
       }
-    } catch (e) {
-      console.log('catch error:', e)
+      setMsg(tip === 'aprobare' ? 'Cont aprobat. Email trimis pacientului.' : 'Cerere respinsă.')
+      setCereri(prev => prev.filter(c => c.id !== pk))
+      if (onActiune) onActiune()
+      setTimeout(() => setMsg(null), 3000)
+    } catch {
       setMsg('Eroare. Încearcă din nou.')
-    }
-    finally { setProcessing(null) }
+    } finally { setProcessing(null) }
   }
 
   return (

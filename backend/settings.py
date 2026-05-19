@@ -102,7 +102,7 @@ CORS_ALLOW_CREDENTIALS = True
 # ── DRF ───────────────────────────────────────────────────────────────────────
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'pacienti.views.CookieJWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
+import api from '../api'
 import s from '../styles/PortalPacient.module.css'
-
-const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
 
 const STATUS_COLORS = {
   programat:  { bg: 'rgba(37,99,168,0.1)',   color: '#2563a8',          label: 'Programat' },
@@ -38,12 +37,8 @@ export default function PortalPacient({ user, onLogout }) {
   const [retetaSelectata, setRetetaSelectata] = useState(null)
 
   useEffect(() => {
-    const token = localStorage.getItem('access')
-    fetch(`${API}/portal-pacient/`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(r => r.json())
-      .then(data => { setDate(data); setLoading(false) })
+    api.get('/portal-pacient/')
+      .then(res => { setDate(res.data); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
 

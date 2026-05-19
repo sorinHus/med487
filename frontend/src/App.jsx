@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { getToken, logout } from './auth'
+import { logout } from './auth'
 import api from './api'
 import Login from './components/Login'
 import Layout from './components/Layout'
@@ -17,7 +17,6 @@ import PortalPacient from './components/PortalPacient'
 import MobilApp from './components/MobilApp'
 
 const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000
-const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
 
 function AppMedic({ user, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard')
@@ -44,14 +43,9 @@ function AppMedic({ user, onLogout }) {
   }, [user])
 
   const fetchCereriCount = () => {
-    const token = localStorage.getItem('access')
-    if (!token) return
-    fetch(`${API}/useri/?rol=pacient&aprobat=false`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(r => r.json())
-      .then(data => {
-        const list = Array.isArray(data) ? data : data.results || []
+    api.get('/useri/', { params: { rol: 'pacient', aprobat: 'false' } })
+      .then(res => {
+        const list = Array.isArray(res.data) ? res.data : res.data.results || []
         setCereriCount(list.length)
       })
       .catch(() => {})
@@ -91,13 +85,13 @@ function AppMedic({ user, onLogout }) {
 }
 
 function AppInterna() {
-  const [loggedIn, setLoggedIn] = useState(!!getToken())
+  const [loggedIn, setLoggedIn] = useState(false)
   const [user, setUser]         = useState(null)
   const [loading, setLoading]   = useState(true)
   const timerRef                = useRef(null)
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     setLoggedIn(false)
     setUser(null)
   }
@@ -120,22 +114,22 @@ function AppInterna() {
     }
   }, [loggedIn])
 
+  // Check existing cookie session on mount
   useEffect(() => {
-    if (loggedIn) {
-      api.get('/useri/me/').then(res => {
-        setUser(res.data)
-        setLoading(false)
-      }).catch(() => {
-        logout()
-        setLoggedIn(false)
-        setLoading(false)
-      })
-    } else {
-      setLoading(false)
-    }
-  }, [loggedIn])
+    api.get('/useri/me/').then(res => {
+      setUser(res.data)
+      setLoggedIn(true)
+    }).catch(() => {}).finally(() => setLoading(false))
+  }, [])
 
-  if (!loggedIn) return <Login onLogin={() => setLoggedIn(true)} />
+  const handleLoginSuccess = () => {
+    api.get('/useri/me/').then(res => {
+      setUser(res.data)
+      setLoggedIn(true)
+    }).catch(() => handleLogout())
+  }
+
+  if (!loggedIn) return <Login onLogin={handleLoginSuccess} />
   if (loading)   return <div style={{ minHeight: '100vh', background: '#0f1117' }} />
 
   if (user?.rol === 'superadmin') return <SuperadminPanel onLogout={handleLogout} user={user} />

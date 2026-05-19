@@ -7,6 +7,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 from django.utils.decorators import method_decorator
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken as JWTRefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
     DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical, Trimitere, \
     ModuleUtilizator, LogActivitate
@@ -28,6 +31,63 @@ from django.contrib.auth.hashers import make_password
 import boto3
 import os
 import uuid
+
+
+class CookieJWTAuthentication(JWTAuthentication):
+    def authenticate(self, request):
+        raw_token = request.COOKIES.get('access')
+        if raw_token is None:
+            return None
+        validated_token = self.get_validated_token(raw_token)
+        return self.get_user(validated_token), validated_token
+
+
+def _set_token_cookies(response, access, refresh=None):
+    opts = {
+        'httponly': True,
+        'secure': not settings.DEBUG,
+        'samesite': 'None' if not settings.DEBUG else 'Lax',
+        'path': '/',
+    }
+    response.set_cookie('access', access, max_age=8 * 3600, **opts)
+    if refresh is not None:
+        response.set_cookie('refresh', refresh, max_age=7 * 24 * 3600, **opts)
+
+
+class CookieTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == 200:
+            _set_token_cookies(response, response.data['access'], response.data['refresh'])
+            response.data = {}
+        return response
+
+
+class CookieTokenRefreshView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        raw = request.COOKIES.get('refresh')
+        if not raw:
+            return Response({'detail': 'No refresh token.'}, status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            token = JWTRefreshToken(raw)
+            access = str(token.access_token)
+        except Exception:
+            return Response({'detail': 'Invalid or expired refresh token.'}, status=status.HTTP_401_UNAUTHORIZED)
+        response = Response({})
+        _set_token_cookies(response, access)
+        return response
+
+
+class LogoutView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        response = Response({})
+        response.delete_cookie('access', path='/')
+        response.delete_cookie('refresh', path='/')
+        return response
 
 
 def log_actiune(request, actiune, descriere=''):
