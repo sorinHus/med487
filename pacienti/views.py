@@ -9,7 +9,7 @@ from django_ratelimit.exceptions import Ratelimited
 from django.utils.decorators import method_decorator
 from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
     DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical, Trimitere, \
-    ModuleUtilizator
+    ModuleUtilizator, LogActivitate
 from .serializers import (UserSerializer, PacientSerializer,
                           DiagnosticSerializer, ConsulatieSerializer,
                           ProgramareSerializer, ConfiguratieCabinetSerializer,
@@ -32,7 +32,6 @@ import uuid
 
 def log_actiune(request, actiune, descriere=''):
     try:
-        from .models import LogActivitate
         ip = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() or request.META.get('REMOTE_ADDR')
         LogActivitate.objects.create(
             user=request.user if request.user.is_authenticated else None,
