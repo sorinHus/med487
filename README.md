@@ -18,7 +18,7 @@ A full-stack web application for managing a family medicine practice, built unde
 |---|---|
 | Backend | Python · Django 6.0.3 · Django REST Framework |
 | Database | PostgreSQL (Railway) |
-| Authentication | JWT — simplejwt (access 8h · refresh 7 days) |
+| Authentication | JWT via simplejwt — httpOnly cookies (access 8h · refresh 7 days) |
 | Frontend | React 19 · Vite 8 · React Router · Axios · Recharts |
 | Styling | CSS Modules · CSS custom properties (dark/light theme) |
 | Storage | Cloudflare R2 (patient documents) |
@@ -46,7 +46,7 @@ A full-stack web application for managing a family medicine practice, built unde
 - Public self-registration with doctor approval step
 - Portal view: upcoming appointments, past consultations, active prescriptions
 - Username = CNP (Romanian national ID number)
-- Password reset by username (public endpoint)
+- Password reset by username (public endpoint, rate-limited)
 
 ### Mobile PWA
 - Installable Progressive Web App at `/mobil`
@@ -70,7 +70,7 @@ A full-stack web application for managing a family medicine practice, built unde
 
 ```
 Browser (React/Vite — Cloudflare Pages)
-        │  HTTPS · JSON · JWT
+        │  HTTPS · JSON · httpOnly cookies
         ▼
 Django 6 + DRF (Railway)
         │  ORM
@@ -81,7 +81,7 @@ Patient documents → Cloudflare R2
 Emails           → Resend (via anymail)
 ```
 
-**Auth flow:** JWT stored in `localStorage`. React Router guards redirect unauthenticated users. Auto-refresh on 401. Auto-logout after 2h inactivity or on token expiry.
+**Auth flow:** JWT stored in httpOnly cookies (`access` + `refresh`). The access token is read server-side via a custom `CookieJWTAuthentication` class. Axios sends cookies automatically (`withCredentials: true`). On 401 the interceptor silently calls `/api/token/refresh/`; if that also fails it dispatches an `auth:session-expired` event that clears React state without a page reload. Auto-logout after 2h inactivity. In development a Vite proxy forwards `/api` to Django so cookies remain same-origin.
 
 ---
 
@@ -89,8 +89,9 @@ Emails           → Resend (via anymail)
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/token/` | Obtain JWT pair |
-| POST | `/api/token/refresh/` | Refresh access token |
+| POST | `/api/token/` | Login — sets access + refresh cookies |
+| POST | `/api/token/refresh/` | Refresh access token cookie |
+| POST | `/api/logout/` | Clear auth cookies |
 | GET/POST | `/api/pacienti/` | List / create patients |
 | POST | `/api/import-pacienti/` | Bulk import from Excel |
 | GET/POST | `/api/programari/` | List / create appointments |
@@ -113,14 +114,22 @@ Emails           → Resend (via anymail)
 ## Project Structure
 
 ```
-cabinet-medical/
+med487/
 ├── backend/
 │   ├── settings.py
 │   └── urls.py
 ├── pacienti/                        # Main app
 │   ├── models.py                    # 12 models
 │   ├── serializers.py
-│   ├── views.py
+│   ├── authentication.py            # CookieJWTAuthentication
+│   ├── views.py                     # Re-export shim
+│   ├── views_auth.py                # Login, refresh, logout
+│   ├── views_utils.py               # log_actiune, LUNI_RO
+│   ├── views_pacienti.py            # Patients, consultations, documents
+│   ├── views_programari.py          # Appointments, cabinet config
+│   ├── views_clinical.py            # Prescriptions, referrals, medical leave, print views
+│   ├── views_raportare.py           # CNAS XML exports
+│   ├── views_users.py               # Users, portal, registration, approvals, logs
 │   ├── urls.py
 │   ├── migrations/
 │   ├── fixtures/
@@ -132,20 +141,26 @@ cabinet-medical/
 │       └── trimitere_cnas_print.html
 └── frontend/
     ├── src/
-    │   ├── App.jsx                  # Router + role guards
-    │   ├── components/
-    │   │   ├── Dashboard.jsx
-    │   │   ├── Pacienti.jsx
-    │   │   ├── Programari.jsx
-    │   │   ├── Consultatii.jsx
-    │   │   ├── Retete.jsx
-    │   │   ├── Trimiteri.jsx
-    │   │   ├── ConcediiMedicale.jsx
-    │   │   ├── MobilApp.jsx         # PWA mobile
-    │   │   ├── SuperadminPanel.jsx
-    │   │   ├── PrezentareSite.jsx   # Public site
-    │   │   └── PortalPacient.jsx
-    │   └── *.module.css             # CSS Modules per component
+    │   ├── App.jsx                  # Router + auth state + role guards
+    │   ├── api.js                   # Axios instance + 401 interceptor
+    │   ├── auth.js                  # login / logout helpers
+    │   └── components/
+    │       ├── Login.jsx
+    │       ├── Layout.jsx
+    │       ├── Dashboard.jsx
+    │       ├── PacientList.jsx
+    │       ├── PacientForm.jsx
+    │       ├── PacientDetalii.jsx
+    │       ├── AdresaFields.jsx
+    │       ├── Programari.jsx
+    │       ├── Consultatii.jsx
+    │       ├── Rapoarte.jsx
+    │       ├── ProfilMedic.jsx
+    │       ├── CereriPacienti.jsx
+    │       ├── PortalPacient.jsx
+    │       ├── SitePrezentare.jsx
+    │       ├── SuperadminPanel.jsx
+    │       └── MobilApp.jsx         # PWA mobile
     └── public/
         └── manifest.json            # PWA manifest
 ```
@@ -165,6 +180,7 @@ cabinet-medical/
 | F7 | Patient portal, PWA mobile, CNAS XML export | ✅ Done |
 | F8 | CSS Modules refactor, responsive design, activity logs | ✅ Done |
 | F9 | PWA auto-logout, calendar availability colors, Excel import | ✅ Done |
+| F10 | JWT → httpOnly cookies, views.py split into domain modules | ✅ Done |
 
 ---
 
