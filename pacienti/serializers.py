@@ -167,6 +167,18 @@ class RetetaCreateSerializer(serializers.ModelSerializer):
             LinieReteta.objects.create(reteta=reteta, ordine=i, **linie)
         return reteta
 
+    def update(self, instance, validated_data):
+        linii_data = validated_data.pop('linii', None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        if linii_data is not None:
+            instance.linii.all().delete()
+            for i, linie in enumerate(linii_data):
+                linie.pop('ordine', None)
+                LinieReteta.objects.create(reteta=instance, ordine=i, **linie)
+        return instance
+
 
 class ConcediuMedicalSerializer(serializers.ModelSerializer):
     pacient_nume = serializers.SerializerMethodField()

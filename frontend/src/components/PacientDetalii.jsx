@@ -66,9 +66,16 @@ function ICD10Search({ selectate, onAdd, onRemove }) {
 /* ─────────────────────────────────────────────
    ModalReteta
 ───────────────────────────────────────────── */
-function ModalReteta({ pacientId, medicId, onClose, onSaved }) {
-  const [form, setForm] = useState({ gratuit: 'nu', valabilitate_zile: 30, diagnostic: '', nr_fisa: '', observatii: '' })
-  const [linii, setLinii] = useState([{ nume_medicament: '', concentratie: '', doza_frecventa: '', durata_zile: '', cantitate: 1, observatii: '' }])
+function ModalReteta({ pacientId, medicId, onClose, onSaved, editData = null }) {
+  const [form, setForm] = useState(editData ? {
+    gratuit: editData.gratuit || 'nu', valabilitate_zile: editData.valabilitate_zile || 30,
+    diagnostic: editData.diagnostic || '', nr_fisa: editData.nr_fisa || '', observatii: editData.observatii || '',
+  } : { gratuit: 'nu', valabilitate_zile: 30, diagnostic: '', nr_fisa: '', observatii: '' })
+  const [linii, setLinii] = useState(editData?.linii?.length ? editData.linii.map(l => ({
+    nume_medicament: l.nume_medicament || '', concentratie: l.concentratie || '',
+    doza_frecventa: l.doza_frecventa || '', durata_zile: l.durata_zile || '',
+    cantitate: l.cantitate || 1, observatii: l.observatii || '',
+  })) : [{ nume_medicament: '', concentratie: '', doza_frecventa: '', durata_zile: '', cantitate: 1, observatii: '' }])
   const [salvand, setSalvand] = useState(false)
   const [eroare, setEroare]   = useState('')
 
@@ -87,11 +94,14 @@ function ModalReteta({ pacientId, medicId, onClose, onSaved }) {
       if (!l.cantitate) { setEroare(`Medicament ${i+1}: cantitatea este obligatorie.`); return }
     }
     setSalvand(true); setEroare('')
+    const payload = {
+      pacient: pacientId, medic: medicId, ...form,
+      linii: linii.map((l, i) => ({ ...l, ordine: i, durata_zile: parseInt(l.durata_zile), cantitate: parseInt(l.cantitate) || 1 })),
+    }
     try {
-      const res = await api.post('/retete/', {
-        pacient: pacientId, medic: medicId, ...form,
-        linii: linii.map((l, i) => ({ ...l, ordine: i, durata_zile: parseInt(l.durata_zile), cantitate: parseInt(l.cantitate) || 1 })),
-      })
+      const res = editData
+        ? await api.patch(`/retete/${editData.id}/`, payload)
+        : await api.post('/retete/', payload)
       onSaved && onSaved(res.data); onClose()
     } catch (err) { setEroare(err.response?.data?.detail || 'Eroare la salvare.') }
     finally { setSalvand(false) }
@@ -101,7 +111,7 @@ function ModalReteta({ pacientId, medicId, onClose, onSaved }) {
     <div className={s.overlay}>
       <div className={`${s.modal} ${s.modalLg}`}>
         <div className={s.modalHeader}>
-          <span className={s.modalTitle}>Rețetă nouă</span>
+          <span className={s.modalTitle}>{editData ? 'Editare rețetă' : 'Rețetă nouă'}</span>
           <button onClick={onClose} className={s.btnClose}>✕</button>
         </div>
         <form onSubmit={salveaza} className={s.modalBody}>
@@ -152,7 +162,7 @@ function ModalReteta({ pacientId, medicId, onClose, onSaved }) {
           {eroare && <div className={s.errMsg}>{eroare}</div>}
           <div className={s.formActions}>
             <button type="button" onClick={onClose} className={s.btnCancel}>Anulează</button>
-            <button type="submit" disabled={salvand} className={s.btnSave}>{salvand ? 'Se salvează...' : 'Salvează rețeta'}</button>
+            <button type="submit" disabled={salvand} className={s.btnSave}>{salvand ? 'Se salvează...' : (editData ? 'Salvează modificările' : 'Salvează rețeta')}</button>
           </div>
         </form>
       </div>
@@ -167,8 +177,20 @@ const SPECIALIST_CHOICES = ['cardiologie','neurologie','oftalmologie','ortopedie
 const SPECIALIST_LABELS = { analize_laborator: 'Analize laborator' }
 
 
-function ModalTrimitere({ pacientId, medicId, onClose, onSaved }) {
-  const [form, setForm] = useState({ specialist: 'cardiologie', specialist_custom: '', unitate_medicala: '', diagnostic: '', cod_diagnostic: '', investigatii_solicitate: '', prioritate: 'normal', valabilitate_zile: 30, nr_fisa: '', analize_selectate: [], observatii: '' })
+function ModalTrimitere({ pacientId, medicId, onClose, onSaved, editData = null }) {
+  const [form, setForm] = useState(editData ? {
+    specialist: editData.specialist || 'cardiologie',
+    specialist_custom: editData.specialist_custom || '',
+    unitate_medicala: editData.unitate_medicala || '',
+    diagnostic: editData.diagnostic || '',
+    cod_diagnostic: editData.cod_diagnostic || '',
+    investigatii_solicitate: editData.investigatii_solicitate || '',
+    prioritate: editData.prioritate || 'normal',
+    valabilitate_zile: editData.valabilitate_zile || 30,
+    nr_fisa: editData.nr_fisa || '',
+    analize_selectate: editData.analize_selectate || [],
+    observatii: editData.observatii || '',
+  } : { specialist: 'cardiologie', specialist_custom: '', unitate_medicala: '', diagnostic: '', cod_diagnostic: '', investigatii_solicitate: '', prioritate: 'normal', valabilitate_zile: 30, nr_fisa: '', analize_selectate: [], observatii: '' })
   const [salvand, setSalvand] = useState(false)
   const [eroare, setEroare]   = useState('')
   const [cautare, setCautare] = useState('')
@@ -193,7 +215,9 @@ function ModalTrimitere({ pacientId, medicId, onClose, onSaved }) {
   const salveaza = async (e) => {
     e.preventDefault(); setSalvand(true); setEroare('')
     try {
-      const res = await api.post('/trimiteri/', { pacient: pacientId, medic: medicId, ...form })
+      const res = editData
+        ? await api.patch(`/trimiteri/${editData.id}/`, { pacient: pacientId, medic: medicId, ...form })
+        : await api.post('/trimiteri/', { pacient: pacientId, medic: medicId, ...form })
       onSaved && onSaved(res.data); onClose()
     } catch (err) { setEroare(err.response?.data?.detail || 'Eroare la salvare.') }
     finally { setSalvand(false) }
@@ -203,7 +227,7 @@ function ModalTrimitere({ pacientId, medicId, onClose, onSaved }) {
     <div className={s.overlay}>
       <div className={`${s.modal} ${s.modalSm}`}>
         <div className={s.modalHeader}>
-          <span className={s.modalTitle}>Trimitere nouă</span>
+          <span className={s.modalTitle}>{editData ? 'Editare trimitere' : 'Trimitere nouă'}</span>
           <button onClick={onClose} className={s.btnClose}>✕</button>
         </div>
         <form onSubmit={salveaza} className={s.modalBody}>
@@ -297,7 +321,7 @@ function ModalTrimitere({ pacientId, medicId, onClose, onSaved }) {
           {eroare && <div className={s.errMsg}>{eroare}</div>}
           <div className={s.formActions}>
             <button type="button" onClick={onClose} className={s.btnCancel}>Anulează</button>
-            <button type="submit" disabled={salvand} className={s.btnSave}>{salvand ? 'Se salvează...' : 'Salvează trimiterea'}</button>
+            <button type="submit" disabled={salvand} className={s.btnSave}>{salvand ? 'Se salvează...' : (editData ? 'Salvează modificările' : 'Salvează trimiterea')}</button>
           </div>
         </form>
       </div>
@@ -313,8 +337,16 @@ const aziStr = new Date().toISOString().slice(0, 10)
 const lunaC  = new Date().getMonth() + 1
 const anC    = new Date().getFullYear()
 
-function ModalConcediu({ pacientId, medicId, onClose, onSaved }) {
-  const [form, setForm] = useState({ serie_numar: '', tip: 'initial', serie_initial: '', luna: lunaC, an: anC, cod_indemnizatie: '01', data_acordarii: aziStr, nr_zile: 3, de_la: aziStr, pana_la: aziStr, cod_diagnostic: '', acut_subacut_cronic: 'acut', nr_inreg: '', ambulator_internat: 'ambulator', nr_conventie: '', cas: '', observatii: '' })
+function ModalConcediu({ pacientId, medicId, onClose, onSaved, editData = null }) {
+  const [form, setForm] = useState(editData ? {
+    serie_numar: editData.serie_numar || '', tip: editData.tip || 'initial',
+    serie_initial: editData.serie_initial || '', luna: editData.luna || lunaC, an: editData.an || anC,
+    cod_indemnizatie: editData.cod_indemnizatie || '01', data_acordarii: editData.data_acordarii || aziStr,
+    nr_zile: editData.nr_zile || 3, de_la: editData.de_la || aziStr, pana_la: editData.pana_la || aziStr,
+    cod_diagnostic: editData.cod_diagnostic || '', acut_subacut_cronic: editData.acut_subacut_cronic || 'acut',
+    nr_inreg: editData.nr_inreg || '', ambulator_internat: editData.ambulator_internat || 'ambulator',
+    nr_conventie: editData.nr_conventie || '', cas: editData.cas || '', observatii: editData.observatii || '',
+  } : { serie_numar: '', tip: 'initial', serie_initial: '', luna: lunaC, an: anC, cod_indemnizatie: '01', data_acordarii: aziStr, nr_zile: 3, de_la: aziStr, pana_la: aziStr, cod_diagnostic: '', acut_subacut_cronic: 'acut', nr_inreg: '', ambulator_internat: 'ambulator', nr_conventie: '', cas: '', observatii: '' })
   const [salvand, setSalvand] = useState(false)
   const [eroare, setEroare]   = useState('')
 
@@ -323,7 +355,9 @@ function ModalConcediu({ pacientId, medicId, onClose, onSaved }) {
     if (!form.serie_numar.trim()) { setEroare('Seria și numărul sunt obligatorii.'); return }
     setSalvand(true); setEroare('')
     try {
-      const res = await api.post('/concedii/', { pacient: pacientId, medic: medicId, ...form })
+      const res = editData
+        ? await api.patch(`/concedii/${editData.id}/`, { pacient: pacientId, medic: medicId, ...form })
+        : await api.post('/concedii/', { pacient: pacientId, medic: medicId, ...form })
       onSaved && onSaved(res.data); onClose()
     } catch (err) { setEroare(err.response?.data?.detail || JSON.stringify(err.response?.data) || 'Eroare la salvare.') }
     finally { setSalvand(false) }
@@ -335,7 +369,7 @@ function ModalConcediu({ pacientId, medicId, onClose, onSaved }) {
     <div className={s.overlay}>
       <div className={`${s.modal} ${s.modalMd}`}>
         <div className={s.modalHeader}>
-          <span className={s.modalTitle}>Concediu medical nou</span>
+          <span className={s.modalTitle}>{editData ? 'Editare concediu medical' : 'Concediu medical nou'}</span>
           <button onClick={onClose} className={s.btnClose}>✕</button>
         </div>
         <form onSubmit={salveaza} className={s.modalBody}>
@@ -394,7 +428,7 @@ function ModalConcediu({ pacientId, medicId, onClose, onSaved }) {
           {eroare && <div className={s.errMsg}>{eroare}</div>}
           <div className={s.formActions}>
             <button type="button" onClick={onClose} className={s.btnCancel}>Anulează</button>
-            <button type="submit" disabled={salvand} className={s.btnSave}>{salvand ? 'Se salvează...' : 'Salvează concediul'}</button>
+            <button type="submit" disabled={salvand} className={s.btnSave}>{salvand ? 'Se salvează...' : (editData ? 'Salvează modificările' : 'Salvează concediul')}</button>
           </div>
         </form>
       </div>
@@ -452,6 +486,10 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
   const [showReteta, setShowReteta]   = useState(false)
   const [showTrimitere, setShowTrimitere] = useState(false)
   const [showConcediu, setShowConcediu]   = useState(false)
+  const [editReteta, setEditReteta]       = useState(null)
+  const [editTrimitere, setEditTrimitere] = useState(null)
+  const [editConcediu, setEditConcediu]   = useState(null)
+  const [editConsultatie, setEditConsultatie] = useState(null)
   const [formC, setFormC] = useState({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] })
   const [salvandC, setSalvandC] = useState(false)
   const [documente, setDocumente] = useState([])
@@ -526,13 +564,46 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
 
   const salveazaConsultatie = async (e) => {
     e.preventDefault(); setSalvandC(true)
+    const emptyFormC = { data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] }
     try {
-      await api.post('/consultatii/', { ...formC, pacient: pacient.id, medic: pacient.medic, diagnostice_ids: formC.diagnostice.map(d => d.id) })
-      const res = await api.get(`/pacienti/${pacient.id}/consultatii/`)
-      setConsultatii(res.data); setShowConsultatie(false)
-      setFormC({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] })
+      if (editConsultatie) {
+        await api.patch(`/consultatii/${editConsultatie.id}/`, { ...formC, pacient: pacient.id, medic: pacient.medic, diagnostice_ids: formC.diagnostice.map(d => d.id) })
+        const res = await api.get(`/pacienti/${pacient.id}/consultatii/`)
+        setConsultatii(res.data); setEditConsultatie(null)
+      } else {
+        await api.post('/consultatii/', { ...formC, pacient: pacient.id, medic: pacient.medic, diagnostice_ids: formC.diagnostice.map(d => d.id) })
+        const res = await api.get(`/pacienti/${pacient.id}/consultatii/`)
+        setConsultatii(res.data); setShowConsultatie(false)
+      }
+      setFormC(emptyFormC)
     } catch { alert('Eroare la salvarea consultatiei.') }
     finally { setSalvandC(false) }
+  }
+
+  const stergeReteta = async (id) => {
+    if (!window.confirm('Ștergi această rețetă? Acțiunea nu poate fi anulată.')) return
+    try { await api.delete(`/retete/${id}/`); setRetete(prev => prev.filter(r => r.id !== id)) }
+    catch { alert('Eroare la ștergere.') }
+  }
+  const stergeTrimitere = async (id) => {
+    if (!window.confirm('Ștergi această trimitere?')) return
+    try { await api.delete(`/trimiteri/${id}/`); setTrimiteri(prev => prev.filter(t => t.id !== id)) }
+    catch { alert('Eroare la ștergere.') }
+  }
+  const stergeConcediu = async (id) => {
+    if (!window.confirm('Ștergi acest concediu medical?')) return
+    try { await api.delete(`/concedii/${id}/`); setConcedii(prev => prev.filter(c => c.id !== id)) }
+    catch { alert('Eroare la ștergere.') }
+  }
+  const stergeConsultatie = async (id) => {
+    if (!window.confirm('Ștergi această consultație? Acțiunea nu poate fi anulată.')) return
+    try { await api.delete(`/consultatii/${id}/`); setConsultatii(prev => prev.filter(c => c.id !== id)) }
+    catch { alert('Eroare la ștergere.') }
+  }
+  const deschideEditConsultatie = (c) => {
+    setEditConsultatie(c)
+    setFormC({ data_ora: c.data_ora?.slice(0,16) || '', simptome: c.simptome || '', examen_clinic: c.examen_clinic || '', tratament: c.tratament || '', observatii: c.observatii || '', diagnostice: c.diagnostice || [] })
+    setShowConsultatie(false)
   }
 
   const adresaDisplay = [pacient.strada, pacient.numar_strada, pacient.localitate, pacient.judet].filter(Boolean).join(', ') || '—'
@@ -689,7 +760,11 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
               {r.diagnostic && <span className={s.listRowDiag}>— {r.diagnostic}</span>}
               <span className={r.gratuit === 'da' ? s.badgeGratuit : s.badgePlata}>{r.gratuit === 'da' ? 'Gratuit' : 'Cu plată'}</span>
             </div>
-            <a href={`${API_BASE}/retete/${r.id}/print/`} target="_blank" rel="noreferrer" className={s.btnPrint}>🖨️ Print</a>
+            <div className={s.rowActions}>
+              <button onClick={() => setEditReteta(r)} className={s.btnEdit}>Editează</button>
+              <button onClick={() => stergeReteta(r.id)} className={s.btnDelete}>Șterge</button>
+              <a href={`${API_BASE}/retete/${r.id}/print/`} target="_blank" rel="noreferrer" className={s.btnPrint}>🖨️ Print</a>
+            </div>
           </div>
         ))}
       </div>
@@ -708,11 +783,13 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
             <div>
               <span className={s.listRowNume}>{t.numar_trimitere}</span>
               <span className={s.listRowDate}>{t.data_emiterii}</span>
-              <span className={s.badgeSpecialist}>{t.specialist.charAt(0).toUpperCase() + t.specialist.slice(1)}</span>
+              <span className={s.badgeSpecialist}>{SPECIALIST_LABELS[t.specialist] || (t.specialist.charAt(0).toUpperCase() + t.specialist.replace(/_/g, ' ').slice(1))}</span>
               {t.prioritate === 'urgent' && <span className={s.badgeUrgent}>Urgent</span>}
               {t.diagnostic && <span className={s.listRowDiag}>— {t.diagnostic}</span>}
             </div>
-            <div className={s.printBtns}>
+            <div className={s.rowActions}>
+              <button onClick={() => setEditTrimitere(t)} className={s.btnEdit}>Editează</button>
+              <button onClick={() => stergeTrimitere(t.id)} className={s.btnDelete}>Șterge</button>
               <a href={`${API_BASE}/trimiteri/${t.id}/print/`} target="_blank" rel="noreferrer" className={s.btnPrint}>🖨️ Simplu</a>
               <a href={`${API_BASE}/trimiteri/${t.id}/print/?tip=cnas`} target="_blank" rel="noreferrer" className={s.btnPrint}>🖨️ CNAS</a>
             </div>
@@ -737,7 +814,11 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
               <span className={s.listRowDiag}>{c.de_la} → {c.pana_la}</span>
               {c.cod_diagnostic && <span className={s.listRowDiag}>({c.cod_diagnostic})</span>}
             </div>
-            <a href={`${API_BASE}/concedii/${c.id}/print/`} target="_blank" rel="noreferrer" className={s.btnPrint}>🖨️ Print</a>
+            <div className={s.rowActions}>
+              <button onClick={() => setEditConcediu(c)} className={s.btnEdit}>Editează</button>
+              <button onClick={() => stergeConcediu(c.id)} className={s.btnDelete}>Șterge</button>
+              <a href={`${API_BASE}/concedii/${c.id}/print/`} target="_blank" rel="noreferrer" className={s.btnPrint}>🖨️ Print</a>
+            </div>
           </div>
         ))}
       </div>
@@ -746,13 +827,14 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
       <div className={s.card}>
         <div className={s.sectionHeader}>
           <span className={s.sectionTitle}>Istoric consultații ({consultatii.length})</span>
-          <button onClick={() => setShowConsultatie(!showConsultatie)} className={showConsultatie ? s.btnNouToggle : s.btnNou}>
+          <button onClick={() => { setShowConsultatie(!showConsultatie); setEditConsultatie(null); setFormC({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] }) }} className={showConsultatie ? s.btnNouToggle : s.btnNou}>
             {showConsultatie ? 'Anulează' : '+ Consultație nouă'}
           </button>
         </div>
 
-        {showConsultatie && (
+        {(showConsultatie || editConsultatie) && (
           <form onSubmit={salveazaConsultatie} className={s.consultatieForm}>
+            {editConsultatie && <div style={{ fontSize: 12, color: 'var(--accent-light)', marginBottom: 10 }}>Editezi consultația din {new Date(editConsultatie.data_ora).toLocaleDateString('ro-RO')}</div>}
             <div className={s.grid2}>
               <div><label className={s.label}>Data și ora *</label>
                 <input type="datetime-local" value={formC.data_ora} onChange={e => setFormC(p => ({ ...p, data_ora: e.target.value }))} required className={s.input} /></div>
@@ -771,8 +853,8 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
               onRemove={id => setFormC(p => ({ ...p, diagnostice: p.diagnostice.filter(d => d.id !== id) }))}
             />
             <div className={s.formActions}>
-              <button type="button" onClick={() => setShowConsultatie(false)} className={s.btnCancel}>Anulează</button>
-              <button type="submit" disabled={salvandC} className={s.btnSave}>{salvandC ? 'Se salvează...' : 'Salvează consultația'}</button>
+              <button type="button" onClick={() => { setShowConsultatie(false); setEditConsultatie(null) }} className={s.btnCancel}>Anulează</button>
+              <button type="submit" disabled={salvandC} className={s.btnSave}>{salvandC ? 'Se salvează...' : (editConsultatie ? 'Salvează modificările' : 'Salvează consultația')}</button>
             </div>
           </form>
         )}
@@ -791,6 +873,8 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
                   {moduleActive.includes('retete')    && <button onClick={() => setShowReteta(true)}    className={s.btnReteta}>+ Rețetă</button>}
                   {moduleActive.includes('trimiteri') && <button onClick={() => setShowTrimitere(true)} className={s.btnTrimitere}>+ Trimitere</button>}
                   {moduleActive.includes('concedii')  && <button onClick={() => setShowConcediu(true)}  className={s.btnConcediu}>+ Concediu</button>}
+                  <button onClick={() => deschideEditConsultatie(c)} className={s.btnEdit}>Editează</button>
+                  <button onClick={() => stergeConsultatie(c.id)} className={s.btnDelete}>Șterge</button>
                 </div>
               </div>
             </div>
@@ -801,8 +885,11 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
       </div>
 
       {showReteta    && <ModalReteta    pacientId={pacient.id} medicId={pacient.medic} onClose={() => setShowReteta(false)}    onSaved={r => setRetete(prev => [r, ...prev])} />}
+      {editReteta    && <ModalReteta    pacientId={pacient.id} medicId={pacient.medic} editData={editReteta} onClose={() => setEditReteta(null)} onSaved={r => { setRetete(prev => prev.map(x => x.id === r.id ? r : x)); setEditReteta(null) }} />}
       {showTrimitere && <ModalTrimitere pacientId={pacient.id} medicId={pacient.medic} onClose={() => setShowTrimitere(false)} onSaved={t => setTrimiteri(prev => [t, ...prev])} />}
+      {editTrimitere && <ModalTrimitere pacientId={pacient.id} medicId={pacient.medic} editData={editTrimitere} onClose={() => setEditTrimitere(null)} onSaved={t => { setTrimiteri(prev => prev.map(x => x.id === t.id ? t : x)); setEditTrimitere(null) }} />}
       {showConcediu  && <ModalConcediu  pacientId={pacient.id} medicId={pacient.medic} onClose={() => setShowConcediu(false)}  onSaved={c => setConcedii(prev => [c, ...prev])} />}
+      {editConcediu  && <ModalConcediu  pacientId={pacient.id} medicId={pacient.medic} editData={editConcediu} onClose={() => setEditConcediu(null)} onSaved={c => { setConcedii(prev => prev.map(x => x.id === c.id ? c : x)); setEditConcediu(null) }} />}
     </div>
   )
 }

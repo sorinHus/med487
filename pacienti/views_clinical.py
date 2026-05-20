@@ -244,6 +244,7 @@ def print_trimitere(request, pk):
         'diagnostic':              trimitere.diagnostic or '',
         'cod_diagnostic':          trimitere.cod_diagnostic or '',
         'investigatii_solicitate': trimitere.investigatii_solicitate or '',
+        'analize_selectate':       trimitere.analize_selectate or [],
         'prioritate':              trimitere.prioritate,
         'nr_fisa':                 trimitere.nr_fisa or '',
         'observatii':              trimitere.observatii or '',
@@ -274,7 +275,10 @@ def print_trimitere(request, pk):
 
     if tip == 'cnas':
         investigatii_text = trimitere.investigatii_solicitate or ''
-        linii_inv = [l.strip() for l in investigatii_text.split('\n') if l.strip()][:15]
+        linii_inv = [l.strip() for l in investigatii_text.split('\n') if l.strip()]
+        if not linii_inv and trimitere.analize_selectate:
+            linii_inv = list(trimitere.analize_selectate)
+        linii_inv = linii_inv[:15]
         context['investigatii_randuri'] = [
             {'text': text, 'top': 135 + i * 6}
             for i, text in enumerate(linii_inv)
