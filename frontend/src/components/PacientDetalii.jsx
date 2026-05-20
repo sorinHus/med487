@@ -162,10 +162,23 @@ function ModalReteta({ pacientId, medicId, onClose, onSaved }) {
 /* ─────────────────────────────────────────────
    ModalTrimitere
 ───────────────────────────────────────────── */
-const SPECIALIST_CHOICES = ['cardiologie','neurologie','oftalmologie','ortopedie','dermatologie','ginecologie','urologie','gastroenterologie','endocrinologie','psihiatrie','pneumologie','reumatologie','nefrologie','hematologie','oncologie','chirurgie','ORL','stomatologie','recuperare','altele']
+const SPECIALIST_CHOICES = ['cardiologie','neurologie','oftalmologie','ortopedie','dermatologie','ginecologie','urologie','gastroenterologie','endocrinologie','psihiatrie','pneumologie','reumatologie','nefrologie','hematologie','oncologie','chirurgie','ORL','stomatologie','recuperare','analize_laborator','altele']
+const SPECIALIST_LABELS = { analize_laborator: 'Analize laborator' }
+
+const ANALIZE_LABORATOR = [
+  { categorie: 'Hemogramă', analize: ['Hemoleucogramă completă', 'VSH', 'PCR (Proteina C Reactivă)', 'Frotiu sanguine'] },
+  { categorie: 'Biochimie', analize: ['Glicemie a jeun', 'HbA1c', 'Uree', 'Creatinină', 'Acid uric', 'TGO (AST)', 'TGP (ALT)', 'Gama-GT', 'Fosfataza alcalină', 'Bilirubina totală', 'Albumina serică', 'Proteine totale'] },
+  { categorie: 'Lipide', analize: ['Colesterol total', 'HDL-colesterol', 'LDL-colesterol', 'Trigliceride'] },
+  { categorie: 'Electroliți & Minerale', analize: ['Sodiu (Na+)', 'Potasiu (K+)', 'Clor (Cl-)', 'Calciu seric', 'Magneziu', 'Fosfor'] },
+  { categorie: 'Fier & Anemie', analize: ['Fier seric', 'Feritină', 'Saturatia transferinei', 'Vitamina B12', 'Acid folic'] },
+  { categorie: 'Hormoni', analize: ['TSH', 'FT4 (Tiroxina liberă)', 'FT3', 'PSA total', 'PSA liber', 'LH', 'FSH', 'Testosteron', 'Estradiol', 'Prolactina', 'Cortizol'] },
+  { categorie: 'Coagulare', analize: ['INR / Timp Quick (PT)', 'APTT', 'Fibrinogen', 'D-dimeri', 'Timp de trombină'] },
+  { categorie: 'Serologie', analize: ['AgHBs', 'Anticorpi anti-HBs', 'Anti-HCV', 'HIV Ag/Ac', 'VDRL/RPR', 'IgM/IgG Toxoplasma', 'IgM/IgG CMV', 'IgM/IgG Rubeolă'] },
+  { categorie: 'Urină & Fecale', analize: ['Sumar de urină', 'Urocultură', 'Microalbuminurie', 'Coprocultură', 'Coproparazitologic'] },
+]
 
 function ModalTrimitere({ pacientId, medicId, onClose, onSaved }) {
-  const [form, setForm] = useState({ specialist: 'cardiologie', specialist_custom: '', unitate_medicala: '', diagnostic: '', cod_diagnostic: '', investigatii_solicitate: '', prioritate: 'normal', valabilitate_zile: 30, nr_fisa: '', observatii: '' })
+  const [form, setForm] = useState({ specialist: 'cardiologie', specialist_custom: '', unitate_medicala: '', diagnostic: '', cod_diagnostic: '', investigatii_solicitate: '', prioritate: 'normal', valabilitate_zile: 30, nr_fisa: '', analize_selectate: [], observatii: '' })
   const [salvand, setSalvand] = useState(false)
   const [eroare, setEroare]   = useState('')
 
@@ -188,8 +201,8 @@ function ModalTrimitere({ pacientId, medicId, onClose, onSaved }) {
         <form onSubmit={salveaza} className={s.modalBody}>
           <div className={s.grid2}>
             <div><label className={s.label}>Specialist *</label>
-              <select value={form.specialist} onChange={e => setForm(p => ({ ...p, specialist: e.target.value }))} className={s.input} required>
-                {SPECIALIST_CHOICES.map(sp => <option key={sp} value={sp}>{sp.charAt(0).toUpperCase() + sp.slice(1)}</option>)}
+              <select value={form.specialist} onChange={e => setForm(p => ({ ...p, specialist: e.target.value, analize_selectate: [] }))} className={s.input} required>
+                {SPECIALIST_CHOICES.map(sp => <option key={sp} value={sp}>{SPECIALIST_LABELS[sp] || (sp.charAt(0).toUpperCase() + sp.slice(1))}</option>)}
               </select></div>
             <div><label className={s.label}>Prioritate</label>
               <select value={form.prioritate} onChange={e => setForm(p => ({ ...p, prioritate: e.target.value }))} className={s.input} style={{ color: form.prioritate === 'urgent' ? '#f87171' : 'var(--text-primary)' }}>
@@ -199,6 +212,45 @@ function ModalTrimitere({ pacientId, medicId, onClose, onSaved }) {
           {form.specialist === 'altele' && (
             <div><label className={s.label}>Specificați specialitatea</label>
               <input value={form.specialist_custom} onChange={e => setForm(p => ({ ...p, specialist_custom: e.target.value }))} className={s.input} placeholder="ex: Medicina muncii" /></div>
+          )}
+          {form.specialist === 'analize_laborator' && (
+            <div>
+              <label className={s.label}>Analize solicitate</label>
+              {form.analize_selectate.length > 0 && (
+                <div className={s.analizeSelectate}>
+                  {form.analize_selectate.map(a => (
+                    <span key={a} className={s.analizeChip}>
+                      {a}
+                      <span className={s.analizeChipX} onClick={() => setForm(p => ({ ...p, analize_selectate: p.analize_selectate.filter(x => x !== a) }))}>×</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+              <div className={s.analizeBox}>
+                {ANALIZE_LABORATOR.map(({ categorie, analize }) => (
+                  <div key={categorie}>
+                    <div className={s.analizeCategorie}>{categorie}</div>
+                    <div className={s.analizeGrid}>
+                      {analize.map(a => (
+                        <label key={a} className={s.analizeItem}>
+                          <input
+                            type="checkbox"
+                            checked={form.analize_selectate.includes(a)}
+                            onChange={e => setForm(p => ({
+                              ...p,
+                              analize_selectate: e.target.checked
+                                ? [...p.analize_selectate, a]
+                                : p.analize_selectate.filter(x => x !== a)
+                            }))}
+                          />
+                          {a}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
           <label className={s.label}>Unitate medicală (optional)</label>
           <input value={form.unitate_medicala} onChange={e => setForm(p => ({ ...p, unitate_medicala: e.target.value }))} className={s.input} placeholder="ex: Spitalul Județean Cluj" />

@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(d:\\\\MED487\\\\cabinet-medical\\\\venv\\\\Scripts\\\\python.exe manage.py makemigrations pacienti --name=\"add_analize_selectate_to_trimitere\")"
+    ]
+  }
+}

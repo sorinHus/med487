@@ -304,6 +304,7 @@ class Trimitere(models.Model):
         ('ORL', 'ORL'),
         ('stomatologie', 'Stomatologie'),
         ('recuperare', 'Recuperare medicala'),
+        ('analize_laborator', 'Analize laborator'),
         ('altele', 'Altele'),
     ]
     PRIORITATE_CHOICES = [
@@ -328,6 +329,7 @@ class Trimitere(models.Model):
     investigatii_solicitate = models.TextField(blank=True)
     prioritate            = models.CharField(max_length=10, choices=PRIORITATE_CHOICES, default='normal')
     nr_fisa               = models.CharField(max_length=50, blank=True)
+    analize_selectate     = models.JSONField(default=list, blank=True)
     observatii            = models.TextField(blank=True)
 
     class Meta:
