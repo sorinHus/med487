@@ -7,8 +7,8 @@ import boto3
 import os
 import uuid
 
-from .models import Pacient, Consultatie, Diagnostic, Programare, DocumentPacient
-from .serializers import PacientSerializer, ConsulatieSerializer, DiagnosticSerializer
+from .models import Pacient, Consultatie, Diagnostic, Programare, DocumentPacient, DiagnosticPacient
+from .serializers import PacientSerializer, ConsulatieSerializer, DiagnosticSerializer, DiagnosticPacientSerializer
 from .views_utils import log_actiune
 
 
@@ -62,6 +62,7 @@ class ConsulatieViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         consultatie = serializer.save()
+        self._sync_diagnostice_dosar(consultatie)
         try:
             from django.utils import timezone
             azi = timezone.localdate()
@@ -74,17 +75,41 @@ class ConsulatieViewSet(viewsets.ModelViewSet):
             pass
         log_actiune(self.request, 'creare_consultatie', f'Pacient ID {consultatie.pacient_id}')
 
+    def perform_update(self, serializer):
+        consultatie = serializer.save()
+        self._sync_diagnostice_dosar(consultatie)
+
+    @staticmethod
+    def _sync_diagnostice_dosar(consultatie):
+        for dc in consultatie.diagnosticconsultatie_set.select_related('diagnostic').all():
+            DiagnosticPacient.objects.get_or_create(
+                pacient=consultatie.pacient,
+                diagnostic=dc.diagnostic,
+                defaults={
+                    'tip': 'activ',
+                    'sursa': 'consultatie',
+                    'consultatie': consultatie,
+                    'medic': consultatie.medic,
+                }
+            )
+
 
 class DiagnosticViewSet(viewsets.ModelViewSet):
     queryset = Diagnostic.objects.all()
     serializer_class = DiagnosticSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['cod_icd10', 'denumire']
+
+
+class DiagnosticPacientViewSet(viewsets.ModelViewSet):
+    serializer_class = DiagnosticPacientSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        qs = Diagnostic.objects.all()
-        search = self.request.query_params.get('search')
-        if search:
-            qs = qs.filter(cod_icd10__icontains=search) | qs.filter(denumire__icontains=search)
+        qs = DiagnosticPacient.objects.select_related('diagnostic', 'medic', 'consultatie')
+        pacient_id = self.request.query_params.get('pacient')
+        if pacient_id:
+            qs = qs.filter(pacient_id=pacient_id)
         return qs
 
 

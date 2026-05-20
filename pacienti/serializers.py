@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import CustomUser, Pacient, Diagnostic, Consultatie, Programare, \
     DiagnosticConsultatie, ConfiguratieCabinet, Reteta, LinieReteta, ConcediuMedical, Trimitere, \
-    ModuleUtilizator
+    ModuleUtilizator, DiagnosticPacient
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -82,6 +82,19 @@ class ConsulatieSerializer(serializers.ModelSerializer):
             )
         return consultatie
 
+    def update(self, instance, validated_data):
+        diagnostice_ids = validated_data.pop('diagnostice_ids', None)
+        instance = super().update(instance, validated_data)
+        if diagnostice_ids is not None:
+            instance.diagnosticconsultatie_set.all().delete()
+            for i, diag_id in enumerate(diagnostice_ids):
+                DiagnosticConsultatie.objects.create(
+                    consultatie=instance,
+                    diagnostic_id=diag_id,
+                    tip='principal' if i == 0 else 'secundar'
+                )
+        return instance
+
 
 class PacientSerializer(serializers.ModelSerializer):
     consultatii_count = serializers.IntegerField(read_only=True, default=0)
@@ -145,7 +158,7 @@ class RetetaSerializer(serializers.ModelSerializer):
         model = Reteta
         fields = ['id', 'numar_reteta', 'pacient', 'pacient_nume', 'medic', 'medic_nume',
                   'consultatie', 'data_emiterii', 'valabilitate_zile', 'gratuit',
-                  'diagnostic', 'nr_fisa', 'observatii', 'creat_la', 'linii']
+                  'diagnostic', 'cod_diagnostic', 'nr_fisa', 'observatii', 'creat_la', 'linii']
         read_only_fields = ['numar_reteta', 'data_emiterii', 'creat_la']
 
 
@@ -155,7 +168,7 @@ class RetetaCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reteta
         fields = ['id', 'numar_reteta', 'pacient', 'medic', 'consultatie',
-                  'valabilitate_zile', 'gratuit', 'diagnostic', 'nr_fisa',
+                  'valabilitate_zile', 'gratuit', 'diagnostic', 'cod_diagnostic', 'nr_fisa',
                   'observatii', 'data_emiterii', 'linii']
         read_only_fields = ['id', 'numar_reteta', 'data_emiterii']
 
@@ -230,3 +243,17 @@ class ModuleUtilizatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = ModuleUtilizator
         fields = ['user', 'active']
+
+
+class DiagnosticPacientSerializer(serializers.ModelSerializer):
+    diagnostic_cod      = serializers.CharField(source='diagnostic.cod_icd10', read_only=True)
+    diagnostic_denumire = serializers.CharField(source='diagnostic.denumire', read_only=True)
+    diagnostic_id       = serializers.PrimaryKeyRelatedField(
+        queryset=Diagnostic.objects.all(), source='diagnostic', write_only=True
+    )
+
+    class Meta:
+        model = DiagnosticPacient
+        fields = ['id', 'pacient', 'diagnostic_id', 'diagnostic_cod', 'diagnostic_denumire',
+                  'data_adaugarii', 'tip', 'sursa', 'consultatie', 'observatii', 'medic']
+        read_only_fields = ['data_adaugarii']

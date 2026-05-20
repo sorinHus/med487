@@ -822,3 +822,23 @@
 .analizeChipX:hover {
   opacity: 1;
 }
+
+/* ── Diagnostice pacient badges ── */
+.badgeDiagActiv, .badgeDiagCronic, .badgeDiagAntecedent, .badgeDiagRezolvat {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 8px;
+}
+.badgeDiagActiv      { background: rgba(52,211,153,0.15);  color: #34d399; }
+.badgeDiagCronic     { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+.badgeDiagAntecedent { background: rgba(156,163,175,0.15); color: #9ca3af; }
+.badgeDiagRezolvat   { background: rgba(129,140,248,0.15); color: #818cf8; }
+.diagSursa {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-left: 6px;
+}

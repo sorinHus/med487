@@ -77,8 +77,14 @@ function ICD10Search({ selectate, onAdd, onRemove, label = 'Diagnostice ICD-10' 
 function ModalReteta({ pacientId, medicId, onClose, onSaved, editData = null }) {
   const [form, setForm] = useState(editData ? {
     gratuit: editData.gratuit || 'nu', valabilitate_zile: editData.valabilitate_zile || 30,
-    diagnostic: editData.diagnostic || '', nr_fisa: editData.nr_fisa || '', observatii: editData.observatii || '',
-  } : { gratuit: 'nu', valabilitate_zile: 30, diagnostic: '', nr_fisa: '', observatii: '' })
+    diagnostic: editData.diagnostic || '', cod_diagnostic: editData.cod_diagnostic || '',
+    nr_fisa: editData.nr_fisa || '', observatii: editData.observatii || '',
+  } : { gratuit: 'nu', valabilitate_zile: 30, diagnostic: '', cod_diagnostic: '', nr_fisa: '', observatii: '' })
+  const [diagSelectate, setDiagSelectate] = useState(() => {
+    if (editData?.cod_diagnostic && editData?.diagnostic)
+      return [{ id: '__init__', cod_icd10: editData.cod_diagnostic, denumire: editData.diagnostic }]
+    return []
+  })
   const [linii, setLinii] = useState(editData?.linii?.length ? editData.linii.map(l => ({
     nume_medicament: l.nume_medicament || '', concentratie: l.concentratie || '',
     doza_frecventa: l.doza_frecventa || '', durata_zile: l.durata_zile || '',
@@ -133,8 +139,12 @@ function ModalReteta({ pacientId, medicId, onClose, onSaved, editData = null }) 
             <div><label className={s.label}>Nr. fișă</label>
               <input value={form.nr_fisa} onChange={e => setForm(p => ({ ...p, nr_fisa: e.target.value }))} className={s.input} placeholder="optional" /></div>
           </div>
-          <label className={s.label}>Diagnostic</label>
-          <input value={form.diagnostic} onChange={e => setForm(p => ({ ...p, diagnostic: e.target.value }))} className={s.input} placeholder="ex: Hipertensiune arterială esențială" />
+          <ICD10Search
+            label="Diagnostic (ICD-10)"
+            selectate={diagSelectate}
+            onAdd={d => { setDiagSelectate([d]); setForm(p => ({ ...p, diagnostic: d.denumire, cod_diagnostic: d.cod_icd10 })) }}
+            onRemove={() => { setDiagSelectate([]); setForm(p => ({ ...p, diagnostic: '', cod_diagnostic: '' })) }}
+          />
           <label className={s.label}>Observații</label>
           <textarea value={form.observatii} onChange={e => setForm(p => ({ ...p, observatii: e.target.value }))} className={s.textarea} style={{ height: '55px' }} />
           <div className={s.medicamenteSep}>
@@ -504,6 +514,12 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
   const [editConcediu, setEditConcediu]   = useState(null)
   const [editConsultatie, setEditConsultatie] = useState(null)
   const [formC, setFormC] = useState({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] })
+  const [diagnosticePacient, setDiagnosticePacient] = useState([])
+  const [loadingDP, setLoadingDP] = useState(true)
+  const [showDiagForm, setShowDiagForm] = useState(false)
+  const [formDiag, setFormDiag] = useState({ tip: 'activ', sursa: 'scrisoare', observatii: '' })
+  const [diagPacSelectat, setDiagPacSelectat] = useState([])
+  const [salvandDP, setSalvandDP] = useState(false)
   const [salvandC, setSalvandC] = useState(false)
   const [documente, setDocumente] = useState([])
   const [incarcand, setIncarcand] = useState(false)
@@ -514,6 +530,7 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
   useEffect(() => { api.get('/retete/', { params: { pacient: pacient.id } }).then(res => setRetete(Array.isArray(res.data) ? res.data : (res.data.results || []))).catch(console.error).finally(() => setLoadingR(false)) }, [pacient.id])
   useEffect(() => { api.get('/trimiteri/', { params: { pacient: pacient.id } }).then(res => setTrimiteri(Array.isArray(res.data) ? res.data : (res.data.results || []))).catch(console.error).finally(() => setLoadingT(false)) }, [pacient.id])
   useEffect(() => { api.get('/concedii/', { params: { pacient: pacient.id } }).then(res => setConcedii(Array.isArray(res.data) ? res.data : (res.data.results || []))).catch(console.error).finally(() => setLoadingCo(false)) }, [pacient.id])
+  useEffect(() => { api.get('/diagnostice-pacient/', { params: { pacient: pacient.id } }).then(res => setDiagnosticePacient(Array.isArray(res.data) ? res.data : (res.data.results || []))).catch(console.error).finally(() => setLoadingDP(false)) }, [pacient.id])
   useEffect(() => { api.get(`/pacienti/${pacient.id}/documente/`).then(res => {
     const toate = Array.isArray(res.data) ? res.data : []
     setDocumente(toate.filter(d => d.categorie === 'document' || !d.categorie))
@@ -589,8 +606,32 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
         setConsultatii(res.data); setShowConsultatie(false)
       }
       setFormC(emptyFormC)
+      api.get('/diagnostice-pacient/', { params: { pacient: pacient.id } })
+        .then(r => setDiagnosticePacient(Array.isArray(r.data) ? r.data : (r.data.results || [])))
     } catch { alert('Eroare la salvarea consultatiei.') }
     finally { setSalvandC(false) }
+  }
+
+  const stergeDiagnosticPacient = async (id) => {
+    if (!window.confirm('Ștergi acest diagnostic din dosar?')) return
+    try { await api.delete(`/diagnostice-pacient/${id}/`); setDiagnosticePacient(prev => prev.filter(d => d.id !== id)) }
+    catch { alert('Eroare la ștergere.') }
+  }
+
+  const adaugaDiagnostic = async (e) => {
+    e.preventDefault()
+    if (!diagPacSelectat.length) { alert('Selectați un diagnostic ICD-10.'); return }
+    setSalvandDP(true)
+    try {
+      const res = await api.post('/diagnostice-pacient/', {
+        pacient: pacient.id, medic: pacient.medic,
+        diagnostic_id: diagPacSelectat[0].id,
+        ...formDiag,
+      })
+      setDiagnosticePacient(prev => [res.data, ...prev])
+      setShowDiagForm(false); setDiagPacSelectat([]); setFormDiag({ tip: 'activ', sursa: 'scrisoare', observatii: '' })
+    } catch (err) { alert(err.response?.data?.detail || 'Eroare la adăugare.') }
+    finally { setSalvandDP(false) }
   }
 
   const stergeReteta = async (id) => {
@@ -711,6 +752,65 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
           <p className={s.fieldLabel}>Alergii</p>
           <p className={pacient.alergii ? s.fieldValueWarning : s.fieldValueDim}>{pacient.alergii || 'Nicio alergie cunoscută'}</p>
         </div>
+      </div>
+
+      {/* Diagnostice pacient */}
+      <div className={s.section}>
+        <div className={s.sectionHeader}>
+          <span className={s.sectionTitle}>Diagnostice ({diagnosticePacient.length})</span>
+          <button onClick={() => { setShowDiagForm(!showDiagForm); setDiagPacSelectat([]) }} className={showDiagForm ? s.btnNouToggle : s.btnNou}>
+            {showDiagForm ? 'Anulează' : '+ Adaugă diagnostic'}
+          </button>
+        </div>
+        {showDiagForm && (
+          <form onSubmit={adaugaDiagnostic} className={s.consultatieForm}>
+            <ICD10Search
+              label="Diagnostic ICD-10 *"
+              selectate={diagPacSelectat}
+              onAdd={d => setDiagPacSelectat([d])}
+              onRemove={() => setDiagPacSelectat([])}
+            />
+            <div className={s.grid2}>
+              <div><label className={s.label}>Tip</label>
+                <select value={formDiag.tip} onChange={e => setFormDiag(p => ({ ...p, tip: e.target.value }))} className={s.input}>
+                  <option value="activ">Activ</option>
+                  <option value="cronic">Cronic</option>
+                  <option value="antecedent">Antecedent</option>
+                  <option value="rezolvat">Rezolvat</option>
+                </select></div>
+              <div><label className={s.label}>Sursa</label>
+                <select value={formDiag.sursa} onChange={e => setFormDiag(p => ({ ...p, sursa: e.target.value }))} className={s.input}>
+                  <option value="scrisoare">Scrisoare medicală</option>
+                  <option value="extern">Document extern</option>
+                </select></div>
+            </div>
+            <label className={s.label}>Observații</label>
+            <textarea value={formDiag.observatii} onChange={e => setFormDiag(p => ({ ...p, observatii: e.target.value }))} className={s.textarea} style={{ height: '50px' }} />
+            <div className={s.formActions}>
+              <button type="button" onClick={() => { setShowDiagForm(false); setDiagPacSelectat([]) }} className={s.btnCancel}>Anulează</button>
+              <button type="submit" disabled={salvandDP} className={s.btnSave}>{salvandDP ? 'Se salvează...' : 'Adaugă diagnostic'}</button>
+            </div>
+          </form>
+        )}
+        {loadingDP && <p className={s.loadingText}>Se încarcă...</p>}
+        {!loadingDP && diagnosticePacient.length === 0 && <p className={s.emptyText}>Niciun diagnostic înregistrat.</p>}
+        {!loadingDP && diagnosticePacient.map(d => (
+          <div key={d.id} className={s.listRow}>
+            <div>
+              <span className={s.listRowNume}>{d.diagnostic_cod}</span>
+              <span className={s.listRowDiag}> — {d.diagnostic_denumire}</span>
+              {d.tip === 'activ'      && <span className={s.badgeDiagActiv}>Activ</span>}
+              {d.tip === 'cronic'     && <span className={s.badgeDiagCronic}>Cronic</span>}
+              {d.tip === 'antecedent' && <span className={s.badgeDiagAntecedent}>Antecedent</span>}
+              {d.tip === 'rezolvat'   && <span className={s.badgeDiagRezolvat}>Rezolvat</span>}
+              <span className={s.diagSursa}>{d.sursa === 'consultatie' ? '· consultație' : d.sursa === 'scrisoare' ? '· scrisoare medicală' : '· document extern'}</span>
+              <span className={s.listRowDate}> · {d.data_adaugarii}</span>
+            </div>
+            <div className={s.rowActions}>
+              <button onClick={() => stergeDiagnosticPacient(d.id)} className={s.btnDelete}>Șterge</button>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Dosar scanat */}

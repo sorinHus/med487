@@ -179,6 +179,7 @@ class Reteta(models.Model):
     gratuit           = models.CharField(max_length=2, choices=GRATUIT_CHOICES,
                                          default='nu', verbose_name='Gratuit')
     diagnostic        = models.CharField(max_length=255, blank=True, verbose_name='Diagnostic')
+    cod_diagnostic    = models.CharField(max_length=10, blank=True, verbose_name='Cod ICD-10')
     nr_fisa           = models.CharField(max_length=50, blank=True, verbose_name='Nr. fișă / reg. cons.')
     observatii        = models.TextField(blank=True, verbose_name='Observații')
     creat_la          = models.DateTimeField(auto_now_add=True)
@@ -354,6 +355,36 @@ class Trimitere(models.Model):
     def __str__(self):
         return f'{self.numar_trimitere} — {self.pacient} → {self.specialist}'
     
+class DiagnosticPacient(models.Model):
+    TIP_CHOICES = [
+        ('activ', 'Activ'),
+        ('cronic', 'Cronic'),
+        ('antecedent', 'Antecedent'),
+        ('rezolvat', 'Rezolvat'),
+    ]
+    SURSA_CHOICES = [
+        ('consultatie', 'Consultație'),
+        ('scrisoare', 'Scrisoare medicală'),
+        ('extern', 'Document extern'),
+    ]
+    pacient        = models.ForeignKey(Pacient, on_delete=models.CASCADE, related_name='diagnostice_pacient')
+    diagnostic     = models.ForeignKey(Diagnostic, on_delete=models.PROTECT, related_name='diagnostice_pacienti')
+    data_adaugarii = models.DateField(auto_now_add=True)
+    tip            = models.CharField(max_length=20, choices=TIP_CHOICES, default='activ')
+    sursa          = models.CharField(max_length=30, choices=SURSA_CHOICES, default='consultatie')
+    consultatie    = models.ForeignKey(Consultatie, null=True, blank=True, on_delete=models.SET_NULL, related_name='diagnostice_dosar')
+    observatii     = models.TextField(blank=True)
+    medic          = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='diagnostice_adaugate')
+
+    class Meta:
+        ordering = ['-data_adaugarii']
+        verbose_name = 'Diagnostic pacient'
+        verbose_name_plural = 'Diagnostice pacient'
+
+    def __str__(self):
+        return f'{self.diagnostic} — {self.pacient}'
+
+
 class DocumentPacient(models.Model):
     pacient     = models.ForeignKey(Pacient, on_delete=models.CASCADE, related_name='documente')
     nume        = models.CharField(max_length=255, verbose_name='Nume document')

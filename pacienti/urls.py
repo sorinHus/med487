@@ -1,7 +1,8 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 from .views import (LinieRetetaViewSet, PacientViewSet, ConsulatieViewSet,
-                    DiagnosticViewSet, ResetParolaView, RetetaViewSet, UserViewSet,
+                    DiagnosticViewSet, DiagnosticPacientViewSet,
+                    ResetParolaView, RetetaViewSet, UserViewSet,
                     ProgramareViewSet, ConfiguratieCabinetViewSet,
                     ConcediuMedicalViewSet, TrimitereViewSet,
                     ModuleUtilizatorViewSet)
@@ -18,6 +19,7 @@ router = DefaultRouter()
 router.register('pacienti', PacientViewSet, basename='pacient')
 router.register('consultatii', ConsulatieViewSet, basename='consultatie')
 router.register('diagnostice', DiagnosticViewSet, basename='diagnostic')
+router.register('diagnostice-pacient', DiagnosticPacientViewSet, basename='diagnostic-pacient')
 router.register('useri', UserViewSet, basename='user')
 router.register('programari', ProgramareViewSet, basename='programare')
 router.register(r'configuratie', ConfiguratieCabinetViewSet, basename='configuratie')

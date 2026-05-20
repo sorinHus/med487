@@ -1,6 +1,7 @@
 from .views_auth import _set_token_cookies, CookieTokenObtainPairView, CookieTokenRefreshView, LogoutView
 from .views_utils import log_actiune, LUNI_RO
 from .views_pacienti import (PacientViewSet, ConsulatieViewSet, DiagnosticViewSet,
+                              DiagnosticPacientViewSet,
                               import_pacienti_excel, documente_pacient, sterge_document)
 from .views_programari import ProgramareViewSet, ConfiguratieCabinetViewSet, zile_libere_view
 from .views_clinical import (RetetaViewSet, LinieRetetaViewSet, ConcediuMedicalViewSet,
@@ -15,7 +16,7 @@ from .views_users import (UserViewSet, ProfilMedicView, SchimbareParolaView,
 __all__ = [
     '_set_token_cookies', 'CookieTokenObtainPairView', 'CookieTokenRefreshView', 'LogoutView',
     'log_actiune', 'LUNI_RO',
-    'PacientViewSet', 'ConsulatieViewSet', 'DiagnosticViewSet',
+    'PacientViewSet', 'ConsulatieViewSet', 'DiagnosticViewSet', 'DiagnosticPacientViewSet',
     'import_pacienti_excel', 'documente_pacient', 'sterge_document',
     'ProgramareViewSet', 'ConfiguratieCabinetViewSet', 'zile_libere_view',
     'RetetaViewSet', 'LinieRetetaViewSet', 'ConcediuMedicalViewSet',
