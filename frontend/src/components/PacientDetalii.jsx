@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import api from '../api'
 import { validareCNP } from '../utils/cnp'
 import AdresaFields from '../components/AdresaFields'
@@ -10,15 +10,21 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://web-production-26811.u
 /* ─────────────────────────────────────────────
    ICD10Search
 ───────────────────────────────────────────── */
-function ICD10Search({ selectate, onAdd, onRemove }) {
+function ICD10Search({ selectate, onAdd, onRemove, label = 'Diagnostice ICD-10' }) {
   const [query, setQuery]         = useState('')
   const [rezultate, setRezultate] = useState([])
   const [loading, setLoading]     = useState(false)
+  const [rect, setRect]           = useState(null)
+  const wrapRef                   = useRef(null)
 
   useEffect(() => {
-    if (query.length < 2) { setRezultate([]); return }
+    if (query.length < 2) { setRezultate([]); setRect(null); return }
     const t = setTimeout(async () => {
       setLoading(true)
+      if (wrapRef.current) {
+        const r = wrapRef.current.getBoundingClientRect()
+        setRect({ top: r.bottom + 4, left: r.left, width: r.width })
+      }
       try {
         const res = await api.get('/diagnostice/', { params: { search: query } })
         const lista = Array.isArray(res.data) ? res.data : (res.data.results || [])
@@ -29,9 +35,11 @@ function ICD10Search({ selectate, onAdd, onRemove }) {
     return () => clearTimeout(t)
   }, [query, selectate])
 
+  const showDropdown = rect && (rezultate.length > 0 || (loading && query.length >= 2))
+
   return (
     <div className={s.icd10Wrap}>
-      <label className={s.label}>Diagnostice ICD-10</label>
+      <label className={s.label}>{label}</label>
       {selectate.length > 0 && (
         <div className={s.icd10Tags}>
           {selectate.map((d, i) => (
@@ -43,18 +51,18 @@ function ICD10Search({ selectate, onAdd, onRemove }) {
           ))}
         </div>
       )}
-      <div className={s.icd10InputWrap}>
+      <div className={s.icd10InputWrap} ref={wrapRef}>
         <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cauta cod ICD-10 sau denumire..." className={s.input} style={{ marginBottom: 0 }} />
-        {(rezultate.length > 0 || (loading && query.length >= 2)) && (
-          <div className={s.icd10Dropdown}>
+        {showDropdown && (
+          <div className={s.icd10Dropdown} style={{ position: 'fixed', top: rect.top, left: rect.left, width: rect.width, zIndex: 9999 }}>
             {loading && <div className={s.icd10Loading}>Se cauta...</div>}
             {!loading && rezultate.map(d => (
-              <button key={d.id} onClick={() => { onAdd(d); setQuery(''); setRezultate([]) }} className={s.icd10Btn}>
+              <button key={d.id} onClick={() => { onAdd(d); setQuery(''); setRezultate([]); setRect(null) }} className={s.icd10Btn}>
                 <span className={s.icd10Cod}>{d.cod_icd10}</span>{d.denumire}
               </button>
             ))}
             {!loading && rezultate.length === 0 && query.length >= 2 && (
-              <div className={s.icd10Empty}>Niciun rezultat.</div>
+              <div className={s.icd10Empty}>Niciun rezultat găsit.</div>
             )}
           </div>
         )}
@@ -194,6 +202,11 @@ function ModalTrimitere({ pacientId, medicId, onClose, onSaved, editData = null 
   const [salvand, setSalvand] = useState(false)
   const [eroare, setEroare]   = useState('')
   const [cautare, setCautare] = useState('')
+  const [diagSelectate, setDiagSelectate] = useState(() => {
+    if (editData?.cod_diagnostic && editData?.diagnostic)
+      return [{ id: '__init__', cod_icd10: editData.cod_diagnostic, denumire: editData.diagnostic }]
+    return []
+  })
 
   const analizeFiltered = useMemo(() => {
     if (!cautare.trim()) return null
@@ -302,12 +315,12 @@ function ModalTrimitere({ pacientId, medicId, onClose, onSaved, editData = null 
           )}
           <label className={s.label}>Unitate medicală (optional)</label>
           <input value={form.unitate_medicala} onChange={e => setForm(p => ({ ...p, unitate_medicala: e.target.value }))} className={s.input} placeholder="ex: Spitalul Județean Cluj" />
-          <div className={s.grid21}>
-            <div><label className={s.label}>Diagnostic prezumtiv</label>
-              <input value={form.diagnostic} onChange={e => setForm(p => ({ ...p, diagnostic: e.target.value }))} className={s.input} placeholder="ex: Insuficiență cardiacă" /></div>
-            <div><label className={s.label}>Cod ICD-10</label>
-              <input value={form.cod_diagnostic} onChange={e => setForm(p => ({ ...p, cod_diagnostic: e.target.value }))} className={s.input} placeholder="ex: I50" /></div>
-          </div>
+          <ICD10Search
+            label="Diagnostic prezumtiv (ICD-10)"
+            selectate={diagSelectate}
+            onAdd={d => { setDiagSelectate([d]); setForm(p => ({ ...p, diagnostic: d.denumire, cod_diagnostic: d.cod_icd10 })) }}
+            onRemove={() => { setDiagSelectate([]); setForm(p => ({ ...p, diagnostic: '', cod_diagnostic: '' })) }}
+          />
           <label className={s.label}>Investigații solicitate / Motivul trimiterii</label>
           <textarea value={form.investigatii_solicitate} onChange={e => setForm(p => ({ ...p, investigatii_solicitate: e.target.value }))} className={s.textarea} style={{ height: '80px' }} placeholder="Descrieți investigațiile sau motivul trimiterii..." />
           <div className={s.grid2}>

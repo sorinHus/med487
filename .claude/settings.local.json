@@ -3,7 +3,11 @@
     "allow": [
       "Bash(d:\\\\MED487\\\\cabinet-medical\\\\venv\\\\Scripts\\\\python.exe manage.py makemigrations pacienti --name=\"add_analize_selectate_to_trimitere\")",
       "Read(//d/MED487/**)",
-      "PowerShell(New-Item -ItemType Directory -Force -Path \"d:\\\\MED487\\\\cabinet-medical\\\\frontend\\\\src\\\\data\")"
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"d:\\\\MED487\\\\cabinet-medical\\\\frontend\\\\src\\\\data\")",
+      "Bash(xargs ls -la)",
+      "Read(//d/MED487/cabinet-medical/**)",
+      "Bash(grep -n \"class ConsulatieSerializer\" \"d:/pacienti/serializers.py\" -A 50 | grep -E \"def \\(create|update\\)\" | head -5)",
+      "Read(//d/pacienti/**)"
     ]
   }
 }
