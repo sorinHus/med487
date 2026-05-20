@@ -731,6 +731,17 @@
 .analizeCategorie:first-child {
   margin-top: 0;
 }
+.analizeSubcategorie {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  margin-bottom: 4px;
+  padding-left: 2px;
+}
+.analizeCod {
+  color: var(--text-dim);
+  font-size: 11px;
+}
 .analizeGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;

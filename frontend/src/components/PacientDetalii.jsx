@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import api from '../api'
 import { validareCNP } from '../utils/cnp'
 import AdresaFields from '../components/AdresaFields'
 import s from '../styles/PacientDetalii.module.css'
+import { ANALIZE_LABORATOR } from '../data/analizeLabor'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
 
@@ -165,22 +166,29 @@ function ModalReteta({ pacientId, medicId, onClose, onSaved }) {
 const SPECIALIST_CHOICES = ['cardiologie','neurologie','oftalmologie','ortopedie','dermatologie','ginecologie','urologie','gastroenterologie','endocrinologie','psihiatrie','pneumologie','reumatologie','nefrologie','hematologie','oncologie','chirurgie','ORL','stomatologie','recuperare','analize_laborator','altele']
 const SPECIALIST_LABELS = { analize_laborator: 'Analize laborator' }
 
-const ANALIZE_LABORATOR = [
-  { categorie: 'Hemogramă', analize: ['Hemoleucogramă completă', 'VSH', 'PCR (Proteina C Reactivă)', 'Frotiu sanguine'] },
-  { categorie: 'Biochimie', analize: ['Glicemie a jeun', 'HbA1c', 'Uree', 'Creatinină', 'Acid uric', 'TGO (AST)', 'TGP (ALT)', 'Gama-GT', 'Fosfataza alcalină', 'Bilirubina totală', 'Albumina serică', 'Proteine totale'] },
-  { categorie: 'Lipide', analize: ['Colesterol total', 'HDL-colesterol', 'LDL-colesterol', 'Trigliceride'] },
-  { categorie: 'Electroliți & Minerale', analize: ['Sodiu (Na+)', 'Potasiu (K+)', 'Clor (Cl-)', 'Calciu seric', 'Magneziu', 'Fosfor'] },
-  { categorie: 'Fier & Anemie', analize: ['Fier seric', 'Feritină', 'Saturatia transferinei', 'Vitamina B12', 'Acid folic'] },
-  { categorie: 'Hormoni', analize: ['TSH', 'FT4 (Tiroxina liberă)', 'FT3', 'PSA total', 'PSA liber', 'LH', 'FSH', 'Testosteron', 'Estradiol', 'Prolactina', 'Cortizol'] },
-  { categorie: 'Coagulare', analize: ['INR / Timp Quick (PT)', 'APTT', 'Fibrinogen', 'D-dimeri', 'Timp de trombină'] },
-  { categorie: 'Serologie', analize: ['AgHBs', 'Anticorpi anti-HBs', 'Anti-HCV', 'HIV Ag/Ac', 'VDRL/RPR', 'IgM/IgG Toxoplasma', 'IgM/IgG CMV', 'IgM/IgG Rubeolă'] },
-  { categorie: 'Urină & Fecale', analize: ['Sumar de urină', 'Urocultură', 'Microalbuminurie', 'Coprocultură', 'Coproparazitologic'] },
-]
 
 function ModalTrimitere({ pacientId, medicId, onClose, onSaved }) {
   const [form, setForm] = useState({ specialist: 'cardiologie', specialist_custom: '', unitate_medicala: '', diagnostic: '', cod_diagnostic: '', investigatii_solicitate: '', prioritate: 'normal', valabilitate_zile: 30, nr_fisa: '', analize_selectate: [], observatii: '' })
   const [salvand, setSalvand] = useState(false)
   const [eroare, setEroare]   = useState('')
+  const [cautare, setCautare] = useState('')
+
+  const analizeFiltered = useMemo(() => {
+    if (!cautare.trim()) return null
+    const q = cautare.toLowerCase()
+    const results = []
+    for (const { categorie, subcategorii } of ANALIZE_LABORATOR)
+      for (const { analize } of subcategorii)
+        for (const a of analize)
+          if (a.denumire.toLowerCase().includes(q) || a.cod.toLowerCase().includes(q))
+            results.push({ ...a, categorie })
+    return results
+  }, [cautare])
+
+  const toggleAnaliza = (denumire, checked) => setForm(p => ({
+    ...p,
+    analize_selectate: checked ? [...p.analize_selectate, denumire] : p.analize_selectate.filter(x => x !== denumire)
+  }))
 
   const salveaza = async (e) => {
     e.preventDefault(); setSalvand(true); setEroare('')
@@ -201,7 +209,7 @@ function ModalTrimitere({ pacientId, medicId, onClose, onSaved }) {
         <form onSubmit={salveaza} className={s.modalBody}>
           <div className={s.grid2}>
             <div><label className={s.label}>Specialist *</label>
-              <select value={form.specialist} onChange={e => setForm(p => ({ ...p, specialist: e.target.value, analize_selectate: [] }))} className={s.input} required>
+              <select value={form.specialist} onChange={e => { setForm(p => ({ ...p, specialist: e.target.value, analize_selectate: [] })); setCautare('') }} className={s.input} required>
                 {SPECIALIST_CHOICES.map(sp => <option key={sp} value={sp}>{SPECIALIST_LABELS[sp] || (sp.charAt(0).toUpperCase() + sp.slice(1))}</option>)}
               </select></div>
             <div><label className={s.label}>Prioritate</label>
@@ -215,40 +223,56 @@ function ModalTrimitere({ pacientId, medicId, onClose, onSaved }) {
           )}
           {form.specialist === 'analize_laborator' && (
             <div>
-              <label className={s.label}>Analize solicitate</label>
+              <label className={s.label}>Analize solicitate {form.analize_selectate.length > 0 && <span style={{ color: 'var(--accent-light)' }}>({form.analize_selectate.length} selectate)</span>}</label>
               {form.analize_selectate.length > 0 && (
                 <div className={s.analizeSelectate}>
                   {form.analize_selectate.map(a => (
                     <span key={a} className={s.analizeChip}>
                       {a}
-                      <span className={s.analizeChipX} onClick={() => setForm(p => ({ ...p, analize_selectate: p.analize_selectate.filter(x => x !== a) }))}>×</span>
+                      <span className={s.analizeChipX} onClick={() => toggleAnaliza(a, false)}>×</span>
                     </span>
                   ))}
                 </div>
               )}
+              <input
+                className={s.input}
+                placeholder="Caută analiză după denumire sau cod..."
+                value={cautare}
+                onChange={e => setCautare(e.target.value)}
+                style={{ marginBottom: 6 }}
+              />
               <div className={s.analizeBox}>
-                {ANALIZE_LABORATOR.map(({ categorie, analize }) => (
-                  <div key={categorie}>
-                    <div className={s.analizeCategorie}>{categorie}</div>
-                    <div className={s.analizeGrid}>
-                      {analize.map(a => (
-                        <label key={a} className={s.analizeItem}>
-                          <input
-                            type="checkbox"
-                            checked={form.analize_selectate.includes(a)}
-                            onChange={e => setForm(p => ({
-                              ...p,
-                              analize_selectate: e.target.checked
-                                ? [...p.analize_selectate, a]
-                                : p.analize_selectate.filter(x => x !== a)
-                            }))}
-                          />
-                          {a}
-                        </label>
+                {analizeFiltered !== null ? (
+                  analizeFiltered.length === 0
+                    ? <div style={{ color: 'var(--text-muted)', fontSize: 13, padding: '8px 0' }}>Nicio analiză găsită.</div>
+                    : <div className={s.analizeGrid}>
+                        {analizeFiltered.map(a => (
+                          <label key={a.denumire} className={s.analizeItem}>
+                            <input type="checkbox" checked={form.analize_selectate.includes(a.denumire)} onChange={e => toggleAnaliza(a.denumire, e.target.checked)} />
+                            <span>{a.denumire}{a.cod && <span className={s.analizeCod}> · {a.cod}</span>}</span>
+                          </label>
+                        ))}
+                      </div>
+                ) : (
+                  ANALIZE_LABORATOR.map(({ categorie, subcategorii }) => (
+                    <div key={categorie}>
+                      <div className={s.analizeCategorie}>{categorie}</div>
+                      {subcategorii.map(({ subcategorie, analize }) => (
+                        <div key={subcategorie}>
+                          <div className={s.analizeSubcategorie}>{subcategorie}</div>
+                          <div className={s.analizeGrid}>
+                            {analize.map(a => (
+                              <label key={a.denumire} className={s.analizeItem}>
+                                <input type="checkbox" checked={form.analize_selectate.includes(a.denumire)} onChange={e => toggleAnaliza(a.denumire, e.target.checked)} />
+                                <span>{a.denumire}{a.cod && <span className={s.analizeCod}> · {a.cod}</span>}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           )}
