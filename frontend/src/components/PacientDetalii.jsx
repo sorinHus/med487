@@ -508,6 +508,7 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
   const [formEdit, setFormEdit]       = useState({ ...pacient })
   const [errorsEdit, setErrorsEdit]   = useState({})
   const [salvandEdit, setSalvandEdit] = useState(false)
+  const [sectiuneActiva, setSectiuneActiva] = useState(null)
   const [showConsultatie, setShowConsultatie] = useState(false)
   const [showReteta, setShowReteta]   = useState(false)
   const [showTrimitere, setShowTrimitere] = useState(false)
@@ -757,7 +758,93 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
         </div>
       </div>
 
+      {/* Grid carduri sectiuni */}
+      <div className={s.sectiuniGrid}>
+        {[
+          { key: 'consultatii', label: 'Consultații',    ico: '🩺', count: consultatii.length,        loading: loadingC  },
+          { key: 'diagnostice', label: 'Diagnostice',    ico: '📋', count: diagnosticePacient.length,  loading: loadingDP },
+          ...(moduleActive.includes('retete')    ? [{ key: 'retete',    label: 'Rețete',          ico: '📝', count: retete.length,    loading: loadingR  }] : []),
+          ...(moduleActive.includes('trimiteri') ? [{ key: 'trimiteri', label: 'Trimiteri',        ico: '↗️', count: trimiteri.length, loading: loadingT  }] : []),
+          ...(moduleActive.includes('concedii')  ? [{ key: 'concedii',  label: 'Concedii',         ico: '🏥', count: concedii.length,  loading: loadingCo }] : []),
+          { key: 'documente',   label: 'Dosar scanat',  ico: '📄', count: documente.length,          loading: false     },
+          { key: 'alteFisiere', label: 'Alte fișiere',  ico: '📎', count: alteFisiere.length,        loading: false     },
+        ].map(sec => (
+          <button
+            key={sec.key}
+            type="button"
+            onClick={() => setSectiuneActiva(prev => prev === sec.key ? null : sec.key)}
+            className={`${s.sectiuneCard} ${sectiuneActiva === sec.key ? s.sectiuneCardActiv : ''}`}
+          >
+            <span className={s.sectiuneIco}>{sec.ico}</span>
+            <span className={s.sectiuneCount}>{sec.loading ? '·' : sec.count}</span>
+            <span className={s.sectiuneLabel}>{sec.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Consultații */}
+      {sectiuneActiva === 'consultatii' && (
+      <div className={s.section}>
+        <div className={s.sectionHeader}>
+          <span className={s.sectionTitle}>Istoric consultații ({consultatii.length})</span>
+          <button onClick={() => { setShowConsultatie(!showConsultatie); setEditConsultatie(null); setFormC({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] }) }} className={showConsultatie ? s.btnNouToggle : s.btnNou}>
+            {showConsultatie ? 'Anulează' : '+ Consultație nouă'}
+          </button>
+        </div>
+        {(showConsultatie || editConsultatie) && (
+          <form onSubmit={salveazaConsultatie} className={s.consultatieForm}>
+            {editConsultatie && <div style={{ fontSize: 12, color: 'var(--accent-light)', marginBottom: 10 }}>Editezi consultația din {new Date(editConsultatie.data_ora).toLocaleDateString('ro-RO')}</div>}
+            <div className={s.grid2}>
+              <div><label className={s.label}>Data și ora *</label>
+                <input type="datetime-local" value={formC.data_ora} onChange={e => setFormC(p => ({ ...p, data_ora: e.target.value }))} required className={s.input} /></div>
+            </div>
+            <label className={s.label}>Simptome</label>
+            <textarea value={formC.simptome} onChange={e => setFormC(p => ({ ...p, simptome: e.target.value }))} className={s.textarea} style={{ height: '70px' }} placeholder="Descrie simptomele..." />
+            <label className={s.label}>Examen clinic</label>
+            <textarea value={formC.examen_clinic} onChange={e => setFormC(p => ({ ...p, examen_clinic: e.target.value }))} className={s.textarea} style={{ height: '70px' }} placeholder="Rezultatele examenului..." />
+            <label className={s.label}>Tratament</label>
+            <textarea value={formC.tratament} onChange={e => setFormC(p => ({ ...p, tratament: e.target.value }))} className={s.textarea} style={{ height: '70px' }} placeholder="Medicație, doze, durată..." />
+            <label className={s.label}>Observații</label>
+            <textarea value={formC.observatii} onChange={e => setFormC(p => ({ ...p, observatii: e.target.value }))} className={s.textarea} style={{ height: '60px' }} />
+            <ICD10Search
+              selectate={formC.diagnostice}
+              onAdd={d => setFormC(p => ({ ...p, diagnostice: [...p.diagnostice, d] }))}
+              onRemove={id => setFormC(p => ({ ...p, diagnostice: p.diagnostice.filter(d => d.id !== id) }))}
+            />
+            <div className={s.formActions}>
+              <button type="button" onClick={() => { setShowConsultatie(false); setEditConsultatie(null) }} className={s.btnCancel}>Anulează</button>
+              <button type="submit" disabled={salvandC} className={s.btnSave}>{salvandC ? 'Se salvează...' : (editConsultatie ? 'Salvează modificările' : 'Salvează consultația')}</button>
+            </div>
+          </form>
+        )}
+        {loadingC && <p className={s.loadingText}>Se încarcă...</p>}
+        {!loadingC && consultatii.length === 0 && <p className={s.emptyText}>Nicio consultație înregistrată.</p>}
+        {!loadingC && consultatii.map(c => (
+          <div key={c.id} className={s.consultatieRow}>
+            <div className={s.consultatieRowHeader}>
+              <span className={s.consultatieData}>
+                {new Date(c.data_ora).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </span>
+              <div className={s.consultatieRight}>
+                <span className={s.consultatieMedic}>Dr. {c.medic_nume || '—'}</span>
+                <div className={s.consultatieBtns}>
+                  {moduleActive.includes('retete')    && <button onClick={() => setShowReteta(true)}    className={s.btnReteta}>+ Rețetă</button>}
+                  {moduleActive.includes('trimiteri') && <button onClick={() => setShowTrimitere(true)} className={s.btnTrimitere}>+ Trimitere</button>}
+                  {moduleActive.includes('concedii')  && <button onClick={() => setShowConcediu(true)}  className={s.btnConcediu}>+ Concediu</button>}
+                  <button onClick={() => deschideEditConsultatie(c)} className={s.btnEdit}>Editează</button>
+                  <button onClick={() => stergeConsultatie(c.id)} className={s.btnDelete}>Șterge</button>
+                </div>
+              </div>
+            </div>
+            {c.simptome  && <p className={s.consultatieLine}><span className={s.consultatieDimLabel}>Simptome: </span>{c.simptome}</p>}
+            {c.tratament && <p className={s.consultatieLine}><span className={s.consultatieDimLabel}>Tratament: </span>{c.tratament}</p>}
+          </div>
+        ))}
+      </div>
+      )}
+
       {/* Diagnostice pacient */}
+      {sectiuneActiva === 'diagnostice' && (
       <div className={s.section}>
         <div className={s.sectionHeader}>
           <span className={s.sectionTitle}>Diagnostice ({diagnosticePacient.length})</span>
@@ -815,52 +902,10 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
           </div>
         ))}
       </div>
-
-      {/* Dosar scanat */}
-      <div className={s.section}>
-        <div className={s.sectionHeader}>
-          <span className={s.sectionTitle}>Dosar scanat ({documente.length})</span>
-          <label className={s.btnNouLabel}>
-            + Adaugă document
-            <input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={incarcaDocument} style={{ display: 'none' }} />
-          </label>
-        </div>
-        {incarcand && <p className={s.loadingText}>Se încarcă...</p>}
-        {!incarcand && documente.length === 0 && <p className={s.emptyText}>Niciun document înregistrat.</p>}
-        {documente.map(d => (
-          <div key={d.id} className={s.docRow}>
-            <div>
-              <a href={d.fisier_url} target="_blank" rel="noreferrer" className={s.docLink}>📄 {d.nume}</a>
-              <span className={s.docMeta}>{new Date(d.incarcat_la).toLocaleDateString('ro-RO')} · {Math.round(d.marime / 1024)} KB · {d.incarcat_de}</span>
-            </div>
-            <button onClick={() => stergeDocument(d.id)} className={s.btnStergeDoc}>×</button>
-          </div>
-        ))}
-      </div>
-
-      {/* Alte fisiere */}
-      <div className={s.section}>
-        <div className={s.sectionHeader}>
-          <span className={s.sectionTitle}>Alte fișiere ({alteFisiere.length})</span>
-          <label className={s.btnNouLabel}>
-            + Adaugă fișier
-            <input type="file" onChange={incarcaAltFisier} style={{ display: 'none' }} />
-          </label>
-        </div>
-        {incarcandAlt && <p className={s.loadingText}>Se încarcă...</p>}
-        {!incarcandAlt && alteFisiere.length === 0 && <p className={s.emptyText}>Niciun fișier înregistrat.</p>}
-        {alteFisiere.map(d => (
-          <div key={d.id} className={s.docRow}>
-            <div>
-              <a href={d.fisier_url} target="_blank" rel="noreferrer" className={s.docLink}>📎 {d.nume}</a>
-              <span className={s.docMeta}>{new Date(d.incarcat_la).toLocaleDateString('ro-RO')} · {Math.round(d.marime / 1024)} KB · {d.incarcat_de}</span>
-            </div>
-            <button onClick={() => stergeAltFisier(d.id)} className={s.btnStergeDoc}>×</button>
-          </div>
-        ))}
-      </div>
+      )}
 
       {/* Rețete */}
+      {sectiuneActiva === 'retete' && (
       <div className={s.section}>
         <div className={s.sectionHeader}>
           <span className={s.sectionTitle}>Rețete ({retete.length})</span>
@@ -884,9 +929,10 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
           </div>
         ))}
       </div>
-      
+      )}
 
       {/* Trimiteri */}
+      {sectiuneActiva === 'trimiteri' && (
       <div className={s.section}>
         <div className={s.sectionHeader}>
           <span className={s.sectionTitle}>Trimiteri ({trimiteri.length})</span>
@@ -912,8 +958,10 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
           </div>
         ))}
       </div>
+      )}
 
       {/* Concedii */}
+      {sectiuneActiva === 'concedii' && (
       <div className={s.section}>
         <div className={s.sectionHeader}>
           <span className={s.sectionTitle}>Concedii medicale ({concedii.length})</span>
@@ -938,67 +986,55 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
           </div>
         ))}
       </div>
+      )}
 
-      {/* Consultații */}
-      <div className={s.card}>
+      {/* Dosar scanat */}
+      {sectiuneActiva === 'documente' && (
+      <div className={s.section}>
         <div className={s.sectionHeader}>
-          <span className={s.sectionTitle}>Istoric consultații ({consultatii.length})</span>
-          <button onClick={() => { setShowConsultatie(!showConsultatie); setEditConsultatie(null); setFormC({ data_ora: new Date().toISOString().slice(0,16), simptome: '', examen_clinic: '', tratament: '', observatii: '', diagnostice: [] }) }} className={showConsultatie ? s.btnNouToggle : s.btnNou}>
-            {showConsultatie ? 'Anulează' : '+ Consultație nouă'}
-          </button>
+          <span className={s.sectionTitle}>Dosar scanat ({documente.length})</span>
+          <label className={s.btnNouLabel}>
+            + Adaugă document
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={incarcaDocument} style={{ display: 'none' }} />
+          </label>
         </div>
-
-        {(showConsultatie || editConsultatie) && (
-          <form onSubmit={salveazaConsultatie} className={s.consultatieForm}>
-            {editConsultatie && <div style={{ fontSize: 12, color: 'var(--accent-light)', marginBottom: 10 }}>Editezi consultația din {new Date(editConsultatie.data_ora).toLocaleDateString('ro-RO')}</div>}
-            <div className={s.grid2}>
-              <div><label className={s.label}>Data și ora *</label>
-                <input type="datetime-local" value={formC.data_ora} onChange={e => setFormC(p => ({ ...p, data_ora: e.target.value }))} required className={s.input} /></div>
+        {incarcand && <p className={s.loadingText}>Se încarcă...</p>}
+        {!incarcand && documente.length === 0 && <p className={s.emptyText}>Niciun document înregistrat.</p>}
+        {documente.map(d => (
+          <div key={d.id} className={s.docRow}>
+            <div>
+              <a href={d.fisier_url} target="_blank" rel="noreferrer" className={s.docLink}>📄 {d.nume}</a>
+              <span className={s.docMeta}>{new Date(d.incarcat_la).toLocaleDateString('ro-RO')} · {Math.round(d.marime / 1024)} KB · {d.incarcat_de}</span>
             </div>
-            <label className={s.label}>Simptome</label>
-            <textarea value={formC.simptome} onChange={e => setFormC(p => ({ ...p, simptome: e.target.value }))} className={s.textarea} style={{ height: '70px' }} placeholder="Descrie simptomele..." />
-            <label className={s.label}>Examen clinic</label>
-            <textarea value={formC.examen_clinic} onChange={e => setFormC(p => ({ ...p, examen_clinic: e.target.value }))} className={s.textarea} style={{ height: '70px' }} placeholder="Rezultatele examenului..." />
-            <label className={s.label}>Tratament</label>
-            <textarea value={formC.tratament} onChange={e => setFormC(p => ({ ...p, tratament: e.target.value }))} className={s.textarea} style={{ height: '70px' }} placeholder="Medicație, doze, durată..." />
-            <label className={s.label}>Observații</label>
-            <textarea value={formC.observatii} onChange={e => setFormC(p => ({ ...p, observatii: e.target.value }))} className={s.textarea} style={{ height: '60px' }} />
-            <ICD10Search
-              selectate={formC.diagnostice}
-              onAdd={d => setFormC(p => ({ ...p, diagnostice: [...p.diagnostice, d] }))}
-              onRemove={id => setFormC(p => ({ ...p, diagnostice: p.diagnostice.filter(d => d.id !== id) }))}
-            />
-            <div className={s.formActions}>
-              <button type="button" onClick={() => { setShowConsultatie(false); setEditConsultatie(null) }} className={s.btnCancel}>Anulează</button>
-              <button type="submit" disabled={salvandC} className={s.btnSave}>{salvandC ? 'Se salvează...' : (editConsultatie ? 'Salvează modificările' : 'Salvează consultația')}</button>
-            </div>
-          </form>
-        )}
-
-        {loadingC && <p className={s.loadingText}>Se încarcă...</p>}
-        {!loadingC && consultatii.length === 0 && <p className={s.emptyText}>Nicio consultație înregistrată.</p>}
-        {!loadingC && consultatii.map(c => (
-          <div key={c.id} className={s.consultatieRow}>
-            <div className={s.consultatieRowHeader}>
-              <span className={s.consultatieData}>
-                {new Date(c.data_ora).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' })}
-              </span>
-              <div className={s.consultatieRight}>
-                <span className={s.consultatieMedic}>Dr. {c.medic_nume || '—'}</span>
-                <div className={s.consultatieBtns}>
-                  {moduleActive.includes('retete')    && <button onClick={() => setShowReteta(true)}    className={s.btnReteta}>+ Rețetă</button>}
-                  {moduleActive.includes('trimiteri') && <button onClick={() => setShowTrimitere(true)} className={s.btnTrimitere}>+ Trimitere</button>}
-                  {moduleActive.includes('concedii')  && <button onClick={() => setShowConcediu(true)}  className={s.btnConcediu}>+ Concediu</button>}
-                  <button onClick={() => deschideEditConsultatie(c)} className={s.btnEdit}>Editează</button>
-                  <button onClick={() => stergeConsultatie(c.id)} className={s.btnDelete}>Șterge</button>
-                </div>
-              </div>
-            </div>
-            {c.simptome  && <p className={s.consultatieLine}><span className={s.consultatieDimLabel}>Simptome: </span>{c.simptome}</p>}
-            {c.tratament && <p className={s.consultatieLine}><span className={s.consultatieDimLabel}>Tratament: </span>{c.tratament}</p>}
+            <button onClick={() => stergeDocument(d.id)} className={s.btnStergeDoc}>×</button>
           </div>
         ))}
       </div>
+      )}
+
+      {/* Alte fisiere */}
+      {sectiuneActiva === 'alteFisiere' && (
+      <div className={s.section}>
+        <div className={s.sectionHeader}>
+          <span className={s.sectionTitle}>Alte fișiere ({alteFisiere.length})</span>
+          <label className={s.btnNouLabel}>
+            + Adaugă fișier
+            <input type="file" onChange={incarcaAltFisier} style={{ display: 'none' }} />
+          </label>
+        </div>
+        {incarcandAlt && <p className={s.loadingText}>Se încarcă...</p>}
+        {!incarcandAlt && alteFisiere.length === 0 && <p className={s.emptyText}>Niciun fișier înregistrat.</p>}
+        {alteFisiere.map(d => (
+          <div key={d.id} className={s.docRow}>
+            <div>
+              <a href={d.fisier_url} target="_blank" rel="noreferrer" className={s.docLink}>📎 {d.nume}</a>
+              <span className={s.docMeta}>{new Date(d.incarcat_la).toLocaleDateString('ro-RO')} · {Math.round(d.marime / 1024)} KB · {d.incarcat_de}</span>
+            </div>
+            <button onClick={() => stergeAltFisier(d.id)} className={s.btnStergeDoc}>×</button>
+          </div>
+        ))}
+      </div>
+      )}
 
       {showReteta    && <ModalReteta    pacientId={pacient.id} medicId={pacient.medic} onClose={() => setShowReteta(false)}    onSaved={r => setRetete(prev => [r, ...prev])} />}
       {editReteta    && <ModalReteta    pacientId={pacient.id} medicId={pacient.medic} editData={editReteta} onClose={() => setEditReteta(null)} onSaved={r => { setRetete(prev => prev.map(x => x.id === r.id ? r : x)); setEditReteta(null) }} />}

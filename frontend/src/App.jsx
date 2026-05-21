@@ -135,8 +135,8 @@ function AppInterna() {
     }).catch(() => handleLogout())
   }
 
-  if (!loggedIn) return <Login onLogin={handleLoginSuccess} />
   if (loading)   return <div style={{ minHeight: '100vh', background: '#0f1117' }} />
+  if (!loggedIn) return <Login onLogin={handleLoginSuccess} />
 
   if (user?.rol === 'superadmin') return <SuperadminPanel onLogout={handleLogout} user={user} />
   if (user?.rol === 'pacient')    return <PortalPacient user={user} onLogout={handleLogout} />
