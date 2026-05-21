@@ -172,7 +172,7 @@ function ModalReteta({ pacientId, medicId, onClose, onSaved, editData = null }) 
                     <input value={linie.doza_frecventa} onChange={e => updateLinie(i, 'doza_frecventa', e.target.value)} className={s.input} placeholder="ex: 1cp/zi" /></div>
                   <div><label className={s.label}>Durată (zile)</label>
                     <input type="number" min="1" value={linie.durata_zile} onChange={e => updateLinie(i, 'durata_zile', e.target.value)} className={s.input} placeholder="30" /></div>
-                  <div><label className={s.label}>Nr. unități (comprimate/fiole)</label>
+                  <div><label className={s.label}>Nr. unități</label>
                     <input type="number" min="1" value={linie.cantitate} onChange={e => updateLinie(i, 'cantitate', e.target.value)} className={s.input} /></div>
                 </div>
                 <label className={s.label}>Observații medicament</label>
