@@ -491,6 +491,63 @@ const STATUS_OPTS = [
 const LUNI = ['','Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec']
 
 /* ─────────────────────────────────────────────
+   Sectiuni config (SVG icons + accent colors)
+───────────────────────────────────────────── */
+const SECTIUNI_CFG = {
+  consultatii: {
+    label: 'Consultații', color: '#3a7bd5',
+    ico: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 2v7a3 3 0 006 0V2"/><circle cx="18" cy="17" r="2.5"/><path d="M15.5 17H12a4 4 0 01-4-4V8"/>
+    </svg>,
+  },
+  diagnostice: {
+    label: 'Diagnostice', color: '#8b5cf6',
+    ico: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 12h6M9 17h4"/>
+      <path d="M9 2a2 2 0 004 0"/>
+    </svg>,
+  },
+  retete: {
+    label: 'Rețete', color: '#10b981',
+    ico: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M7 5h5.5a3.5 3.5 0 010 7H7V5z"/><path d="M7 12l7 7"/><path d="M14 12l-4 5"/>
+    </svg>,
+  },
+  trimiteri: {
+    label: 'Trimiteri', color: '#f59e0b',
+    ico: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+    </svg>,
+  },
+  concedii: {
+    label: 'Concedii', color: '#ef4444',
+    ico: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
+    </svg>,
+  },
+  documente: {
+    label: 'Dosar scanat', color: '#14b8a6',
+    ico: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 7a2 2 0 012-2h4.586a1 1 0 01.707.293L12 7h7a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
+    </svg>,
+  },
+  alteFisiere: {
+    label: 'Alte fișiere', color: '#6b7280',
+    ico: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+      <line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/>
+    </svg>,
+  },
+}
+
+function hexToRgba(hex, a) {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r},${g},${b},${a})`
+}
+
+/* ─────────────────────────────────────────────
    PacientDetalii
 ───────────────────────────────────────────── */
 export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
@@ -761,25 +818,37 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
       {/* Grid carduri sectiuni */}
       <div className={s.sectiuniGrid}>
         {[
-          { key: 'consultatii', label: 'Consultații',    ico: '🩺', count: consultatii.length,        loading: loadingC  },
-          { key: 'diagnostice', label: 'Diagnostice',    ico: '📋', count: diagnosticePacient.length,  loading: loadingDP },
-          ...(moduleActive.includes('retete')    ? [{ key: 'retete',    label: 'Rețete',          ico: '📝', count: retete.length,    loading: loadingR  }] : []),
-          ...(moduleActive.includes('trimiteri') ? [{ key: 'trimiteri', label: 'Trimiteri',        ico: '↗️', count: trimiteri.length, loading: loadingT  }] : []),
-          ...(moduleActive.includes('concedii')  ? [{ key: 'concedii',  label: 'Concedii',         ico: '🏥', count: concedii.length,  loading: loadingCo }] : []),
-          { key: 'documente',   label: 'Dosar scanat',  ico: '📄', count: documente.length,          loading: false     },
-          { key: 'alteFisiere', label: 'Alte fișiere',  ico: '📎', count: alteFisiere.length,        loading: false     },
-        ].map(sec => (
-          <button
-            key={sec.key}
-            type="button"
-            onClick={() => setSectiuneActiva(prev => prev === sec.key ? null : sec.key)}
-            className={`${s.sectiuneCard} ${sectiuneActiva === sec.key ? s.sectiuneCardActiv : ''}`}
-          >
-            <span className={s.sectiuneIco}>{sec.ico}</span>
-            <span className={s.sectiuneCount}>{sec.loading ? '·' : sec.count}</span>
-            <span className={s.sectiuneLabel}>{sec.label}</span>
-          </button>
-        ))}
+          { key: 'consultatii', count: consultatii.length,       loading: loadingC  },
+          { key: 'diagnostice', count: diagnosticePacient.length, loading: loadingDP },
+          ...(moduleActive.includes('retete')    ? [{ key: 'retete',    count: retete.length,    loading: loadingR  }] : []),
+          ...(moduleActive.includes('trimiteri') ? [{ key: 'trimiteri', count: trimiteri.length, loading: loadingT  }] : []),
+          ...(moduleActive.includes('concedii')  ? [{ key: 'concedii',  count: concedii.length,  loading: loadingCo }] : []),
+          { key: 'documente',   count: documente.length,          loading: false     },
+          { key: 'alteFisiere', count: alteFisiere.length,        loading: false     },
+        ].map(({ key, count, loading }) => {
+          const cfg    = SECTIUNI_CFG[key]
+          const activ  = sectiuneActiva === key
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setSectiuneActiva(prev => prev === key ? null : key)}
+              className={`${s.sectiuneCard} ${activ ? s.sectiuneCardActiv : ''}`}
+              style={{ '--card-color': cfg.color, background: activ ? hexToRgba(cfg.color, 0.07) : undefined }}
+            >
+              <div
+                className={s.sectiuneIcoWrap}
+                style={{ background: hexToRgba(cfg.color, 0.14), color: cfg.color }}
+              >
+                {cfg.ico}
+              </div>
+              <div className={s.sectiuneBottom}>
+                <span className={s.sectiuneCount}>{loading ? '–' : count}</span>
+                <span className={s.sectiuneLabel}>{cfg.label}</span>
+              </div>
+            </button>
+          )
+        })}
       </div>
 
       {/* Consultații */}
