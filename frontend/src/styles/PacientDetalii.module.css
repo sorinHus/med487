@@ -6,13 +6,23 @@
   margin-bottom: 20px;
 }
 .btnBack {
-  background: none;
-  border: none;
-  color: var(--text-dim);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
   cursor: pointer;
-  font-size: 20px;
-  padding: 0;
-  line-height: 1;
+  font-size: 22px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btnBack:hover {
+  background: var(--bg-main);
+  border-color: var(--accent);
 }
 .headerNume {
   font-size: 15px;
