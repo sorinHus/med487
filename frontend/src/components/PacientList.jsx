@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
+import { Routes, Route, useNavigate, useParams } from 'react-router-dom'
 import api from '../api'
 import PacientForm from './PacientForm'
 import PacientDetalii from './PacientDetalii'
@@ -89,12 +90,40 @@ async function exportExcel(pacienti) {
   XLSX.writeFile(wb, `pacienti_${new Date().toISOString().slice(0, 10)}.xlsx`)
 }
 
-export default function PacientList({ pacientInitial, moduleActive = [] }) {
+function PacientDetaliiRoute({ moduleActive }) {
+  const { pacientId } = useParams()
+  const navigate = useNavigate()
+  const [pacient, setPacient] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    api.get(`/pacienti/${pacientId}/`)
+      .then(res => setPacient(res.data))
+      .catch(() => navigate('/app/pacienti', { replace: true }))
+      .finally(() => setLoading(false))
+  }, [pacientId])
+
+  if (loading) return <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-dim)' }}>Se încarcă...</div>
+  if (!pacient) return null
+  return <PacientDetalii pacient={pacient} onBack={() => navigate('/app/pacienti')} moduleActive={moduleActive} />
+}
+
+export default function PacientList({ moduleActive = [] }) {
+  return (
+    <Routes>
+      <Route index element={<PacientListView moduleActive={moduleActive} />} />
+      <Route path=":pacientId" element={<PacientDetaliiRoute moduleActive={moduleActive} />} />
+      <Route path=":pacientId/:sectiune" element={<PacientDetaliiRoute moduleActive={moduleActive} />} />
+    </Routes>
+  )
+}
+
+function PacientListView({ moduleActive = [] }) {
+  const navigate = useNavigate()
   const [pacienti, setPacienti]               = useState([])
   const [loading, setLoading]                 = useState(true)
   const [search, setSearch]                   = useState('')
   const [showForm, setShowForm]               = useState(false)
-  const [pacientSelectat, setPacientSelectat] = useState(pacientInitial || null)
   const [exportand, setExportand]             = useState(false)
   const [importand, setImportand]             = useState(false)
   const [rezultatImport, setRezultatImport]   = useState(null)
@@ -111,10 +140,6 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
   const [coloane, setColoane]         = useState(getColoaneSalvate)
   const [showColoane, setShowColoane] = useState(false)
   const colDropRef = useRef(null)
-
-  useEffect(() => {
-    if (pacientInitial) setPacientSelectat(pacientInitial)
-  }, [pacientInitial])
 
   useEffect(() => {
     const timer = setTimeout(() => fetchPacienti(), search ? 300 : 0)
@@ -208,9 +233,6 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
     } finally { setImportand(false); e.target.value = '' }
   }
 
-  if (pacientSelectat) return (
-    <PacientDetalii pacient={pacientSelectat} onBack={() => { setPacientSelectat(null); fetchPacienti() }} moduleActive={moduleActive} />
-  )
   if (showForm) return (
     <PacientForm onSaved={() => { setShowForm(false); fetchPacienti() }} onCancel={() => setShowForm(false)} />
   )
@@ -376,7 +398,7 @@ export default function PacientList({ pacientInitial, moduleActive = [] }) {
               </td></tr>
             )}
             {!loading && pacientiFiltrati.map((p, index) => (
-              <tr key={p.id} className={s.tr} onClick={() => setPacientSelectat(p)}>
+              <tr key={p.id} className={s.tr} onClick={() => navigate(p.id.toString())}>
                 <td className={s.tdIndex}>{index + 1}</td>
                 {coloaneVizibile.map(col => (
                   <td key={col.id} className={s.td}>

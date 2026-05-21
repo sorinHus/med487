@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import api from '../api'
 import { validareCNP } from '../utils/cnp'
 import AdresaFields from '../components/AdresaFields'
@@ -551,6 +552,9 @@ function hexToRgba(hex, a) {
    PacientDetalii
 ───────────────────────────────────────────── */
 export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
+  const { sectiune } = useParams()
+  const navigate     = useNavigate()
+  const sectiuneActiva = sectiune || null
   const [consultatii, setConsultatii] = useState([])
   const [retete, setRetete]           = useState([])
   const [trimiteri, setTrimiteri]     = useState([])
@@ -565,7 +569,6 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
   const [formEdit, setFormEdit]       = useState({ ...pacient })
   const [errorsEdit, setErrorsEdit]   = useState({})
   const [salvandEdit, setSalvandEdit] = useState(false)
-  const [sectiuneActiva, setSectiuneActiva] = useState(null)
   const [showConsultatie, setShowConsultatie] = useState(false)
   const [showReteta, setShowReteta]   = useState(false)
   const [showTrimitere, setShowTrimitere] = useState(false)
@@ -729,7 +732,7 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
     <div>
       {/* Header */}
       <div className={s.header}>
-        <button onClick={sectiuneActiva ? () => setSectiuneActiva(null) : onBack} className={s.btnBack}>←</button>
+        <button onClick={sectiuneActiva ? () => navigate(`/app/pacienti/${pacient.id}`) : onBack} className={s.btnBack}>←</button>
         <span className={s.headerNume}>{nume}</span>
         {sectiuneActiva && (
           <>
@@ -844,7 +847,7 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
             <button
               key={key}
               type="button"
-              onClick={() => setSectiuneActiva(prev => prev === key ? null : key)}
+              onClick={() => navigate(sectiuneActiva === key ? `/app/pacienti/${pacient.id}` : `/app/pacienti/${pacient.id}/${key}`)}
               className={`${s.sectiuneCard} ${activ ? s.sectiuneCardActiv : ''}`}
               style={{ '--card-color': cfg.color, background: activ ? hexToRgba(cfg.color, 0.07) : undefined }}
             >

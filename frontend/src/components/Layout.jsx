@@ -1,3 +1,4 @@
+import { useNavigate, useLocation } from 'react-router-dom'
 import s from '../styles/Layout.module.css'
 
 const AVATAR_COLORS = ['#3a7bd5','#e05c7a','#f5a623','#50c878','#9b59b6','#1abc9c','#e67e22']
@@ -30,7 +31,11 @@ const PAGE_TITLES = {
   rapoarte:    () => 'Rapoarte & Grafice',
 }
 
-export default function Layout({ children, activePage, onNavigate, onLogout, user, moduleActive = [], theme = 'dark', onToggleTheme, cereriCount = 0 }) {
+export default function Layout({ children, onLogout, user, moduleActive = [], theme = 'dark', onToggleTheme, cereriCount = 0 }) {
+  const navigate  = useNavigate()
+  const location  = useLocation()
+  const activePage = location.pathname.replace(/^\/app\/?/, '').split('/')[0] || 'dashboard'
+
   const firstName = user?.first_name || ''
   const lastName  = user?.last_name  || ''
   const prefix    = user?.rol === 'medic' ? 'Dr. ' : ''
@@ -60,7 +65,7 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
             return (
               <button
                 key={id}
-                onClick={() => onNavigate(id)}
+                onClick={() => navigate(`/app/${id}`)}
                 className={`${s.navBtn} ${active ? s['navBtn--active'] : ''}`}
               >
                 <Icon size={15} color={active ? 'var(--accent-light)' : 'var(--text-dim)'} />
@@ -115,7 +120,7 @@ export default function Layout({ children, activePage, onNavigate, onLogout, use
             </button>
             <span
               className={s.header__userName}
-              onClick={() => onNavigate('profil')}
+              onClick={() => navigate('/app/profil')}
               title="Profilul meu"
             >{fullName}</span>
             <div className={s.header__avatar} style={{ background: avatarBg }}>

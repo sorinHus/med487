@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { logout } from './auth'
 import api from './api'
 import Login from './components/Login'
@@ -19,11 +19,10 @@ import MobilApp from './components/MobilApp'
 const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000
 
 function AppMedic({ user, onLogout }) {
-  const [activePage, setActivePage] = useState('dashboard')
-  const [theme, setTheme]           = useState(() => localStorage.getItem('theme') || 'dark')
-  const [pacientInitial, setPacientInitial] = useState(null)
-  const [moduleActive, setModuleActive]     = useState([])
-  const [cereriCount, setCereriCount]       = useState(0)
+  const [theme, setTheme]               = useState(() => localStorage.getItem('theme') || 'dark')
+  const [moduleActive, setModuleActive] = useState([])
+  const [cereriCount, setCereriCount]   = useState(0)
+  const navigate = useNavigate()
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -36,9 +35,7 @@ function AppMedic({ user, onLogout }) {
     if (user?.id) {
       api.get(`/module/${user.id}/`).then(res => {
         setModuleActive(res.data.active || [])
-      }).catch(() => {
-        setModuleActive([])
-      })
+      }).catch(() => setModuleActive([]))
     }
   }, [user])
 
@@ -58,28 +55,26 @@ function AppMedic({ user, onLogout }) {
   }, [])
 
   const handleNavigate = (page, data = null) => {
-    setPacientInitial(null)
-    if (page === 'pacienti' && data?.pacient) {
-      setPacientInitial(data.pacient)
-    }
     if (page === 'cereri-pacienti') fetchCereriCount()
-    setActivePage(page)
+    if (page === 'pacienti' && data?.pacient) {
+      navigate(`/app/pacienti/${data.pacient.id}`)
+    } else {
+      navigate(`/app/${page}`)
+    }
   }
 
-  if (activePage === 'profil') return (
-    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme} cereriCount={cereriCount}>
-      <ProfilMedic onBack={() => setActivePage('dashboard')} />
-    </Layout>
-  )
-
   return (
-    <Layout activePage={activePage} onNavigate={handleNavigate} onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme} cereriCount={cereriCount}>
-      {activePage === 'dashboard'       && <Dashboard onNavigate={handleNavigate} />}
-      {activePage === 'pacienti'        && <PacientList pacientInitial={pacientInitial} moduleActive={moduleActive} />}
-      {activePage === 'programari'      && <Programari />}
-      {activePage === 'consultatii'     && <Consultatii onNavigate={handleNavigate} />}
-      {activePage === 'rapoarte'        && <Rapoarte />}
-      {activePage === 'cereri-pacienti' && <CereriPacienti onActiune={fetchCereriCount} />}
+    <Layout onLogout={onLogout} user={user} moduleActive={moduleActive} theme={theme} onToggleTheme={toggleTheme} cereriCount={cereriCount}>
+      <Routes>
+        <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard"       element={<Dashboard onNavigate={handleNavigate} />} />
+        <Route path="pacienti/*"      element={<PacientList moduleActive={moduleActive} />} />
+        <Route path="programari"      element={<Programari />} />
+        <Route path="consultatii"     element={<Consultatii onNavigate={handleNavigate} />} />
+        <Route path="rapoarte"        element={<Rapoarte />} />
+        <Route path="cereri-pacienti" element={<CereriPacienti onActiune={fetchCereriCount} />} />
+        <Route path="profil"          element={<ProfilMedic onBack={() => navigate('/app/dashboard')} />} />
+      </Routes>
     </Layout>
   )
 }
@@ -120,7 +115,6 @@ function AppInterna() {
     return () => window.removeEventListener('auth:session-expired', handler)
   }, [])
 
-  // Check existing cookie session on mount
   useEffect(() => {
     api.get('/useri/me/').then(res => {
       setUser(res.data)
@@ -150,7 +144,7 @@ export default function App() {
       <Routes>
         <Route path="/mobil" element={<MobilApp />} />
         <Route path="/*"     element={<SitePrezentare />} />
-        <Route path="/app"   element={<AppInterna />} />
+        <Route path="/app/*" element={<AppInterna />} />
         <Route path="*"      element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
