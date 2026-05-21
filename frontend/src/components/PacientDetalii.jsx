@@ -729,13 +729,25 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
     <div>
       {/* Header */}
       <div className={s.header}>
-        <button onClick={onBack} className={s.btnBack}>←</button>
+        <button onClick={sectiuneActiva ? () => setSectiuneActiva(null) : onBack} className={s.btnBack}>←</button>
         <span className={s.headerNume}>{nume}</span>
+        {sectiuneActiva && (
+          <>
+            <span className={s.headerSep}>/</span>
+            <span className={s.headerSectiune} style={{ color: SECTIUNI_CFG[sectiuneActiva].color }}>
+              {SECTIUNI_CFG[sectiuneActiva].label}
+            </span>
+          </>
+        )}
         <div className={s.headerSpacer} />
-        <button onClick={() => setEditMode(!editMode)} className={`${s.btnEdit} ${editMode ? s.btnEditActive : ''}`}>
-          {editMode ? 'Anulează' : 'Editează'}
-        </button>
+        {!sectiuneActiva && (
+          <button onClick={() => setEditMode(!editMode)} className={`${s.btnEdit} ${editMode ? s.btnEditActive : ''}`}>
+            {editMode ? 'Anulează' : 'Editează'}
+          </button>
+        )}
       </div>
+
+      {!sectiuneActiva && (<>
 
       {/* Edit form */}
       {editMode && (
@@ -850,6 +862,11 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
           )
         })}
       </div>
+
+      </>)} {/* end !sectiuneActiva */}
+
+      {/* Sectiune activa */}
+      {sectiuneActiva && (<>
 
       {/* Consultații */}
       {sectiuneActiva === 'consultatii' && (
@@ -1104,6 +1121,8 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
         ))}
       </div>
       )}
+
+      </>)} {/* end sectiuneActiva */}
 
       {showReteta    && <ModalReteta    pacientId={pacient.id} medicId={pacient.medic} onClose={() => setShowReteta(false)}    onSaved={r => setRetete(prev => [r, ...prev])} />}
       {editReteta    && <ModalReteta    pacientId={pacient.id} medicId={pacient.medic} editData={editReteta} onClose={() => setEditReteta(null)} onSaved={r => { setRetete(prev => prev.map(x => x.id === r.id ? r : x)); setEditReteta(null) }} />}
