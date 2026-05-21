@@ -4,6 +4,7 @@ import { validareCNP } from '../utils/cnp'
 import AdresaFields from '../components/AdresaFields'
 import s from '../styles/PacientDetalii.module.css'
 import { ANALIZE_LABORATOR } from '../data/analizeLabor'
+import MedicamentPicker from './MedicamentPicker'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
 
@@ -94,6 +95,7 @@ function ModalReteta({ pacientId, medicId, onClose, onSaved, editData = null }) 
   const [eroare, setEroare]   = useState('')
 
   const updateLinie = (i, field, value) => setLinii(prev => prev.map((l, idx) => idx === i ? { ...l, [field]: value } : l))
+  const updateLinieMulti = (i, fields) => setLinii(prev => prev.map((l, idx) => idx === i ? { ...l, ...fields } : l))
   const adaugaLinie = () => setLinii(prev => [...prev, { nume_medicament: '', concentratie: '', doza_frecventa: '', durata_zile: '', cantitate: 1, observatii: '' }])
   const stergeLinie = (i) => setLinii(prev => prev.filter((_, idx) => idx !== i))
 
@@ -158,6 +160,7 @@ function ModalReteta({ pacientId, medicId, onClose, onSaved, editData = null }) 
                   <span className={s.medicamentCardLabel}>Medicament {i + 1}</span>
                   {linii.length > 1 && <button type="button" onClick={() => stergeLinie(i)} className={s.btnStergeMed}>×</button>}
                 </div>
+                <MedicamentPicker onSelect={sel => updateLinieMulti(i, sel)} />
                 <div className={s.grid21}>
                   <div><label className={s.label}>Denumire medicament *</label>
                     <input value={linie.nume_medicament} onChange={e => updateLinie(i, 'nume_medicament', e.target.value)} className={s.input} placeholder="ex: Enalapril" /></div>

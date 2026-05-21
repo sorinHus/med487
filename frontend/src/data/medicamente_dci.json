@@ -1,0 +1,6925 @@
+[
+  {
+    "dci": "Amoxicilina",
+    "forma": "capsule/comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Amoxicilina",
+    "forma": "capsule/comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Amoxicilina",
+    "forma": "capsule/comprimate",
+    "concentratie": "1000 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Amoxicilina",
+    "forma": "pulbere suspensie orala",
+    "concentratie": "125 mg/5ml",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Amoxicilina",
+    "forma": "pulbere suspensie orala",
+    "concentratie": "250 mg/5ml",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Amoxicilina + Acid clavulanic",
+    "forma": "comprimate",
+    "concentratie": "500 mg/125 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina + inhibitor betalactamaza"
+  },
+  {
+    "dci": "Amoxicilina + Acid clavulanic",
+    "forma": "comprimate",
+    "concentratie": "875 mg/125 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina + inhibitor betalactamaza"
+  },
+  {
+    "dci": "Amoxicilina + Acid clavulanic",
+    "forma": "pulbere suspensie orala",
+    "concentratie": "400 mg/57 mg per 5ml",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina + inhibitor betalactamaza"
+  },
+  {
+    "dci": "Amoxicilina + Acid clavulanic",
+    "forma": "pulbere injectabila",
+    "concentratie": "1000 mg/200 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Penicilina + inhibitor betalactamaza"
+  },
+  {
+    "dci": "Ampicilina",
+    "forma": "capsule",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Ampicilina",
+    "forma": "capsule",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Ampicilina",
+    "forma": "pulbere injectabila",
+    "concentratie": "500 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Ampicilina",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Fenoximetilpenicilina",
+    "forma": "comprimate",
+    "concentratie": "1 MU",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Fenoximetilpenicilina",
+    "forma": "comprimate",
+    "concentratie": "0.5 MU",
+    "cale": "oral",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Benzilpenicilina (Penicilina G)",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 MU",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Benzilpenicilina (Penicilina G)",
+    "forma": "pulbere injectabila",
+    "concentratie": "5 MU",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Penicilina"
+  },
+  {
+    "dci": "Oxacilina",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Penicilina antistafilococica"
+  },
+  {
+    "dci": "Piperacilina + Tazobactam",
+    "forma": "pulbere injectabila",
+    "concentratie": "4 g/0.5 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Penicilina spectru larg"
+  },
+  {
+    "dci": "Cefalexina",
+    "forma": "capsule",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Cefalosporina gen 1"
+  },
+  {
+    "dci": "Cefalexina",
+    "forma": "capsule",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Cefalosporina gen 1"
+  },
+  {
+    "dci": "Cefalexina",
+    "forma": "pulbere suspensie orala",
+    "concentratie": "125 mg/5ml",
+    "cale": "oral",
+    "clasa": "Antibiotic - Cefalosporina gen 1"
+  },
+  {
+    "dci": "Cefazolina",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 1"
+  },
+  {
+    "dci": "Cefuroxima",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Cefalosporina gen 2"
+  },
+  {
+    "dci": "Cefuroxima",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Cefalosporina gen 2"
+  },
+  {
+    "dci": "Cefuroxima",
+    "forma": "pulbere injectabila",
+    "concentratie": "750 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 2"
+  },
+  {
+    "dci": "Cefuroxima",
+    "forma": "pulbere injectabila",
+    "concentratie": "1.5 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 2"
+  },
+  {
+    "dci": "Cefaclor",
+    "forma": "capsule",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Cefalosporina gen 2"
+  },
+  {
+    "dci": "Cefaclor",
+    "forma": "capsule",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Cefalosporina gen 2"
+  },
+  {
+    "dci": "Ceftriaxona",
+    "forma": "pulbere injectabila",
+    "concentratie": "500 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 3"
+  },
+  {
+    "dci": "Ceftriaxona",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 3"
+  },
+  {
+    "dci": "Ceftriaxona",
+    "forma": "pulbere injectabila",
+    "concentratie": "2 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 3"
+  },
+  {
+    "dci": "Cefotaxima",
+    "forma": "pulbere injectabila",
+    "concentratie": "500 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 3"
+  },
+  {
+    "dci": "Cefotaxima",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 3"
+  },
+  {
+    "dci": "Ceftazidima",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 3"
+  },
+  {
+    "dci": "Ceftazidima",
+    "forma": "pulbere injectabila",
+    "concentratie": "2 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 3"
+  },
+  {
+    "dci": "Cefixima",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Cefalosporina gen 3"
+  },
+  {
+    "dci": "Cefixima",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Cefalosporina gen 3"
+  },
+  {
+    "dci": "Cefepima",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 4"
+  },
+  {
+    "dci": "Cefepima",
+    "forma": "pulbere injectabila",
+    "concentratie": "2 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Cefalosporina gen 4"
+  },
+  {
+    "dci": "Meropenem",
+    "forma": "pulbere injectabila",
+    "concentratie": "500 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Carbapenem"
+  },
+  {
+    "dci": "Meropenem",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Carbapenem"
+  },
+  {
+    "dci": "Imipenem + Cilastatina",
+    "forma": "pulbere injectabila",
+    "concentratie": "500 mg/500 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Carbapenem"
+  },
+  {
+    "dci": "Ertapenem",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Carbapenem"
+  },
+  {
+    "dci": "Azitromicina",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Azitromicina",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Azitromicina",
+    "forma": "pulbere suspensie orala",
+    "concentratie": "200 mg/5ml",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Claritromicina",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Claritromicina",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Claritromicina",
+    "forma": "granule suspensie orala",
+    "concentratie": "125 mg/5ml",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Eritromicina",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Eritromicina",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Roxitromicina",
+    "forma": "comprimate",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Roxitromicina",
+    "forma": "comprimate",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Spiramicina",
+    "forma": "comprimate",
+    "concentratie": "1.5 MU",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Spiramicina",
+    "forma": "comprimate",
+    "concentratie": "3 MU",
+    "cale": "oral",
+    "clasa": "Antibiotic - Macrolid"
+  },
+  {
+    "dci": "Ciprofloxacina",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Ciprofloxacina",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Ciprofloxacina",
+    "forma": "comprimate",
+    "concentratie": "750 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Ciprofloxacina",
+    "forma": "solutie perfuzabila",
+    "concentratie": "200 mg/100ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Ciprofloxacina",
+    "forma": "solutie perfuzabila",
+    "concentratie": "400 mg/200ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Levofloxacina",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Levofloxacina",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Levofloxacina",
+    "forma": "solutie perfuzabila",
+    "concentratie": "500 mg/100ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Moxifloxacina",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Moxifloxacina",
+    "forma": "solutie perfuzabila",
+    "concentratie": "400 mg/250ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Norfloxacina",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Ofloxacina",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Ofloxacina",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Fluorochinolona"
+  },
+  {
+    "dci": "Doxiciclina",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Tetraciclina"
+  },
+  {
+    "dci": "Doxiciclina",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Tetraciclina"
+  },
+  {
+    "dci": "Minociclina",
+    "forma": "capsule",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Tetraciclina"
+  },
+  {
+    "dci": "Minociclina",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Tetraciclina"
+  },
+  {
+    "dci": "Tetraciclina",
+    "forma": "capsule",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Tetraciclina"
+  },
+  {
+    "dci": "Gentamicina",
+    "forma": "solutie injectabila",
+    "concentratie": "40 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Aminoglicozid"
+  },
+  {
+    "dci": "Gentamicina",
+    "forma": "solutie injectabila",
+    "concentratie": "80 mg/2ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Aminoglicozid"
+  },
+  {
+    "dci": "Amikacina",
+    "forma": "solutie injectabila",
+    "concentratie": "250 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Aminoglicozid"
+  },
+  {
+    "dci": "Amikacina",
+    "forma": "solutie injectabila",
+    "concentratie": "500 mg/2ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Aminoglicozid"
+  },
+  {
+    "dci": "Tobramicina",
+    "forma": "solutie injectabila",
+    "concentratie": "40 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Aminoglicozid"
+  },
+  {
+    "dci": "Streptomicina",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 g",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Aminoglicozid"
+  },
+  {
+    "dci": "Cotrimoxazol (Trimetoprim + Sulfametoxazol)",
+    "forma": "comprimate",
+    "concentratie": "80 mg/400 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Sulfonamida"
+  },
+  {
+    "dci": "Cotrimoxazol (Trimetoprim + Sulfametoxazol)",
+    "forma": "comprimate forte",
+    "concentratie": "160 mg/800 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Sulfonamida"
+  },
+  {
+    "dci": "Cotrimoxazol (Trimetoprim + Sulfametoxazol)",
+    "forma": "suspensie orala",
+    "concentratie": "40 mg/200 mg per 5ml",
+    "cale": "oral",
+    "clasa": "Antibiotic - Sulfonamida"
+  },
+  {
+    "dci": "Trimetoprim",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Sulfonamida"
+  },
+  {
+    "dci": "Trimetoprim",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Sulfonamida"
+  },
+  {
+    "dci": "Metronidazol",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Nitroimidazol"
+  },
+  {
+    "dci": "Metronidazol",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Nitroimidazol"
+  },
+  {
+    "dci": "Metronidazol",
+    "forma": "solutie perfuzabila",
+    "concentratie": "500 mg/100ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Nitroimidazol"
+  },
+  {
+    "dci": "Metronidazol",
+    "forma": "ovule",
+    "concentratie": "500 mg",
+    "cale": "vaginal",
+    "clasa": "Antibiotic - Nitroimidazol"
+  },
+  {
+    "dci": "Tinidazol",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Nitroimidazol"
+  },
+  {
+    "dci": "Clindamicina",
+    "forma": "capsule",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Lincosamida"
+  },
+  {
+    "dci": "Clindamicina",
+    "forma": "capsule",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Lincosamida"
+  },
+  {
+    "dci": "Clindamicina",
+    "forma": "solutie injectabila",
+    "concentratie": "150 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Lincosamida"
+  },
+  {
+    "dci": "Vancomicina",
+    "forma": "pulbere injectabila",
+    "concentratie": "500 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Glicopeptid"
+  },
+  {
+    "dci": "Vancomicina",
+    "forma": "pulbere injectabila",
+    "concentratie": "1000 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Glicopeptid"
+  },
+  {
+    "dci": "Teicoplanina",
+    "forma": "pulbere injectabila",
+    "concentratie": "200 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Glicopeptid"
+  },
+  {
+    "dci": "Teicoplanina",
+    "forma": "pulbere injectabila",
+    "concentratie": "400 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Glicopeptid"
+  },
+  {
+    "dci": "Linezolid",
+    "forma": "comprimate",
+    "concentratie": "600 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Oxazolidinona"
+  },
+  {
+    "dci": "Linezolid",
+    "forma": "solutie perfuzabila",
+    "concentratie": "600 mg/300ml",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Oxazolidinona"
+  },
+  {
+    "dci": "Colistina",
+    "forma": "pulbere injectabila",
+    "concentratie": "1 MU",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Polipeptidic"
+  },
+  {
+    "dci": "Colistina",
+    "forma": "pulbere injectabila",
+    "concentratie": "2 MU",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Polipeptidic"
+  },
+  {
+    "dci": "Fosfomicina",
+    "forma": "granule solutie orala",
+    "concentratie": "3 g",
+    "cale": "oral",
+    "clasa": "Antibiotic - Fosfonic"
+  },
+  {
+    "dci": "Nitrofurantoin",
+    "forma": "capsule",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Nitrofuranic"
+  },
+  {
+    "dci": "Nitrofurantoin",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Nitrofuranic"
+  },
+  {
+    "dci": "Rifampicina",
+    "forma": "capsule",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Rifamicina"
+  },
+  {
+    "dci": "Rifampicina",
+    "forma": "capsule",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Rifamicina"
+  },
+  {
+    "dci": "Rifampicina",
+    "forma": "pulbere injectabila",
+    "concentratie": "600 mg",
+    "cale": "injectabil",
+    "clasa": "Antibiotic - Rifamicina"
+  },
+  {
+    "dci": "Isoniazida",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Antituberculos"
+  },
+  {
+    "dci": "Isoniazida",
+    "forma": "comprimate",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Antituberculos"
+  },
+  {
+    "dci": "Etambutol",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Antituberculos"
+  },
+  {
+    "dci": "Pirazinamida",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antibiotic - Antituberculos"
+  },
+  {
+    "dci": "Fluconazol",
+    "forma": "capsule",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Antifungic - Azol"
+  },
+  {
+    "dci": "Fluconazol",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Antifungic - Azol"
+  },
+  {
+    "dci": "Fluconazol",
+    "forma": "capsule",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Antifungic - Azol"
+  },
+  {
+    "dci": "Fluconazol",
+    "forma": "capsule",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antifungic - Azol"
+  },
+  {
+    "dci": "Fluconazol",
+    "forma": "solutie perfuzabila",
+    "concentratie": "200 mg/100ml",
+    "cale": "injectabil",
+    "clasa": "Antifungic - Azol"
+  },
+  {
+    "dci": "Itraconazol",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Antifungic - Azol"
+  },
+  {
+    "dci": "Voriconazol",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Antifungic - Azol"
+  },
+  {
+    "dci": "Voriconazol",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antifungic - Azol"
+  },
+  {
+    "dci": "Voriconazol",
+    "forma": "pulbere injectabila",
+    "concentratie": "200 mg",
+    "cale": "injectabil",
+    "clasa": "Antifungic - Azol"
+  },
+  {
+    "dci": "Posaconazol",
+    "forma": "suspensie orala",
+    "concentratie": "40 mg/ml",
+    "cale": "oral",
+    "clasa": "Antifungic - Azol"
+  },
+  {
+    "dci": "Caspofungin",
+    "forma": "pulbere injectabila",
+    "concentratie": "50 mg",
+    "cale": "injectabil",
+    "clasa": "Antifungic - Echinocandina"
+  },
+  {
+    "dci": "Caspofungin",
+    "forma": "pulbere injectabila",
+    "concentratie": "70 mg",
+    "cale": "injectabil",
+    "clasa": "Antifungic - Echinocandina"
+  },
+  {
+    "dci": "Amfotericina B",
+    "forma": "pulbere injectabila",
+    "concentratie": "50 mg",
+    "cale": "injectabil",
+    "clasa": "Antifungic - Polien"
+  },
+  {
+    "dci": "Nistatina",
+    "forma": "comprimate",
+    "concentratie": "500.000 UI",
+    "cale": "oral",
+    "clasa": "Antifungic - Polien"
+  },
+  {
+    "dci": "Nistatina",
+    "forma": "suspensie orala",
+    "concentratie": "100.000 UI/ml",
+    "cale": "oral",
+    "clasa": "Antifungic - Polien"
+  },
+  {
+    "dci": "Nistatina",
+    "forma": "ovule",
+    "concentratie": "100.000 UI",
+    "cale": "vaginal",
+    "clasa": "Antifungic - Polien"
+  },
+  {
+    "dci": "Terbinafina",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antifungic - Alilamina"
+  },
+  {
+    "dci": "Griseofulvina",
+    "forma": "comprimate",
+    "concentratie": "125 mg",
+    "cale": "oral",
+    "clasa": "Antifungic"
+  },
+  {
+    "dci": "Griseofulvina",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antifungic"
+  },
+  {
+    "dci": "Aciclovir",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Herpetic"
+  },
+  {
+    "dci": "Aciclovir",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Herpetic"
+  },
+  {
+    "dci": "Aciclovir",
+    "forma": "comprimate",
+    "concentratie": "800 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Herpetic"
+  },
+  {
+    "dci": "Aciclovir",
+    "forma": "pulbere injectabila",
+    "concentratie": "250 mg",
+    "cale": "injectabil",
+    "clasa": "Antiviral - Herpetic"
+  },
+  {
+    "dci": "Valaciclovir",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Herpetic"
+  },
+  {
+    "dci": "Valaciclovir",
+    "forma": "comprimate",
+    "concentratie": "1000 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Herpetic"
+  },
+  {
+    "dci": "Famciclovir",
+    "forma": "comprimate",
+    "concentratie": "125 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Herpetic"
+  },
+  {
+    "dci": "Famciclovir",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Herpetic"
+  },
+  {
+    "dci": "Famciclovir",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Herpetic"
+  },
+  {
+    "dci": "Oseltamivir",
+    "forma": "capsule",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Antigripal"
+  },
+  {
+    "dci": "Oseltamivir",
+    "forma": "capsule",
+    "concentratie": "45 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Antigripal"
+  },
+  {
+    "dci": "Oseltamivir",
+    "forma": "capsule",
+    "concentratie": "75 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Antigripal"
+  },
+  {
+    "dci": "Oseltamivir",
+    "forma": "pulbere suspensie orala",
+    "concentratie": "12 mg/ml",
+    "cale": "oral",
+    "clasa": "Antiviral - Antigripal"
+  },
+  {
+    "dci": "Zanamivir",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "5 mg/doza",
+    "cale": "inhalator",
+    "clasa": "Antiviral - Antigripal"
+  },
+  {
+    "dci": "Tenofovir disoproxil",
+    "forma": "comprimate",
+    "concentratie": "245 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Antiretroviral"
+  },
+  {
+    "dci": "Emtricitabina",
+    "forma": "capsule",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Antiretroviral"
+  },
+  {
+    "dci": "Lamivudina",
+    "forma": "comprimate",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Antiretroviral / Hepatita B"
+  },
+  {
+    "dci": "Lamivudina",
+    "forma": "comprimate",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Antiretroviral / Hepatita B"
+  },
+  {
+    "dci": "Entecavir",
+    "forma": "comprimate",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Hepatita B"
+  },
+  {
+    "dci": "Entecavir",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Hepatita B"
+  },
+  {
+    "dci": "Sofosbuvir",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Hepatita C"
+  },
+  {
+    "dci": "Sofosbuvir + Velpatasvir",
+    "forma": "comprimate",
+    "concentratie": "400 mg/100 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Hepatita C"
+  },
+  {
+    "dci": "Ribavirina",
+    "forma": "capsule",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antiviral - Hepatita C"
+  },
+  {
+    "dci": "Albendazol",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antiparazitar - Antihelmint"
+  },
+  {
+    "dci": "Albendazol",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Antiparazitar - Antihelmint"
+  },
+  {
+    "dci": "Mebendazol",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Antiparazitar - Antihelmint"
+  },
+  {
+    "dci": "Mebendazol",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Antiparazitar - Antihelmint"
+  },
+  {
+    "dci": "Praziquantel",
+    "forma": "comprimate",
+    "concentratie": "600 mg",
+    "cale": "oral",
+    "clasa": "Antiparazitar - Anticestod"
+  },
+  {
+    "dci": "Ivermectina",
+    "forma": "comprimate",
+    "concentratie": "3 mg",
+    "cale": "oral",
+    "clasa": "Antiparazitar - Antihelmint"
+  },
+  {
+    "dci": "Ivermectina",
+    "forma": "comprimate",
+    "concentratie": "6 mg",
+    "cale": "oral",
+    "clasa": "Antiparazitar - Antihelmint"
+  },
+  {
+    "dci": "Clorochina",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Antiparazitar - Antimalaric"
+  },
+  {
+    "dci": "Hidroxiclorochina",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Antiparazitar - Antimalaric / Imunomodulator"
+  },
+  {
+    "dci": "Enalapril",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Enalapril",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Enalapril",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Enalapril",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Ramipril",
+    "forma": "capsule",
+    "concentratie": "1.25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Ramipril",
+    "forma": "capsule",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Ramipril",
+    "forma": "capsule",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Ramipril",
+    "forma": "capsule",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Lisinopril",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Lisinopril",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Lisinopril",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Lisinopril",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Perindopril",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Perindopril",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Perindopril",
+    "forma": "comprimate",
+    "concentratie": "8 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Captopril",
+    "forma": "comprimate",
+    "concentratie": "12.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Captopril",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Captopril",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Quinapril",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Quinapril",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Quinapril",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Fosinopril",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Fosinopril",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Trandolapril",
+    "forma": "capsule",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Trandolapril",
+    "forma": "capsule",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Zofenopril",
+    "forma": "comprimate",
+    "concentratie": "7.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Zofenopril",
+    "forma": "comprimate",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - IECA"
+  },
+  {
+    "dci": "Losartan",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Losartan",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Losartan",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Valsartan",
+    "forma": "capsule",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Valsartan",
+    "forma": "capsule",
+    "concentratie": "80 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Valsartan",
+    "forma": "capsule",
+    "concentratie": "160 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Valsartan",
+    "forma": "capsule",
+    "concentratie": "320 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Irbesartan",
+    "forma": "comprimate",
+    "concentratie": "75 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Irbesartan",
+    "forma": "comprimate",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Irbesartan",
+    "forma": "comprimate",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Candesartan",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Candesartan",
+    "forma": "comprimate",
+    "concentratie": "8 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Candesartan",
+    "forma": "comprimate",
+    "concentratie": "16 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Candesartan",
+    "forma": "comprimate",
+    "concentratie": "32 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Olmesartan",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Olmesartan",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Olmesartan",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Telmisartan",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Telmisartan",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Telmisartan",
+    "forma": "comprimate",
+    "concentratie": "80 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Eprosartan",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Eprosartan",
+    "forma": "comprimate",
+    "concentratie": "600 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Sartan (ARB)"
+  },
+  {
+    "dci": "Metoprolol tartrat",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Metoprolol tartrat",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Metoprolol tartrat",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Metoprolol succinat",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "23.75 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Metoprolol succinat",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "47.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Metoprolol succinat",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "95 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Metoprolol succinat",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "190 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Bisoprolol",
+    "forma": "comprimate",
+    "concentratie": "1.25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Bisoprolol",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Bisoprolol",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Bisoprolol",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Carvedilol",
+    "forma": "comprimate",
+    "concentratie": "3.125 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant neselectiv"
+  },
+  {
+    "dci": "Carvedilol",
+    "forma": "comprimate",
+    "concentratie": "6.25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant neselectiv"
+  },
+  {
+    "dci": "Carvedilol",
+    "forma": "comprimate",
+    "concentratie": "12.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant neselectiv"
+  },
+  {
+    "dci": "Carvedilol",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant neselectiv"
+  },
+  {
+    "dci": "Nebivolol",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Nebivolol",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Atenolol",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Atenolol",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Atenolol",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant"
+  },
+  {
+    "dci": "Propranolol",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant neselectiv"
+  },
+  {
+    "dci": "Propranolol",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant neselectiv"
+  },
+  {
+    "dci": "Propranolol",
+    "forma": "comprimate",
+    "concentratie": "80 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant neselectiv"
+  },
+  {
+    "dci": "Sotalol",
+    "forma": "comprimate",
+    "concentratie": "80 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant / Antiaritmic"
+  },
+  {
+    "dci": "Sotalol",
+    "forma": "comprimate",
+    "concentratie": "160 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Betablocant / Antiaritmic"
+  },
+  {
+    "dci": "Amlodipina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Amlodipina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Felodipina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Felodipina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Felodipina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Nifedipina",
+    "forma": "comprimate retard",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Nifedipina",
+    "forma": "comprimate retard",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Nifedipina",
+    "forma": "comprimate retard",
+    "concentratie": "60 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Lercanidipina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Lercanidipina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Lacidipina",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Lacidipina",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu DHP"
+  },
+  {
+    "dci": "Verapamil",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu non-DHP"
+  },
+  {
+    "dci": "Verapamil",
+    "forma": "comprimate",
+    "concentratie": "80 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu non-DHP"
+  },
+  {
+    "dci": "Verapamil",
+    "forma": "comprimate retard",
+    "concentratie": "120 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu non-DHP"
+  },
+  {
+    "dci": "Verapamil",
+    "forma": "comprimate retard",
+    "concentratie": "240 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu non-DHP"
+  },
+  {
+    "dci": "Diltiazem",
+    "forma": "capsule retard",
+    "concentratie": "60 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu non-DHP"
+  },
+  {
+    "dci": "Diltiazem",
+    "forma": "capsule retard",
+    "concentratie": "90 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu non-DHP"
+  },
+  {
+    "dci": "Diltiazem",
+    "forma": "capsule retard",
+    "concentratie": "120 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Blocant canale calciu non-DHP"
+  },
+  {
+    "dci": "Furosemid",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic de ansa"
+  },
+  {
+    "dci": "Furosemid",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic de ansa"
+  },
+  {
+    "dci": "Furosemid",
+    "forma": "solutie injectabila",
+    "concentratie": "10 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Diuretic de ansa"
+  },
+  {
+    "dci": "Torasemid",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic de ansa"
+  },
+  {
+    "dci": "Torasemid",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic de ansa"
+  },
+  {
+    "dci": "Torasemid",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic de ansa"
+  },
+  {
+    "dci": "Hidroclorotiazida",
+    "forma": "comprimate",
+    "concentratie": "12.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic tiazidic"
+  },
+  {
+    "dci": "Hidroclorotiazida",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic tiazidic"
+  },
+  {
+    "dci": "Indapamida",
+    "forma": "comprimate",
+    "concentratie": "1.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic tiazid-like"
+  },
+  {
+    "dci": "Indapamida",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic tiazid-like"
+  },
+  {
+    "dci": "Spironolactona",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic antialdosteronic"
+  },
+  {
+    "dci": "Spironolactona",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic antialdosteronic"
+  },
+  {
+    "dci": "Spironolactona",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic antialdosteronic"
+  },
+  {
+    "dci": "Eplerenona",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic antialdosteronic selectiv"
+  },
+  {
+    "dci": "Eplerenona",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic antialdosteronic selectiv"
+  },
+  {
+    "dci": "Amilorid",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Diuretic economisitor potasiu"
+  },
+  {
+    "dci": "Manitol",
+    "forma": "solutie perfuzabila",
+    "concentratie": "10% 100ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Diuretic osmotic"
+  },
+  {
+    "dci": "Manitol",
+    "forma": "solutie perfuzabila",
+    "concentratie": "20% 100ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Diuretic osmotic"
+  },
+  {
+    "dci": "Atorvastatina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Atorvastatina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Atorvastatina",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Atorvastatina",
+    "forma": "comprimate",
+    "concentratie": "80 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Rosuvastatina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Rosuvastatina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Rosuvastatina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Rosuvastatina",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Simvastatina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Simvastatina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Simvastatina",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Pravastatina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Pravastatina",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Fluvastatina",
+    "forma": "capsule",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Fluvastatina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "80 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Statina"
+  },
+  {
+    "dci": "Ezetimib",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Inhibitor absorbtie colesterol"
+  },
+  {
+    "dci": "Fenofibrat",
+    "forma": "capsule",
+    "concentratie": "67 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Fibrat"
+  },
+  {
+    "dci": "Fenofibrat",
+    "forma": "capsule",
+    "concentratie": "134 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Fibrat"
+  },
+  {
+    "dci": "Fenofibrat",
+    "forma": "capsule",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Fibrat"
+  },
+  {
+    "dci": "Gemfibrozil",
+    "forma": "comprimate",
+    "concentratie": "600 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Fibrat"
+  },
+  {
+    "dci": "Omega-3 acizi grasi",
+    "forma": "capsule",
+    "concentratie": "1000 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Hipolipemiant natural"
+  },
+  {
+    "dci": "Warfarina",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral"
+  },
+  {
+    "dci": "Warfarina",
+    "forma": "comprimate",
+    "concentratie": "3 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral"
+  },
+  {
+    "dci": "Warfarina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral"
+  },
+  {
+    "dci": "Acenocumarol",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral"
+  },
+  {
+    "dci": "Acenocumarol",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral"
+  },
+  {
+    "dci": "Dabigatran etexilat",
+    "forma": "capsule",
+    "concentratie": "75 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Dabigatran etexilat",
+    "forma": "capsule",
+    "concentratie": "110 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Dabigatran etexilat",
+    "forma": "capsule",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Rivaroxaban",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Rivaroxaban",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Rivaroxaban",
+    "forma": "comprimate",
+    "concentratie": "15 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Rivaroxaban",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Apixaban",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Apixaban",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Edoxaban",
+    "forma": "comprimate",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Edoxaban",
+    "forma": "comprimate",
+    "concentratie": "60 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Anticoagulant oral direct (DOAC)"
+  },
+  {
+    "dci": "Heparina sodica",
+    "forma": "solutie injectabila",
+    "concentratie": "5000 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Heparina"
+  },
+  {
+    "dci": "Enoxaparina",
+    "forma": "solutie injectabila",
+    "concentratie": "20 mg/0.2ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - HGMM"
+  },
+  {
+    "dci": "Enoxaparina",
+    "forma": "solutie injectabila",
+    "concentratie": "40 mg/0.4ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - HGMM"
+  },
+  {
+    "dci": "Enoxaparina",
+    "forma": "solutie injectabila",
+    "concentratie": "60 mg/0.6ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - HGMM"
+  },
+  {
+    "dci": "Enoxaparina",
+    "forma": "solutie injectabila",
+    "concentratie": "80 mg/0.8ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - HGMM"
+  },
+  {
+    "dci": "Enoxaparina",
+    "forma": "solutie injectabila",
+    "concentratie": "100 mg/1ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - HGMM"
+  },
+  {
+    "dci": "Fondaparinux",
+    "forma": "solutie injectabila",
+    "concentratie": "2.5 mg/0.5ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Anticoagulant anti-Xa"
+  },
+  {
+    "dci": "Fondaparinux",
+    "forma": "solutie injectabila",
+    "concentratie": "7.5 mg/0.6ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Anticoagulant anti-Xa"
+  },
+  {
+    "dci": "Acid acetilsalicilic (antiagregant)",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "75 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiagregant plachetar"
+  },
+  {
+    "dci": "Acid acetilsalicilic (antiagregant)",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiagregant plachetar"
+  },
+  {
+    "dci": "Clopidogrel",
+    "forma": "comprimate",
+    "concentratie": "75 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiagregant plachetar"
+  },
+  {
+    "dci": "Ticagrelor",
+    "forma": "comprimate",
+    "concentratie": "60 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiagregant plachetar"
+  },
+  {
+    "dci": "Ticagrelor",
+    "forma": "comprimate",
+    "concentratie": "90 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiagregant plachetar"
+  },
+  {
+    "dci": "Prasugrel",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiagregant plachetar"
+  },
+  {
+    "dci": "Prasugrel",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiagregant plachetar"
+  },
+  {
+    "dci": "Amiodarona",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiaritmic clasa III"
+  },
+  {
+    "dci": "Amiodarona",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiaritmic clasa III"
+  },
+  {
+    "dci": "Amiodarona",
+    "forma": "solutie injectabila",
+    "concentratie": "150 mg/3ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Antiaritmic clasa III"
+  },
+  {
+    "dci": "Flecainida",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiaritmic clasa IC"
+  },
+  {
+    "dci": "Flecainida",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiaritmic clasa IC"
+  },
+  {
+    "dci": "Propafenona",
+    "forma": "comprimate",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiaritmic clasa IC"
+  },
+  {
+    "dci": "Propafenona",
+    "forma": "comprimate",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antiaritmic clasa IC"
+  },
+  {
+    "dci": "Digoxina",
+    "forma": "comprimate",
+    "concentratie": "0.0625 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Glicozid cardiac"
+  },
+  {
+    "dci": "Digoxina",
+    "forma": "comprimate",
+    "concentratie": "0.125 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Glicozid cardiac"
+  },
+  {
+    "dci": "Digoxina",
+    "forma": "comprimate",
+    "concentratie": "0.25 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Glicozid cardiac"
+  },
+  {
+    "dci": "Digoxina",
+    "forma": "solutie injectabila",
+    "concentratie": "0.25 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Glicozid cardiac"
+  },
+  {
+    "dci": "Ivabradina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Bradicardizant"
+  },
+  {
+    "dci": "Ivabradina",
+    "forma": "comprimate",
+    "concentratie": "7.5 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Bradicardizant"
+  },
+  {
+    "dci": "Nitroglicerina",
+    "forma": "comprimate sublinguale",
+    "concentratie": "0.5 mg",
+    "cale": "sublingual",
+    "clasa": "Cardiovascular - Nitrat"
+  },
+  {
+    "dci": "Nitroglicerina",
+    "forma": "spray sublingual",
+    "concentratie": "0.4 mg/doza",
+    "cale": "sublingual",
+    "clasa": "Cardiovascular - Nitrat"
+  },
+  {
+    "dci": "Nitroglicerina",
+    "forma": "plasture transdermal",
+    "concentratie": "5 mg/24h",
+    "cale": "transdermal",
+    "clasa": "Cardiovascular - Nitrat"
+  },
+  {
+    "dci": "Nitroglicerina",
+    "forma": "plasture transdermal",
+    "concentratie": "10 mg/24h",
+    "cale": "transdermal",
+    "clasa": "Cardiovascular - Nitrat"
+  },
+  {
+    "dci": "Izosorbid mononitrat",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Nitrat"
+  },
+  {
+    "dci": "Izosorbid mononitrat",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Nitrat"
+  },
+  {
+    "dci": "Izosorbid mononitrat",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "60 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Nitrat"
+  },
+  {
+    "dci": "Izosorbid dinitrat",
+    "forma": "comprimate sublinguale",
+    "concentratie": "5 mg",
+    "cale": "sublingual",
+    "clasa": "Cardiovascular - Nitrat"
+  },
+  {
+    "dci": "Trimetazidina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antianginos metabolic"
+  },
+  {
+    "dci": "Trimetazidina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "35 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antianginos metabolic"
+  },
+  {
+    "dci": "Ranolazina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "375 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antianginos"
+  },
+  {
+    "dci": "Ranolazina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antianginos"
+  },
+  {
+    "dci": "Ranolazina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "750 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - Antianginos"
+  },
+  {
+    "dci": "Sacubitril + Valsartan",
+    "forma": "comprimate",
+    "concentratie": "24 mg/26 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - ARNI (IC)"
+  },
+  {
+    "dci": "Sacubitril + Valsartan",
+    "forma": "comprimate",
+    "concentratie": "49 mg/51 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - ARNI (IC)"
+  },
+  {
+    "dci": "Sacubitril + Valsartan",
+    "forma": "comprimate",
+    "concentratie": "97 mg/103 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - ARNI (IC)"
+  },
+  {
+    "dci": "Empagliflozin (cardiac)",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - SGLT2i (IC/renal)"
+  },
+  {
+    "dci": "Dapagliflozin (cardiac)",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Cardiovascular - SGLT2i (IC/renal)"
+  },
+  {
+    "dci": "Dobutamina",
+    "forma": "solutie injectabila",
+    "concentratie": "250 mg/20ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Inotrop pozitiv"
+  },
+  {
+    "dci": "Dopamina",
+    "forma": "solutie injectabila",
+    "concentratie": "200 mg/5ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Vasopressor"
+  },
+  {
+    "dci": "Noradrenalina",
+    "forma": "solutie injectabila",
+    "concentratie": "1 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Vasopressor"
+  },
+  {
+    "dci": "Adrenalina (Epinefrina)",
+    "forma": "solutie injectabila",
+    "concentratie": "0.1 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Vasopressor / Anafilaxie"
+  },
+  {
+    "dci": "Adrenalina (Epinefrina)",
+    "forma": "solutie injectabila",
+    "concentratie": "1 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Vasopressor / Anafilaxie"
+  },
+  {
+    "dci": "Adrenalina (Epinefrina)",
+    "forma": "pen autoinjectabil",
+    "concentratie": "0.15 mg/doza",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Anafilaxie"
+  },
+  {
+    "dci": "Adrenalina (Epinefrina)",
+    "forma": "pen autoinjectabil",
+    "concentratie": "0.3 mg/doza",
+    "cale": "injectabil",
+    "clasa": "Cardiovascular - Anafilaxie"
+  },
+  {
+    "dci": "Metformina",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Biguanid"
+  },
+  {
+    "dci": "Metformina",
+    "forma": "comprimate",
+    "concentratie": "850 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Biguanid"
+  },
+  {
+    "dci": "Metformina",
+    "forma": "comprimate",
+    "concentratie": "1000 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Biguanid"
+  },
+  {
+    "dci": "Metformina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Biguanid"
+  },
+  {
+    "dci": "Metformina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "750 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Biguanid"
+  },
+  {
+    "dci": "Metformina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "1000 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Biguanid"
+  },
+  {
+    "dci": "Glibenclamid",
+    "forma": "comprimate",
+    "concentratie": "1.75 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Glibenclamid",
+    "forma": "comprimate",
+    "concentratie": "3.5 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Glipizid",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Glipizid",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Glimepirid",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Glimepirid",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Glimepirid",
+    "forma": "comprimate",
+    "concentratie": "3 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Glimepirid",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Gliclazid",
+    "forma": "comprimate",
+    "concentratie": "80 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Gliclazid",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Gliclazid",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "60 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Sulfoniluree"
+  },
+  {
+    "dci": "Sitagliptin",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor DPP-4"
+  },
+  {
+    "dci": "Sitagliptin",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor DPP-4"
+  },
+  {
+    "dci": "Sitagliptin",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor DPP-4"
+  },
+  {
+    "dci": "Vildagliptin",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor DPP-4"
+  },
+  {
+    "dci": "Saxagliptin",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor DPP-4"
+  },
+  {
+    "dci": "Saxagliptin",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor DPP-4"
+  },
+  {
+    "dci": "Linagliptin",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor DPP-4"
+  },
+  {
+    "dci": "Alogliptin",
+    "forma": "comprimate",
+    "concentratie": "6.25 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor DPP-4"
+  },
+  {
+    "dci": "Alogliptin",
+    "forma": "comprimate",
+    "concentratie": "12.5 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor DPP-4"
+  },
+  {
+    "dci": "Alogliptin",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor DPP-4"
+  },
+  {
+    "dci": "Empagliflozin",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor SGLT2"
+  },
+  {
+    "dci": "Empagliflozin",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor SGLT2"
+  },
+  {
+    "dci": "Dapagliflozin",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor SGLT2"
+  },
+  {
+    "dci": "Dapagliflozin",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor SGLT2"
+  },
+  {
+    "dci": "Canagliflozin",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor SGLT2"
+  },
+  {
+    "dci": "Canagliflozin",
+    "forma": "comprimate",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor SGLT2"
+  },
+  {
+    "dci": "Ertugliflozin",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor SGLT2"
+  },
+  {
+    "dci": "Ertugliflozin",
+    "forma": "comprimate",
+    "concentratie": "15 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor SGLT2"
+  },
+  {
+    "dci": "Exenatida",
+    "forma": "solutie injectabila",
+    "concentratie": "5 mcg/doza",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Exenatida",
+    "forma": "solutie injectabila",
+    "concentratie": "10 mcg/doza",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Liraglutida",
+    "forma": "solutie injectabila",
+    "concentratie": "0.6 mg/doza",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Liraglutida",
+    "forma": "solutie injectabila",
+    "concentratie": "1.2 mg/doza",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Liraglutida",
+    "forma": "solutie injectabila",
+    "concentratie": "1.8 mg/doza",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Semaglutida (injectabil)",
+    "forma": "solutie injectabila",
+    "concentratie": "0.25 mg/doza",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Semaglutida (injectabil)",
+    "forma": "solutie injectabila",
+    "concentratie": "0.5 mg/doza",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Semaglutida (injectabil)",
+    "forma": "solutie injectabila",
+    "concentratie": "1 mg/doza",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Semaglutida (injectabil)",
+    "forma": "solutie injectabila",
+    "concentratie": "2 mg/doza",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Semaglutida (oral)",
+    "forma": "comprimate",
+    "concentratie": "3 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Semaglutida (oral)",
+    "forma": "comprimate",
+    "concentratie": "7 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Semaglutida (oral)",
+    "forma": "comprimate",
+    "concentratie": "14 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Dulaglutida",
+    "forma": "solutie injectabila",
+    "concentratie": "0.75 mg/0.5ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Dulaglutida",
+    "forma": "solutie injectabila",
+    "concentratie": "1.5 mg/0.5ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Agonist GLP-1"
+  },
+  {
+    "dci": "Insulina glargine",
+    "forma": "solutie injectabila",
+    "concentratie": "100 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina bazala"
+  },
+  {
+    "dci": "Insulina glargine",
+    "forma": "solutie injectabila",
+    "concentratie": "300 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina bazala"
+  },
+  {
+    "dci": "Insulina detemir",
+    "forma": "solutie injectabila",
+    "concentratie": "100 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina bazala"
+  },
+  {
+    "dci": "Insulina degludec",
+    "forma": "solutie injectabila",
+    "concentratie": "100 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina bazala"
+  },
+  {
+    "dci": "Insulina degludec",
+    "forma": "solutie injectabila",
+    "concentratie": "200 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina bazala"
+  },
+  {
+    "dci": "Insulina aspart",
+    "forma": "solutie injectabila",
+    "concentratie": "100 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina rapida (analog)"
+  },
+  {
+    "dci": "Insulina lispro",
+    "forma": "solutie injectabila",
+    "concentratie": "100 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina rapida (analog)"
+  },
+  {
+    "dci": "Insulina glulizina",
+    "forma": "solutie injectabila",
+    "concentratie": "100 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina rapida (analog)"
+  },
+  {
+    "dci": "Insulina umana solubila (regular)",
+    "forma": "solutie injectabila",
+    "concentratie": "100 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina rapida"
+  },
+  {
+    "dci": "Insulina umana izofanica (NPH)",
+    "forma": "suspensie injectabila",
+    "concentratie": "100 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina intermediara"
+  },
+  {
+    "dci": "Insulina bifazica aspart 30/70",
+    "forma": "suspensie injectabila",
+    "concentratie": "100 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina premixata"
+  },
+  {
+    "dci": "Insulina bifazica lispro 25/75",
+    "forma": "suspensie injectabila",
+    "concentratie": "100 UI/ml",
+    "cale": "injectabil",
+    "clasa": "Diabet - Insulina premixata"
+  },
+  {
+    "dci": "Pioglitazona",
+    "forma": "comprimate",
+    "concentratie": "15 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Tiazolidindiona"
+  },
+  {
+    "dci": "Pioglitazona",
+    "forma": "comprimate",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Tiazolidindiona"
+  },
+  {
+    "dci": "Pioglitazona",
+    "forma": "comprimate",
+    "concentratie": "45 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Tiazolidindiona"
+  },
+  {
+    "dci": "Acarboza",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor alfa-glucozidaza"
+  },
+  {
+    "dci": "Acarboza",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Inhibitor alfa-glucozidaza"
+  },
+  {
+    "dci": "Repaglinida",
+    "forma": "comprimate",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Glinid"
+  },
+  {
+    "dci": "Repaglinida",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Glinid"
+  },
+  {
+    "dci": "Repaglinida",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Diabet - Glinid"
+  },
+  {
+    "dci": "Sertralina",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Sertralina",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Sertralina",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Escitalopram",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Escitalopram",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Escitalopram",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Citalopram",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Citalopram",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Citalopram",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Fluoxetina",
+    "forma": "capsule",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Fluoxetina",
+    "forma": "capsule",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Paroxetina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Paroxetina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Paroxetina",
+    "forma": "comprimate",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Fluvoxamina",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Fluvoxamina",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SSRI"
+  },
+  {
+    "dci": "Venlafaxina",
+    "forma": "capsule eliberare prelungita",
+    "concentratie": "37.5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SNRI"
+  },
+  {
+    "dci": "Venlafaxina",
+    "forma": "capsule eliberare prelungita",
+    "concentratie": "75 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SNRI"
+  },
+  {
+    "dci": "Venlafaxina",
+    "forma": "capsule eliberare prelungita",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SNRI"
+  },
+  {
+    "dci": "Duloxetina",
+    "forma": "capsule",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SNRI"
+  },
+  {
+    "dci": "Duloxetina",
+    "forma": "capsule",
+    "concentratie": "60 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv SNRI"
+  },
+  {
+    "dci": "Mirtazapina",
+    "forma": "comprimate",
+    "concentratie": "15 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv NaSSA"
+  },
+  {
+    "dci": "Mirtazapina",
+    "forma": "comprimate",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv NaSSA"
+  },
+  {
+    "dci": "Mirtazapina",
+    "forma": "comprimate",
+    "concentratie": "45 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv NaSSA"
+  },
+  {
+    "dci": "Amitriptilina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv triciclic"
+  },
+  {
+    "dci": "Amitriptilina",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv triciclic"
+  },
+  {
+    "dci": "Amitriptilina",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv triciclic"
+  },
+  {
+    "dci": "Clomipramina",
+    "forma": "capsule",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv triciclic"
+  },
+  {
+    "dci": "Clomipramina",
+    "forma": "capsule",
+    "concentratie": "75 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv triciclic"
+  },
+  {
+    "dci": "Bupropion",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv NDRI"
+  },
+  {
+    "dci": "Bupropion",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv NDRI"
+  },
+  {
+    "dci": "Tianeptina",
+    "forma": "comprimate",
+    "concentratie": "12.5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv atipic"
+  },
+  {
+    "dci": "Agomelatina",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv melatoninergic"
+  },
+  {
+    "dci": "Vortioxetina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv multimodal"
+  },
+  {
+    "dci": "Vortioxetina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv multimodal"
+  },
+  {
+    "dci": "Vortioxetina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antidepresiv multimodal"
+  },
+  {
+    "dci": "Haloperidol",
+    "forma": "comprimate",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic tipic"
+  },
+  {
+    "dci": "Haloperidol",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic tipic"
+  },
+  {
+    "dci": "Haloperidol",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic tipic"
+  },
+  {
+    "dci": "Haloperidol",
+    "forma": "solutie injectabila",
+    "concentratie": "5 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Psihiatrie - Antipsihotic tipic"
+  },
+  {
+    "dci": "Risperidona",
+    "forma": "comprimate",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Risperidona",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Risperidona",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Risperidona",
+    "forma": "comprimate",
+    "concentratie": "3 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Risperidona",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Olanzapina",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Olanzapina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Olanzapina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Quetiapina",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Quetiapina",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Quetiapina",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Quetiapina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Quetiapina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Quetiapina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Aripiprazol",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Aripiprazol",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Aripiprazol",
+    "forma": "comprimate",
+    "concentratie": "15 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Aripiprazol",
+    "forma": "comprimate",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Clozapina",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Clozapina",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Amisulprid",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Amisulprid",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Amisulprid",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Antipsihotic atipic"
+  },
+  {
+    "dci": "Diazepam",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Diazepam",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Diazepam",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Diazepam",
+    "forma": "solutie injectabila",
+    "concentratie": "5 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Alprazolam",
+    "forma": "comprimate",
+    "concentratie": "0.25 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Alprazolam",
+    "forma": "comprimate",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Alprazolam",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Lorazepam",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Lorazepam",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Clonazepam",
+    "forma": "comprimate",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina / Antiepiletic"
+  },
+  {
+    "dci": "Clonazepam",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina / Antiepiletic"
+  },
+  {
+    "dci": "Bromazepam",
+    "forma": "comprimate",
+    "concentratie": "1.5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Bromazepam",
+    "forma": "comprimate",
+    "concentratie": "3 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Bromazepam",
+    "forma": "comprimate",
+    "concentratie": "6 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Benzodiazepina"
+  },
+  {
+    "dci": "Zolpidem",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Hipnotic non-benzo"
+  },
+  {
+    "dci": "Zolpidem",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Hipnotic non-benzo"
+  },
+  {
+    "dci": "Zopiclona",
+    "forma": "comprimate",
+    "concentratie": "7.5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Hipnotic non-benzo"
+  },
+  {
+    "dci": "Zaleplon",
+    "forma": "capsule",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Hipnotic non-benzo"
+  },
+  {
+    "dci": "Zaleplon",
+    "forma": "capsule",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Hipnotic non-benzo"
+  },
+  {
+    "dci": "Buspirona",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Anxiolitic non-benzo"
+  },
+  {
+    "dci": "Buspirona",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Anxiolitic non-benzo"
+  },
+  {
+    "dci": "Hidroxizina",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Anxiolitic antihistaminic"
+  },
+  {
+    "dci": "Melatonina",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Hipnotic cronobiologic"
+  },
+  {
+    "dci": "Melatonina",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Hipnotic cronobiologic"
+  },
+  {
+    "dci": "Melatonina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Hipnotic cronobiologic"
+  },
+  {
+    "dci": "Litiu carbonat",
+    "forma": "comprimate",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Timostabilizator"
+  },
+  {
+    "dci": "Litiu carbonat",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie - Timostabilizator"
+  },
+  {
+    "dci": "Acid valproic",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie / Neurologie - Timostabilizator / Antiepiletic"
+  },
+  {
+    "dci": "Acid valproic",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie / Neurologie - Timostabilizator / Antiepiletic"
+  },
+  {
+    "dci": "Valproat de sodiu",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie / Neurologie - Timostabilizator / Antiepiletic"
+  },
+  {
+    "dci": "Valproat de sodiu",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie / Neurologie - Timostabilizator / Antiepiletic"
+  },
+  {
+    "dci": "Lamotrigina",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie / Neurologie - Timostabilizator / Antiepiletic"
+  },
+  {
+    "dci": "Lamotrigina",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie / Neurologie - Timostabilizator / Antiepiletic"
+  },
+  {
+    "dci": "Lamotrigina",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie / Neurologie - Timostabilizator / Antiepiletic"
+  },
+  {
+    "dci": "Lamotrigina",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Psihiatrie / Neurologie - Timostabilizator / Antiepiletic"
+  },
+  {
+    "dci": "Carbamazepina",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Carbamazepina",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Carbamazepina",
+    "forma": "comprimate retard",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Oxcarbazepina",
+    "forma": "comprimate",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Oxcarbazepina",
+    "forma": "comprimate",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Oxcarbazepina",
+    "forma": "comprimate",
+    "concentratie": "600 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Fenitoina",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Fenitoina",
+    "forma": "solutie injectabila",
+    "concentratie": "50 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Fenobarbiton",
+    "forma": "comprimate",
+    "concentratie": "15 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic / Barbituric"
+  },
+  {
+    "dci": "Fenobarbiton",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic / Barbituric"
+  },
+  {
+    "dci": "Levetiracetam",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Levetiracetam",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Levetiracetam",
+    "forma": "comprimate",
+    "concentratie": "1000 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Levetiracetam",
+    "forma": "solutie perfuzabila",
+    "concentratie": "500 mg/100ml",
+    "cale": "injectabil",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Gabapentin",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic / Durere neuropata"
+  },
+  {
+    "dci": "Gabapentin",
+    "forma": "capsule",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic / Durere neuropata"
+  },
+  {
+    "dci": "Gabapentin",
+    "forma": "capsule",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic / Durere neuropata"
+  },
+  {
+    "dci": "Pregabalin",
+    "forma": "capsule",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic / Durere neuropata"
+  },
+  {
+    "dci": "Pregabalin",
+    "forma": "capsule",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic / Durere neuropata"
+  },
+  {
+    "dci": "Pregabalin",
+    "forma": "capsule",
+    "concentratie": "75 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic / Durere neuropata"
+  },
+  {
+    "dci": "Pregabalin",
+    "forma": "capsule",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic / Durere neuropata"
+  },
+  {
+    "dci": "Pregabalin",
+    "forma": "capsule",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic / Durere neuropata"
+  },
+  {
+    "dci": "Topiramat",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Topiramat",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Topiramat",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Zonisamida",
+    "forma": "capsule",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Zonisamida",
+    "forma": "capsule",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Zonisamida",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Perampanel",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Perampanel",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Perampanel",
+    "forma": "comprimate",
+    "concentratie": "8 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Lacosamida",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Lacosamida",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Lacosamida",
+    "forma": "comprimate",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Lacosamida",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiepiletic"
+  },
+  {
+    "dci": "Levodopa + Carbidopa",
+    "forma": "comprimate",
+    "concentratie": "100 mg/25 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson"
+  },
+  {
+    "dci": "Levodopa + Carbidopa",
+    "forma": "comprimate",
+    "concentratie": "200 mg/50 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson"
+  },
+  {
+    "dci": "Levodopa + Benserazida",
+    "forma": "capsule",
+    "concentratie": "100 mg/25 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson"
+  },
+  {
+    "dci": "Levodopa + Benserazida",
+    "forma": "capsule",
+    "concentratie": "200 mg/50 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson"
+  },
+  {
+    "dci": "Pramipexol",
+    "forma": "comprimate",
+    "concentratie": "0.088 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson (agonist DA)"
+  },
+  {
+    "dci": "Pramipexol",
+    "forma": "comprimate",
+    "concentratie": "0.18 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson (agonist DA)"
+  },
+  {
+    "dci": "Pramipexol",
+    "forma": "comprimate",
+    "concentratie": "0.7 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson (agonist DA)"
+  },
+  {
+    "dci": "Ropinirol",
+    "forma": "comprimate",
+    "concentratie": "0.25 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson (agonist DA)"
+  },
+  {
+    "dci": "Ropinirol",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson (agonist DA)"
+  },
+  {
+    "dci": "Ropinirol",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson (agonist DA)"
+  },
+  {
+    "dci": "Selegilina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson (IMAO-B)"
+  },
+  {
+    "dci": "Rasagilina",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson (IMAO-B)"
+  },
+  {
+    "dci": "Entacapona",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antiparkinson (ICOMT)"
+  },
+  {
+    "dci": "Donepezil",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antidementa (IChE)"
+  },
+  {
+    "dci": "Donepezil",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antidementa (IChE)"
+  },
+  {
+    "dci": "Rivastigmina",
+    "forma": "capsule",
+    "concentratie": "1.5 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antidementa (IChE)"
+  },
+  {
+    "dci": "Rivastigmina",
+    "forma": "capsule",
+    "concentratie": "3 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antidementa (IChE)"
+  },
+  {
+    "dci": "Rivastigmina",
+    "forma": "capsule",
+    "concentratie": "6 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antidementa (IChE)"
+  },
+  {
+    "dci": "Rivastigmina",
+    "forma": "plasture transdermal",
+    "concentratie": "4.6 mg/24h",
+    "cale": "transdermal",
+    "clasa": "Neurologie - Antidementa (IChE)"
+  },
+  {
+    "dci": "Rivastigmina",
+    "forma": "plasture transdermal",
+    "concentratie": "9.5 mg/24h",
+    "cale": "transdermal",
+    "clasa": "Neurologie - Antidementa (IChE)"
+  },
+  {
+    "dci": "Galantamina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "8 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antidementa (IChE)"
+  },
+  {
+    "dci": "Galantamina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "16 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antidementa (IChE)"
+  },
+  {
+    "dci": "Galantamina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "24 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antidementa (IChE)"
+  },
+  {
+    "dci": "Memantina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antidementa (antagonist NMDA)"
+  },
+  {
+    "dci": "Memantina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Antidementa (antagonist NMDA)"
+  },
+  {
+    "dci": "Sumatriptan",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Triptan (migrena)"
+  },
+  {
+    "dci": "Sumatriptan",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Triptan (migrena)"
+  },
+  {
+    "dci": "Sumatriptan",
+    "forma": "solutie injectabila",
+    "concentratie": "6 mg/0.5ml",
+    "cale": "injectabil",
+    "clasa": "Neurologie - Triptan (migrena)"
+  },
+  {
+    "dci": "Sumatriptan",
+    "forma": "spray nazal",
+    "concentratie": "10 mg/doza",
+    "cale": "nazal",
+    "clasa": "Neurologie - Triptan (migrena)"
+  },
+  {
+    "dci": "Rizatriptan",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Triptan (migrena)"
+  },
+  {
+    "dci": "Rizatriptan",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Triptan (migrena)"
+  },
+  {
+    "dci": "Zolmitriptan",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Triptan (migrena)"
+  },
+  {
+    "dci": "Eletriptan",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Triptan (migrena)"
+  },
+  {
+    "dci": "Eletriptan",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Triptan (migrena)"
+  },
+  {
+    "dci": "Ergotamina + Cofeina",
+    "forma": "comprimate",
+    "concentratie": "1 mg/100 mg",
+    "cale": "oral",
+    "clasa": "Neurologie - Ergotaminic (migrena)"
+  },
+  {
+    "dci": "Paracetamol",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / Antipiretic"
+  },
+  {
+    "dci": "Paracetamol",
+    "forma": "comprimate",
+    "concentratie": "1000 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / Antipiretic"
+  },
+  {
+    "dci": "Paracetamol",
+    "forma": "supozitoare",
+    "concentratie": "125 mg",
+    "cale": "rectal",
+    "clasa": "Analgezic / Antipiretic"
+  },
+  {
+    "dci": "Paracetamol",
+    "forma": "supozitoare",
+    "concentratie": "250 mg",
+    "cale": "rectal",
+    "clasa": "Analgezic / Antipiretic"
+  },
+  {
+    "dci": "Paracetamol",
+    "forma": "supozitoare",
+    "concentratie": "500 mg",
+    "cale": "rectal",
+    "clasa": "Analgezic / Antipiretic"
+  },
+  {
+    "dci": "Paracetamol",
+    "forma": "solutie perfuzabila",
+    "concentratie": "10 mg/ml (100ml)",
+    "cale": "injectabil",
+    "clasa": "Analgezic / Antipiretic"
+  },
+  {
+    "dci": "Ibuprofen",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Ibuprofen",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Ibuprofen",
+    "forma": "comprimate",
+    "concentratie": "600 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Ibuprofen",
+    "forma": "comprimate",
+    "concentratie": "800 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Ibuprofen",
+    "forma": "suspensie orala",
+    "concentratie": "100 mg/5ml",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Ketoprofen",
+    "forma": "capsule",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Ketoprofen",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Ketoprofen",
+    "forma": "solutie injectabila",
+    "concentratie": "100 mg/2ml",
+    "cale": "injectabil",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Ketorolac",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Ketorolac",
+    "forma": "solutie injectabila",
+    "concentratie": "30 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Diclofenac",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Diclofenac",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Diclofenac",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "75 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Diclofenac",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Diclofenac",
+    "forma": "solutie injectabila",
+    "concentratie": "75 mg/3ml",
+    "cale": "injectabil",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Diclofenac",
+    "forma": "supozitoare",
+    "concentratie": "50 mg",
+    "cale": "rectal",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Diclofenac",
+    "forma": "supozitoare",
+    "concentratie": "100 mg",
+    "cale": "rectal",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Naproxen",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Naproxen",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Meloxicam",
+    "forma": "comprimate",
+    "concentratie": "7.5 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS (COX-2 preferential)"
+  },
+  {
+    "dci": "Meloxicam",
+    "forma": "comprimate",
+    "concentratie": "15 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS (COX-2 preferential)"
+  },
+  {
+    "dci": "Meloxicam",
+    "forma": "solutie injectabila",
+    "concentratie": "15 mg/1.5ml",
+    "cale": "injectabil",
+    "clasa": "Analgezic / AINS (COX-2 preferential)"
+  },
+  {
+    "dci": "Celecoxib",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS (COX-2 selectiv)"
+  },
+  {
+    "dci": "Celecoxib",
+    "forma": "capsule",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS (COX-2 selectiv)"
+  },
+  {
+    "dci": "Etoricoxib",
+    "forma": "comprimate",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS (COX-2 selectiv)"
+  },
+  {
+    "dci": "Etoricoxib",
+    "forma": "comprimate",
+    "concentratie": "60 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS (COX-2 selectiv)"
+  },
+  {
+    "dci": "Etoricoxib",
+    "forma": "comprimate",
+    "concentratie": "90 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS (COX-2 selectiv)"
+  },
+  {
+    "dci": "Etoricoxib",
+    "forma": "comprimate",
+    "concentratie": "120 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS (COX-2 selectiv)"
+  },
+  {
+    "dci": "Indometacin",
+    "forma": "capsule",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Indometacin",
+    "forma": "capsule",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Indometacin",
+    "forma": "supozitoare",
+    "concentratie": "100 mg",
+    "cale": "rectal",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Piroxicam",
+    "forma": "capsule",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Piroxicam",
+    "forma": "capsule",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Nimesulid",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Nimesulid",
+    "forma": "granule suspensie orala",
+    "concentratie": "100 mg/plic",
+    "cale": "oral",
+    "clasa": "Analgezic / AINS"
+  },
+  {
+    "dci": "Tramadol",
+    "forma": "capsule",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid slab"
+  },
+  {
+    "dci": "Tramadol",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid slab"
+  },
+  {
+    "dci": "Tramadol",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid slab"
+  },
+  {
+    "dci": "Tramadol",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid slab"
+  },
+  {
+    "dci": "Tramadol",
+    "forma": "solutie injectabila",
+    "concentratie": "50 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Analgezic - Opioid slab"
+  },
+  {
+    "dci": "Codeina",
+    "forma": "comprimate",
+    "concentratie": "15 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid slab"
+  },
+  {
+    "dci": "Codeina",
+    "forma": "comprimate",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid slab"
+  },
+  {
+    "dci": "Morfina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Morfina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Morfina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "60 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Morfina",
+    "forma": "solutie injectabila",
+    "concentratie": "10 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Oxicodona",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Oxicodona",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Oxicodona",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Oxicodona",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Fentanil",
+    "forma": "plasture transdermal",
+    "concentratie": "12 mcg/h",
+    "cale": "transdermal",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Fentanil",
+    "forma": "plasture transdermal",
+    "concentratie": "25 mcg/h",
+    "cale": "transdermal",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Fentanil",
+    "forma": "plasture transdermal",
+    "concentratie": "50 mcg/h",
+    "cale": "transdermal",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Fentanil",
+    "forma": "plasture transdermal",
+    "concentratie": "100 mcg/h",
+    "cale": "transdermal",
+    "clasa": "Analgezic - Opioid puternic"
+  },
+  {
+    "dci": "Buprenorfina",
+    "forma": "plasture transdermal",
+    "concentratie": "5 mcg/h",
+    "cale": "transdermal",
+    "clasa": "Analgezic - Opioid partial agonist"
+  },
+  {
+    "dci": "Buprenorfina",
+    "forma": "plasture transdermal",
+    "concentratie": "10 mcg/h",
+    "cale": "transdermal",
+    "clasa": "Analgezic - Opioid partial agonist"
+  },
+  {
+    "dci": "Buprenorfina",
+    "forma": "plasture transdermal",
+    "concentratie": "20 mcg/h",
+    "cale": "transdermal",
+    "clasa": "Analgezic - Opioid partial agonist"
+  },
+  {
+    "dci": "Tapentadol",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid dual MOR/NRI"
+  },
+  {
+    "dci": "Tapentadol",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid dual MOR/NRI"
+  },
+  {
+    "dci": "Tapentadol",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Analgezic - Opioid dual MOR/NRI"
+  },
+  {
+    "dci": "Salbutamol",
+    "forma": "aerosol presorizat",
+    "concentratie": "100 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Beta2-agonist SABA"
+  },
+  {
+    "dci": "Salbutamol",
+    "forma": "solutie nebulizare",
+    "concentratie": "2.5 mg/2.5ml",
+    "cale": "inhalator",
+    "clasa": "Respirator - Beta2-agonist SABA"
+  },
+  {
+    "dci": "Salbutamol",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Beta2-agonist"
+  },
+  {
+    "dci": "Salbutamol",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Beta2-agonist"
+  },
+  {
+    "dci": "Formoterol",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "6 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Beta2-agonist LABA"
+  },
+  {
+    "dci": "Formoterol",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "12 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Beta2-agonist LABA"
+  },
+  {
+    "dci": "Salmeterol",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "25 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Beta2-agonist LABA"
+  },
+  {
+    "dci": "Salmeterol",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "50 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Beta2-agonist LABA"
+  },
+  {
+    "dci": "Indacaterol",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "150 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Beta2-agonist LABA"
+  },
+  {
+    "dci": "Indacaterol",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "300 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Beta2-agonist LABA"
+  },
+  {
+    "dci": "Tiotropiu",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "18 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Anticolinergic LAMA"
+  },
+  {
+    "dci": "Tiotropiu",
+    "forma": "solutie inhalatorie",
+    "concentratie": "2.5 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Anticolinergic LAMA"
+  },
+  {
+    "dci": "Glicopironiu",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "44 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Anticolinergic LAMA"
+  },
+  {
+    "dci": "Umeclidinium",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "55 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Anticolinergic LAMA"
+  },
+  {
+    "dci": "Ipratropiu",
+    "forma": "aerosol",
+    "concentratie": "20 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Anticolinergic SAMA"
+  },
+  {
+    "dci": "Ipratropiu",
+    "forma": "solutie nebulizare",
+    "concentratie": "0.25 mg/2ml",
+    "cale": "inhalator",
+    "clasa": "Respirator - Anticolinergic SAMA"
+  },
+  {
+    "dci": "Beclometazona",
+    "forma": "aerosol presorizat",
+    "concentratie": "50 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Beclometazona",
+    "forma": "aerosol presorizat",
+    "concentratie": "100 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Beclometazona",
+    "forma": "aerosol presorizat",
+    "concentratie": "250 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Budesonid",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "100 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Budesonid",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "200 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Budesonid",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "400 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Budesonid",
+    "forma": "solutie nebulizare",
+    "concentratie": "0.25 mg/ml",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Budesonid",
+    "forma": "solutie nebulizare",
+    "concentratie": "0.5 mg/ml",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Fluticazona propionat",
+    "forma": "aerosol presorizat",
+    "concentratie": "50 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Fluticazona propionat",
+    "forma": "aerosol presorizat",
+    "concentratie": "125 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Fluticazona propionat",
+    "forma": "aerosol presorizat",
+    "concentratie": "250 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - Corticosteroid inhalator ICS"
+  },
+  {
+    "dci": "Salmeterol + Fluticazona",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "25/50 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - LABA + ICS"
+  },
+  {
+    "dci": "Salmeterol + Fluticazona",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "50/100 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - LABA + ICS"
+  },
+  {
+    "dci": "Salmeterol + Fluticazona",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "50/250 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - LABA + ICS"
+  },
+  {
+    "dci": "Formoterol + Budesonid",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "4.5/160 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - LABA + ICS"
+  },
+  {
+    "dci": "Formoterol + Budesonid",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "9/320 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - LABA + ICS"
+  },
+  {
+    "dci": "Indacaterol + Glicopironiu",
+    "forma": "pulbere inhalatorie",
+    "concentratie": "85/43 mcg/doza",
+    "cale": "inhalator",
+    "clasa": "Respirator - LABA + LAMA (BPOC)"
+  },
+  {
+    "dci": "Montelukast",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Antileucotriene"
+  },
+  {
+    "dci": "Montelukast",
+    "forma": "comprimate masticabile",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Antileucotriene"
+  },
+  {
+    "dci": "Montelukast",
+    "forma": "comprimate masticabile",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Antileucotriene"
+  },
+  {
+    "dci": "Teofilina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Xantina (bronhodilatator)"
+  },
+  {
+    "dci": "Teofilina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Xantina (bronhodilatator)"
+  },
+  {
+    "dci": "Teofilina",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Xantina (bronhodilatator)"
+  },
+  {
+    "dci": "Aminofilina",
+    "forma": "solutie injectabila",
+    "concentratie": "240 mg/10ml",
+    "cale": "injectabil",
+    "clasa": "Respirator - Xantina (bronhodilatator)"
+  },
+  {
+    "dci": "Acetilcisteina",
+    "forma": "granule",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Mucolitic"
+  },
+  {
+    "dci": "Acetilcisteina",
+    "forma": "granule",
+    "concentratie": "600 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Mucolitic"
+  },
+  {
+    "dci": "Acetilcisteina",
+    "forma": "solutie injectabila",
+    "concentratie": "200 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Respirator - Mucolitic / Antidot acetaminofen"
+  },
+  {
+    "dci": "Bromhexina",
+    "forma": "comprimate",
+    "concentratie": "8 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Mucolitic"
+  },
+  {
+    "dci": "Ambroxol",
+    "forma": "comprimate",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Respirator - Mucolitic"
+  },
+  {
+    "dci": "Ambroxol",
+    "forma": "sirop",
+    "concentratie": "15 mg/5ml",
+    "cale": "oral",
+    "clasa": "Respirator - Mucolitic"
+  },
+  {
+    "dci": "Dextrometorfan",
+    "forma": "sirop",
+    "concentratie": "15 mg/5ml",
+    "cale": "oral",
+    "clasa": "Respirator - Antitusiv"
+  },
+  {
+    "dci": "Budesonid (nazal)",
+    "forma": "spray nazal",
+    "concentratie": "64 mcg/doza",
+    "cale": "nazal",
+    "clasa": "Respirator - Corticosteroid nazal"
+  },
+  {
+    "dci": "Fluticazona (nazal)",
+    "forma": "spray nazal",
+    "concentratie": "50 mcg/doza",
+    "cale": "nazal",
+    "clasa": "Respirator - Corticosteroid nazal"
+  },
+  {
+    "dci": "Mometazona (nazal)",
+    "forma": "spray nazal",
+    "concentratie": "50 mcg/doza",
+    "cale": "nazal",
+    "clasa": "Respirator - Corticosteroid nazal"
+  },
+  {
+    "dci": "Xilometazolina",
+    "forma": "spray nazal",
+    "concentratie": "0.05%",
+    "cale": "nazal",
+    "clasa": "Respirator - Decongestionant nazal"
+  },
+  {
+    "dci": "Xilometazolina",
+    "forma": "spray nazal",
+    "concentratie": "0.1%",
+    "cale": "nazal",
+    "clasa": "Respirator - Decongestionant nazal"
+  },
+  {
+    "dci": "Oximetazolina",
+    "forma": "spray nazal",
+    "concentratie": "0.05%",
+    "cale": "nazal",
+    "clasa": "Respirator - Decongestionant nazal"
+  },
+  {
+    "dci": "Omeprazol",
+    "forma": "capsule gastrorezistente",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Omeprazol",
+    "forma": "capsule gastrorezistente",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Omeprazol",
+    "forma": "capsule gastrorezistente",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Omeprazol",
+    "forma": "pulbere injectabila",
+    "concentratie": "40 mg",
+    "cale": "injectabil",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Pantoprazol",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Pantoprazol",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Pantoprazol",
+    "forma": "pulbere injectabila",
+    "concentratie": "40 mg",
+    "cale": "injectabil",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Esomeprazol",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Esomeprazol",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Lansoprazol",
+    "forma": "capsule gastrorezistente",
+    "concentratie": "15 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Lansoprazol",
+    "forma": "capsule gastrorezistente",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Rabeprazol",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Rabeprazol",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - IPP"
+  },
+  {
+    "dci": "Famotidina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Anti-H2"
+  },
+  {
+    "dci": "Famotidina",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Anti-H2"
+  },
+  {
+    "dci": "Sucralfat",
+    "forma": "comprimate",
+    "concentratie": "1 g",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Protector gastric"
+  },
+  {
+    "dci": "Sucralfat",
+    "forma": "suspensie orala",
+    "concentratie": "1 g/5ml",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Protector gastric"
+  },
+  {
+    "dci": "Bismut subcitrat",
+    "forma": "comprimate",
+    "concentratie": "120 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Protector gastric / anti-HP"
+  },
+  {
+    "dci": "Misoprostol",
+    "forma": "comprimate",
+    "concentratie": "200 mcg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Analog PGE1"
+  },
+  {
+    "dci": "Domperidon",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Prokinetic"
+  },
+  {
+    "dci": "Metoclopramid",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Prokinetic / Antiemetic"
+  },
+  {
+    "dci": "Metoclopramid",
+    "forma": "solutie injectabila",
+    "concentratie": "5 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Gastroenterologie - Prokinetic / Antiemetic"
+  },
+  {
+    "dci": "Ondansetron",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antiemetic (anti-5HT3)"
+  },
+  {
+    "dci": "Ondansetron",
+    "forma": "comprimate",
+    "concentratie": "8 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antiemetic (anti-5HT3)"
+  },
+  {
+    "dci": "Ondansetron",
+    "forma": "solutie injectabila",
+    "concentratie": "2 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Gastroenterologie - Antiemetic (anti-5HT3)"
+  },
+  {
+    "dci": "Granisetron",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antiemetic (anti-5HT3)"
+  },
+  {
+    "dci": "Aprepitant",
+    "forma": "capsule",
+    "concentratie": "80 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antiemetic (anti-NK1)"
+  },
+  {
+    "dci": "Aprepitant",
+    "forma": "capsule",
+    "concentratie": "125 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antiemetic (anti-NK1)"
+  },
+  {
+    "dci": "Loperamid",
+    "forma": "capsule",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antidiareic"
+  },
+  {
+    "dci": "Mesalazina",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Aminosalicilat (IBD)"
+  },
+  {
+    "dci": "Mesalazina",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "800 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Aminosalicilat (IBD)"
+  },
+  {
+    "dci": "Mesalazina",
+    "forma": "supozitoare",
+    "concentratie": "500 mg",
+    "cale": "rectal",
+    "clasa": "Gastroenterologie - Aminosalicilat (IBD)"
+  },
+  {
+    "dci": "Mesalazina",
+    "forma": "clisma rectala",
+    "concentratie": "4 g/100ml",
+    "cale": "rectal",
+    "clasa": "Gastroenterologie - Aminosalicilat (IBD)"
+  },
+  {
+    "dci": "Sulfasalazina",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie / Reumatologie - Aminosalicilat"
+  },
+  {
+    "dci": "Lactuoza",
+    "forma": "solutie orala",
+    "concentratie": "667 mg/ml",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Laxativ osmotic"
+  },
+  {
+    "dci": "Macrogol 4000",
+    "forma": "pulbere solutie orala",
+    "concentratie": "4 g/plic",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Laxativ osmotic"
+  },
+  {
+    "dci": "Bisacodil",
+    "forma": "comprimate gastrorezistente",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Laxativ de contact"
+  },
+  {
+    "dci": "Bisacodil",
+    "forma": "supozitoare",
+    "concentratie": "10 mg",
+    "cale": "rectal",
+    "clasa": "Gastroenterologie - Laxativ de contact"
+  },
+  {
+    "dci": "Ursodeoxicolic acid",
+    "forma": "capsule",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Acid biliar (hepatoprotector)"
+  },
+  {
+    "dci": "Ursodeoxicolic acid",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Acid biliar (hepatoprotector)"
+  },
+  {
+    "dci": "Rifaximina",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antibiotic intestinal"
+  },
+  {
+    "dci": "Rifaximina",
+    "forma": "comprimate",
+    "concentratie": "550 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antibiotic intestinal"
+  },
+  {
+    "dci": "Trimebutina",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Regulator motilitate"
+  },
+  {
+    "dci": "Trimebutina",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Regulator motilitate"
+  },
+  {
+    "dci": "Mebeverina",
+    "forma": "capsule eliberare prelungita",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antispastic intestinal"
+  },
+  {
+    "dci": "Hioscina (Scopolamina butilbromura)",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antispastic"
+  },
+  {
+    "dci": "Hioscina (Scopolamina butilbromura)",
+    "forma": "solutie injectabila",
+    "concentratie": "20 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Gastroenterologie - Antispastic"
+  },
+  {
+    "dci": "Drotaverina",
+    "forma": "comprimate",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Antispastic"
+  },
+  {
+    "dci": "Drotaverina",
+    "forma": "solutie injectabila",
+    "concentratie": "40 mg/2ml",
+    "cale": "injectabil",
+    "clasa": "Gastroenterologie - Antispastic"
+  },
+  {
+    "dci": "Pancreatin",
+    "forma": "capsule gastrorezistente",
+    "concentratie": "25.000 UI lipaza",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Enzime pancreatice"
+  },
+  {
+    "dci": "Pancreatin",
+    "forma": "capsule gastrorezistente",
+    "concentratie": "40.000 UI lipaza",
+    "cale": "oral",
+    "clasa": "Gastroenterologie - Enzime pancreatice"
+  },
+  {
+    "dci": "Glucoza",
+    "forma": "solutie perfuzabila",
+    "concentratie": "5% 500ml",
+    "cale": "injectabil",
+    "clasa": "Solutii / Electroliti"
+  },
+  {
+    "dci": "Glucoza",
+    "forma": "solutie perfuzabila",
+    "concentratie": "10% 500ml",
+    "cale": "injectabil",
+    "clasa": "Solutii / Electroliti"
+  },
+  {
+    "dci": "Glucoza",
+    "forma": "solutie perfuzabila",
+    "concentratie": "33% 250ml",
+    "cale": "injectabil",
+    "clasa": "Solutii / Electroliti"
+  },
+  {
+    "dci": "Clorura de sodiu",
+    "forma": "solutie perfuzabila",
+    "concentratie": "0.9% 500ml",
+    "cale": "injectabil",
+    "clasa": "Solutii / Electroliti"
+  },
+  {
+    "dci": "Clorura de sodiu",
+    "forma": "solutie perfuzabila",
+    "concentratie": "0.9% 100ml",
+    "cale": "injectabil",
+    "clasa": "Solutii / Electroliti"
+  },
+  {
+    "dci": "Ringer lactat",
+    "forma": "solutie perfuzabila",
+    "concentratie": "500 ml",
+    "cale": "injectabil",
+    "clasa": "Solutii / Electroliti"
+  },
+  {
+    "dci": "Clorura de potasiu",
+    "forma": "solutie perfuzabila",
+    "concentratie": "7.45% 10ml",
+    "cale": "injectabil",
+    "clasa": "Solutii / Electroliti"
+  },
+  {
+    "dci": "Calciu gluconat",
+    "forma": "solutie injectabila",
+    "concentratie": "10% 10ml",
+    "cale": "injectabil",
+    "clasa": "Solutii / Electroliti"
+  },
+  {
+    "dci": "Bicarbonat de sodiu",
+    "forma": "solutie perfuzabila",
+    "concentratie": "8.4% 250ml",
+    "cale": "injectabil",
+    "clasa": "Solutii / Electroliti - Alcalinizant"
+  },
+  {
+    "dci": "Levotiroxina",
+    "forma": "comprimate",
+    "concentratie": "25 mcg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Hormoni tiroidieni"
+  },
+  {
+    "dci": "Levotiroxina",
+    "forma": "comprimate",
+    "concentratie": "50 mcg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Hormoni tiroidieni"
+  },
+  {
+    "dci": "Levotiroxina",
+    "forma": "comprimate",
+    "concentratie": "75 mcg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Hormoni tiroidieni"
+  },
+  {
+    "dci": "Levotiroxina",
+    "forma": "comprimate",
+    "concentratie": "100 mcg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Hormoni tiroidieni"
+  },
+  {
+    "dci": "Levotiroxina",
+    "forma": "comprimate",
+    "concentratie": "125 mcg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Hormoni tiroidieni"
+  },
+  {
+    "dci": "Levotiroxina",
+    "forma": "comprimate",
+    "concentratie": "150 mcg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Hormoni tiroidieni"
+  },
+  {
+    "dci": "Metimazol",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Antitiroidian"
+  },
+  {
+    "dci": "Metimazol",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Antitiroidian"
+  },
+  {
+    "dci": "Propiltiouracil",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Antitiroidian"
+  },
+  {
+    "dci": "Prednison",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Prednison",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Prednison",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Prednisolon",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Prednisolon",
+    "forma": "solutie injectabila",
+    "concentratie": "25 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Metilprednisolon",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Metilprednisolon",
+    "forma": "comprimate",
+    "concentratie": "16 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Metilprednisolon",
+    "forma": "pulbere injectabila",
+    "concentratie": "40 mg",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Metilprednisolon",
+    "forma": "pulbere injectabila",
+    "concentratie": "125 mg",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Metilprednisolon",
+    "forma": "pulbere injectabila",
+    "concentratie": "500 mg",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Dexametazona",
+    "forma": "comprimate",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Dexametazona",
+    "forma": "comprimate",
+    "concentratie": "1.5 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Dexametazona",
+    "forma": "solutie injectabila",
+    "concentratie": "4 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Dexametazona",
+    "forma": "solutie injectabila",
+    "concentratie": "8 mg/2ml",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Hidrocortizon",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Corticosteroid (insuf. suprarenala)"
+  },
+  {
+    "dci": "Hidrocortizon",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Corticosteroid (insuf. suprarenala)"
+  },
+  {
+    "dci": "Hidrocortizon",
+    "forma": "pulbere injectabila",
+    "concentratie": "100 mg",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Corticosteroid"
+  },
+  {
+    "dci": "Fludrocortizon",
+    "forma": "comprimate",
+    "concentratie": "0.1 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Mineralocorticoid"
+  },
+  {
+    "dci": "Estradiol",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Estrogen"
+  },
+  {
+    "dci": "Estradiol",
+    "forma": "comprimate",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Estrogen"
+  },
+  {
+    "dci": "Estradiol",
+    "forma": "gel transdermal",
+    "concentratie": "0.06% (0.5 mg/doza)",
+    "cale": "transdermal",
+    "clasa": "Endocrinologie - Estrogen"
+  },
+  {
+    "dci": "Estradiol",
+    "forma": "plasture transdermal",
+    "concentratie": "25 mcg/24h",
+    "cale": "transdermal",
+    "clasa": "Endocrinologie - Estrogen"
+  },
+  {
+    "dci": "Estradiol",
+    "forma": "plasture transdermal",
+    "concentratie": "50 mcg/24h",
+    "cale": "transdermal",
+    "clasa": "Endocrinologie - Estrogen"
+  },
+  {
+    "dci": "Progesteron micronizat",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Progesteron"
+  },
+  {
+    "dci": "Progesteron micronizat",
+    "forma": "capsule",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Progesteron"
+  },
+  {
+    "dci": "Didrogesteron",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Progestogen"
+  },
+  {
+    "dci": "Medroxiprogesteron acetat",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Progestogen"
+  },
+  {
+    "dci": "Medroxiprogesteron acetat",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Progestogen"
+  },
+  {
+    "dci": "Testosteron",
+    "forma": "gel transdermal",
+    "concentratie": "16.2 mg/g",
+    "cale": "transdermal",
+    "clasa": "Endocrinologie - Androgen"
+  },
+  {
+    "dci": "Testosteron",
+    "forma": "solutie injectabila",
+    "concentratie": "250 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Androgen"
+  },
+  {
+    "dci": "Contraceptiv oral - Etinilestradiol + Levonorgestrel",
+    "forma": "comprimate",
+    "concentratie": "0.03 mg/0.15 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Contraceptiv"
+  },
+  {
+    "dci": "Contraceptiv oral - Etinilestradiol + Desogestrel",
+    "forma": "comprimate",
+    "concentratie": "0.02 mg/0.15 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Contraceptiv"
+  },
+  {
+    "dci": "Contraceptiv oral - Etinilestradiol + Drospirenonona",
+    "forma": "comprimate",
+    "concentratie": "0.02 mg/3 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Contraceptiv"
+  },
+  {
+    "dci": "Levonorgestrel (contraceptiv urgenta)",
+    "forma": "comprimate",
+    "concentratie": "1.5 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Contraceptiv de urgenta"
+  },
+  {
+    "dci": "Ulipristal acetat",
+    "forma": "comprimate",
+    "concentratie": "30 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Contraceptiv de urgenta"
+  },
+  {
+    "dci": "Clomifen",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Inductor ovulatie"
+  },
+  {
+    "dci": "Bromocriptina",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Agonist dopaminergic"
+  },
+  {
+    "dci": "Cabergolina",
+    "forma": "comprimate",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Endocrinologie - Agonist dopaminergic"
+  },
+  {
+    "dci": "Octreotid",
+    "forma": "solutie injectabila",
+    "concentratie": "100 mcg/ml",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Analog somatostatin"
+  },
+  {
+    "dci": "Lanreotid",
+    "forma": "gel injectabil",
+    "concentratie": "60 mg",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Analog somatostatin"
+  },
+  {
+    "dci": "Lanreotid",
+    "forma": "gel injectabil",
+    "concentratie": "90 mg",
+    "cale": "injectabil",
+    "clasa": "Endocrinologie - Analog somatostatin"
+  },
+  {
+    "dci": "Metotrexat",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - DMARD conventional"
+  },
+  {
+    "dci": "Metotrexat",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - DMARD conventional"
+  },
+  {
+    "dci": "Metotrexat",
+    "forma": "solutie injectabila",
+    "concentratie": "10 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Reumatologie - DMARD conventional"
+  },
+  {
+    "dci": "Leflunomida",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - DMARD conventional"
+  },
+  {
+    "dci": "Leflunomida",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - DMARD conventional"
+  },
+  {
+    "dci": "Hidroxiclorochina",
+    "forma": "comprimate",
+    "concentratie": "200 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - DMARD conventional / LES"
+  },
+  {
+    "dci": "Azatioprina",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Imunosupresor"
+  },
+  {
+    "dci": "Azatioprina",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Imunosupresor"
+  },
+  {
+    "dci": "Ciclofosfamida",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Imunosupresor / Citostatic"
+  },
+  {
+    "dci": "Ciclofosfamida",
+    "forma": "pulbere injectabila",
+    "concentratie": "200 mg",
+    "cale": "injectabil",
+    "clasa": "Reumatologie - Imunosupresor / Citostatic"
+  },
+  {
+    "dci": "Ciclosporina",
+    "forma": "capsule",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie / Transplant - Imunosupresor"
+  },
+  {
+    "dci": "Ciclosporina",
+    "forma": "capsule",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie / Transplant - Imunosupresor"
+  },
+  {
+    "dci": "Micofenolat mofetil",
+    "forma": "capsule",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Imunosupresor"
+  },
+  {
+    "dci": "Micofenolat mofetil",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Imunosupresor"
+  },
+  {
+    "dci": "Tacrolimus",
+    "forma": "capsule",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie / Transplant - Imunosupresor"
+  },
+  {
+    "dci": "Tacrolimus",
+    "forma": "capsule",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie / Transplant - Imunosupresor"
+  },
+  {
+    "dci": "Tacrolimus",
+    "forma": "capsule",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie / Transplant - Imunosupresor"
+  },
+  {
+    "dci": "Colchicina",
+    "forma": "comprimate",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Guta / FMF"
+  },
+  {
+    "dci": "Colchicina",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Guta / FMF"
+  },
+  {
+    "dci": "Alopurinol",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Antigutos"
+  },
+  {
+    "dci": "Alopurinol",
+    "forma": "comprimate",
+    "concentratie": "300 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Antigutos"
+  },
+  {
+    "dci": "Febuxostat",
+    "forma": "comprimate",
+    "concentratie": "80 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Antigutos"
+  },
+  {
+    "dci": "Febuxostat",
+    "forma": "comprimate",
+    "concentratie": "120 mg",
+    "cale": "oral",
+    "clasa": "Reumatologie - Antigutos"
+  },
+  {
+    "dci": "Timolol (oftalmic)",
+    "forma": "picaturi oftalmice",
+    "concentratie": "0.25%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Betablocant (glaucom)"
+  },
+  {
+    "dci": "Timolol (oftalmic)",
+    "forma": "picaturi oftalmice",
+    "concentratie": "0.5%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Betablocant (glaucom)"
+  },
+  {
+    "dci": "Latanoprost",
+    "forma": "picaturi oftalmice",
+    "concentratie": "0.005%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Prostaglandina (glaucom)"
+  },
+  {
+    "dci": "Bimatoprost",
+    "forma": "picaturi oftalmice",
+    "concentratie": "0.03%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Prostaglandina (glaucom)"
+  },
+  {
+    "dci": "Brinzolamida",
+    "forma": "picaturi oftalmice",
+    "concentratie": "1%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Inhibitor anhidraza carbonica"
+  },
+  {
+    "dci": "Dorzolamida",
+    "forma": "picaturi oftalmice",
+    "concentratie": "2%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Inhibitor anhidraza carbonica"
+  },
+  {
+    "dci": "Brimonidina",
+    "forma": "picaturi oftalmice",
+    "concentratie": "0.2%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Alfa2-agonist (glaucom)"
+  },
+  {
+    "dci": "Ciprofloxacina (oftalmica)",
+    "forma": "picaturi oftalmice",
+    "concentratie": "0.3%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Antibiotic"
+  },
+  {
+    "dci": "Tobramicina (oftalmica)",
+    "forma": "picaturi oftalmice",
+    "concentratie": "0.3%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Antibiotic"
+  },
+  {
+    "dci": "Dexametazona (oftalmica)",
+    "forma": "picaturi oftalmice",
+    "concentratie": "0.1%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Corticosteroid"
+  },
+  {
+    "dci": "Lacrimi artificiale (hialuronat sodic)",
+    "forma": "picaturi oftalmice",
+    "concentratie": "0.1%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Substitut lacrimal"
+  },
+  {
+    "dci": "Lacrimi artificiale (hialuronat sodic)",
+    "forma": "picaturi oftalmice",
+    "concentratie": "0.2%",
+    "cale": "oftalmic",
+    "clasa": "Oftalmologie - Substitut lacrimal"
+  },
+  {
+    "dci": "Betametazona (topic)",
+    "forma": "crema/unguent",
+    "concentratie": "0.05%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Corticosteroid topic potent"
+  },
+  {
+    "dci": "Betametazona (topic)",
+    "forma": "crema/unguent",
+    "concentratie": "0.1%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Corticosteroid topic potent"
+  },
+  {
+    "dci": "Hidrocortizon (topic)",
+    "forma": "crema",
+    "concentratie": "1%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Corticosteroid topic slab"
+  },
+  {
+    "dci": "Mometazona (topic)",
+    "forma": "crema/unguent",
+    "concentratie": "0.1%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Corticosteroid topic potent"
+  },
+  {
+    "dci": "Clobetasol (topic)",
+    "forma": "crema",
+    "concentratie": "0.05%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Corticosteroid topic foarte potent"
+  },
+  {
+    "dci": "Mupirocina",
+    "forma": "unguent",
+    "concentratie": "2%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Antibiotic topic"
+  },
+  {
+    "dci": "Acid fusidic",
+    "forma": "crema",
+    "concentratie": "2%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Antibiotic topic"
+  },
+  {
+    "dci": "Clotrimazol (topic)",
+    "forma": "crema",
+    "concentratie": "1%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Antifungic topic"
+  },
+  {
+    "dci": "Ketoconazol (topic)",
+    "forma": "crema",
+    "concentratie": "2%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Antifungic topic"
+  },
+  {
+    "dci": "Terbinafina (topic)",
+    "forma": "crema",
+    "concentratie": "1%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Antifungic topic"
+  },
+  {
+    "dci": "Tacrolimus (topic)",
+    "forma": "unguent",
+    "concentratie": "0.03%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Imunomodulator topic"
+  },
+  {
+    "dci": "Tacrolimus (topic)",
+    "forma": "unguent",
+    "concentratie": "0.1%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Imunomodulator topic"
+  },
+  {
+    "dci": "Pimecrolimus",
+    "forma": "crema",
+    "concentratie": "1%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Imunomodulator topic"
+  },
+  {
+    "dci": "Tretinoin",
+    "forma": "crema",
+    "concentratie": "0.025%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Retinoid topic"
+  },
+  {
+    "dci": "Tretinoin",
+    "forma": "crema",
+    "concentratie": "0.05%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Retinoid topic"
+  },
+  {
+    "dci": "Isotretinoin (oral)",
+    "forma": "capsule",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Dermatologie - Retinoid oral"
+  },
+  {
+    "dci": "Isotretinoin (oral)",
+    "forma": "capsule",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Dermatologie - Retinoid oral"
+  },
+  {
+    "dci": "Aciclovir (topic)",
+    "forma": "crema",
+    "concentratie": "5%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Antiviral topic"
+  },
+  {
+    "dci": "Permethrina",
+    "forma": "crema",
+    "concentratie": "5%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Antiparazitar topic (scabie)"
+  },
+  {
+    "dci": "Benzoil peroxid",
+    "forma": "gel",
+    "concentratie": "5%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Antibiotic / Keratolitic"
+  },
+  {
+    "dci": "Acid salicilic",
+    "forma": "solutie topica",
+    "concentratie": "2%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Keratolitic"
+  },
+  {
+    "dci": "Uree",
+    "forma": "crema",
+    "concentratie": "10%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Emollient / Keratolitic"
+  },
+  {
+    "dci": "Uree",
+    "forma": "crema",
+    "concentratie": "20%",
+    "cale": "topic",
+    "clasa": "Dermatologie - Emollient / Keratolitic"
+  },
+  {
+    "dci": "Calcipotriol",
+    "forma": "unguent",
+    "concentratie": "50 mcg/g",
+    "cale": "topic",
+    "clasa": "Dermatologie - Analog vitamina D (psoriazis)"
+  },
+  {
+    "dci": "Calcipotriol + Betametazona",
+    "forma": "unguent",
+    "concentratie": "50 mcg/g + 0.5 mg/g",
+    "cale": "topic",
+    "clasa": "Dermatologie - Analog VitD + Corticosteroid (psoriazis)"
+  },
+  {
+    "dci": "Cetirizina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 2 (non-sedativ)"
+  },
+  {
+    "dci": "Levocetirizina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 2 (non-sedativ)"
+  },
+  {
+    "dci": "Loratadina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 2 (non-sedativ)"
+  },
+  {
+    "dci": "Desloratadina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 2 (non-sedativ)"
+  },
+  {
+    "dci": "Fexofenadina",
+    "forma": "comprimate",
+    "concentratie": "120 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 2 (non-sedativ)"
+  },
+  {
+    "dci": "Fexofenadina",
+    "forma": "comprimate",
+    "concentratie": "180 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 2 (non-sedativ)"
+  },
+  {
+    "dci": "Bilastina",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 2 (non-sedativ)"
+  },
+  {
+    "dci": "Rupatadina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 2"
+  },
+  {
+    "dci": "Clemastina",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 1 (sedativ)"
+  },
+  {
+    "dci": "Clorfeniramina",
+    "forma": "comprimate",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 1 (sedativ)"
+  },
+  {
+    "dci": "Prometazina",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 1"
+  },
+  {
+    "dci": "Prometazina",
+    "forma": "solutie injectabila",
+    "concentratie": "25 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Antihistaminic - Gen 1"
+  },
+  {
+    "dci": "Difenhidramina",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 1 (sedativ)"
+  },
+  {
+    "dci": "Difenhidramina",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Antihistaminic - Gen 1 (sedativ)"
+  },
+  {
+    "dci": "Tamsulosin",
+    "forma": "capsule eliberare prelungita",
+    "concentratie": "0.4 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Alfa1-blocant (HBP)"
+  },
+  {
+    "dci": "Alfuzosin",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Alfa1-blocant (HBP)"
+  },
+  {
+    "dci": "Silodozina",
+    "forma": "capsule",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Alfa1-blocant (HBP)"
+  },
+  {
+    "dci": "Silodozina",
+    "forma": "capsule",
+    "concentratie": "8 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Alfa1-blocant (HBP)"
+  },
+  {
+    "dci": "Finasterida",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor 5-alfa-reductaza"
+  },
+  {
+    "dci": "Finasterida",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor 5-alfa-reductaza (HBP)"
+  },
+  {
+    "dci": "Dutasterida",
+    "forma": "capsule",
+    "concentratie": "0.5 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor 5-alfa-reductaza (HBP)"
+  },
+  {
+    "dci": "Sildenafil",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor PDE5"
+  },
+  {
+    "dci": "Sildenafil",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor PDE5"
+  },
+  {
+    "dci": "Sildenafil",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor PDE5"
+  },
+  {
+    "dci": "Tadalafil",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor PDE5"
+  },
+  {
+    "dci": "Tadalafil",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor PDE5"
+  },
+  {
+    "dci": "Tadalafil",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor PDE5"
+  },
+  {
+    "dci": "Tadalafil",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor PDE5"
+  },
+  {
+    "dci": "Vardenafil",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor PDE5"
+  },
+  {
+    "dci": "Vardenafil",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Inhibitor PDE5"
+  },
+  {
+    "dci": "Oxybutynin",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Anticolinergic (vezica hiperactiva)"
+  },
+  {
+    "dci": "Tolterodina",
+    "forma": "capsule eliberare prelungita",
+    "concentratie": "2 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Anticolinergic (vezica hiperactiva)"
+  },
+  {
+    "dci": "Tolterodina",
+    "forma": "capsule eliberare prelungita",
+    "concentratie": "4 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Anticolinergic (vezica hiperactiva)"
+  },
+  {
+    "dci": "Solifenacina",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Anticolinergic (vezica hiperactiva)"
+  },
+  {
+    "dci": "Solifenacina",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Anticolinergic (vezica hiperactiva)"
+  },
+  {
+    "dci": "Mirabegron",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Beta3-agonist (vezica hiperactiva)"
+  },
+  {
+    "dci": "Mirabegron",
+    "forma": "comprimate eliberare prelungita",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Urologie - Beta3-agonist (vezica hiperactiva)"
+  },
+  {
+    "dci": "Tamoxifen",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Antiestrogen"
+  },
+  {
+    "dci": "Tamoxifen",
+    "forma": "comprimate",
+    "concentratie": "20 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Antiestrogen"
+  },
+  {
+    "dci": "Anastrozol",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Inhibitor aromataza"
+  },
+  {
+    "dci": "Letrozol",
+    "forma": "comprimate",
+    "concentratie": "2.5 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Inhibitor aromataza"
+  },
+  {
+    "dci": "Exemestan",
+    "forma": "comprimate",
+    "concentratie": "25 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Inhibitor aromataza"
+  },
+  {
+    "dci": "Imatinib",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Inhibitor tirozinkinaza"
+  },
+  {
+    "dci": "Imatinib",
+    "forma": "comprimate",
+    "concentratie": "400 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Inhibitor tirozinkinaza"
+  },
+  {
+    "dci": "Erlotinib",
+    "forma": "comprimate",
+    "concentratie": "100 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Inhibitor EGFR"
+  },
+  {
+    "dci": "Erlotinib",
+    "forma": "comprimate",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Inhibitor EGFR"
+  },
+  {
+    "dci": "Capecitabina",
+    "forma": "comprimate",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Citostatic oral"
+  },
+  {
+    "dci": "Capecitabina",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Citostatic oral"
+  },
+  {
+    "dci": "Hidroxiuree",
+    "forma": "capsule",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Antimetabolit"
+  },
+  {
+    "dci": "Bicalutamida",
+    "forma": "comprimate",
+    "concentratie": "50 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Antiandrogen"
+  },
+  {
+    "dci": "Bicalutamida",
+    "forma": "comprimate",
+    "concentratie": "150 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Antiandrogen"
+  },
+  {
+    "dci": "Enzalutamida",
+    "forma": "capsule",
+    "concentratie": "40 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Antiandrogen"
+  },
+  {
+    "dci": "Abiraterona acetat",
+    "forma": "comprimate",
+    "concentratie": "250 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Inhibitor CYP17"
+  },
+  {
+    "dci": "Abiraterona acetat",
+    "forma": "comprimate",
+    "concentratie": "500 mg",
+    "cale": "oral",
+    "clasa": "Oncologie - Inhibitor CYP17"
+  },
+  {
+    "dci": "Acid folic",
+    "forma": "comprimate",
+    "concentratie": "0.4 mg",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente"
+  },
+  {
+    "dci": "Acid folic",
+    "forma": "comprimate",
+    "concentratie": "1 mg",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente"
+  },
+  {
+    "dci": "Acid folic",
+    "forma": "comprimate",
+    "concentratie": "5 mg",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente"
+  },
+  {
+    "dci": "Vitamina D3 (colecalciferol)",
+    "forma": "picaturi orale",
+    "concentratie": "500 UI/picatura",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente"
+  },
+  {
+    "dci": "Vitamina D3 (colecalciferol)",
+    "forma": "capsule",
+    "concentratie": "1000 UI",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente"
+  },
+  {
+    "dci": "Vitamina D3 (colecalciferol)",
+    "forma": "capsule",
+    "concentratie": "4000 UI",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente"
+  },
+  {
+    "dci": "Calcitriol",
+    "forma": "capsule",
+    "concentratie": "0.25 mcg",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente - Vitamina D activa"
+  },
+  {
+    "dci": "Calcitriol",
+    "forma": "capsule",
+    "concentratie": "0.5 mcg",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente - Vitamina D activa"
+  },
+  {
+    "dci": "Vitamina B12 (cianocobalamina)",
+    "forma": "comprimate",
+    "concentratie": "1000 mcg",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente"
+  },
+  {
+    "dci": "Vitamina B12 (cianocobalamina)",
+    "forma": "solutie injectabila",
+    "concentratie": "1000 mcg/ml",
+    "cale": "injectabil",
+    "clasa": "Vitamine / Suplimente"
+  },
+  {
+    "dci": "Sulfat feros",
+    "forma": "comprimate",
+    "concentratie": "80 mg fier elemental",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente - Fier"
+  },
+  {
+    "dci": "Fier III hidroxid polimaltozat",
+    "forma": "comprimate masticabile",
+    "concentratie": "100 mg fier",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente - Fier"
+  },
+  {
+    "dci": "Fier sacarozat",
+    "forma": "solutie injectabila",
+    "concentratie": "20 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Vitamine / Suplimente - Fier IV"
+  },
+  {
+    "dci": "Magneziu",
+    "forma": "comprimate",
+    "concentratie": "375 mg",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente - Electroliti"
+  },
+  {
+    "dci": "Potasiu clorura",
+    "forma": "comprimate",
+    "concentratie": "600 mg (8 mEq)",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente - Electroliti"
+  },
+  {
+    "dci": "Colecalciferol + Calciu",
+    "forma": "comprimate masticabile",
+    "concentratie": "500 UI + 500 mg",
+    "cale": "oral",
+    "clasa": "Vitamine / Suplimente"
+  },
+  {
+    "dci": "Naloxona",
+    "forma": "solutie injectabila",
+    "concentratie": "0.4 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Antidot - Antagonist opioid"
+  },
+  {
+    "dci": "Flumazenil",
+    "forma": "solutie injectabila",
+    "concentratie": "0.1 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Antidot - Antagonist benzodiazepine"
+  },
+  {
+    "dci": "Carbune activat",
+    "forma": "pulbere / granule",
+    "concentratie": "50 g",
+    "cale": "oral",
+    "clasa": "Antidot - Adsorbant intestinal"
+  },
+  {
+    "dci": "Atropina",
+    "forma": "solutie injectabila",
+    "concentratie": "0.5 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Antidot / Antiaritmic"
+  },
+  {
+    "dci": "Atropina",
+    "forma": "solutie injectabila",
+    "concentratie": "1 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Antidot / Antiaritmic"
+  },
+  {
+    "dci": "Desferrioxamina",
+    "forma": "pulbere injectabila",
+    "concentratie": "500 mg",
+    "cale": "injectabil",
+    "clasa": "Antidot - Supraincarcatura fier"
+  },
+  {
+    "dci": "Fitomenadiona (Vitamina K1)",
+    "forma": "comprimate",
+    "concentratie": "10 mg",
+    "cale": "oral",
+    "clasa": "Vitamina K - Antagonist anticoagulante"
+  },
+  {
+    "dci": "Fitomenadiona (Vitamina K1)",
+    "forma": "solutie injectabila",
+    "concentratie": "10 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Vitamina K - Antagonist anticoagulante"
+  },
+  {
+    "dci": "Ketamina",
+    "forma": "solutie injectabila",
+    "concentratie": "10 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Anestezic disociativ"
+  },
+  {
+    "dci": "Ketamina",
+    "forma": "solutie injectabila",
+    "concentratie": "50 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Anestezic disociativ"
+  },
+  {
+    "dci": "Propofol",
+    "forma": "emulsie injectabila",
+    "concentratie": "10 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Anestezic IV"
+  },
+  {
+    "dci": "Propofol",
+    "forma": "emulsie injectabila",
+    "concentratie": "20 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Anestezic IV"
+  },
+  {
+    "dci": "Midazolam",
+    "forma": "comprimate",
+    "concentratie": "7.5 mg",
+    "cale": "oral",
+    "clasa": "Anestezie - Premedicatie / Sedare"
+  },
+  {
+    "dci": "Midazolam",
+    "forma": "solutie injectabila",
+    "concentratie": "1 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Premedicatie / Sedare"
+  },
+  {
+    "dci": "Midazolam",
+    "forma": "solutie injectabila",
+    "concentratie": "5 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Premedicatie / Sedare"
+  },
+  {
+    "dci": "Lidocaina (anestezie)",
+    "forma": "solutie injectabila",
+    "concentratie": "1%",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Anestezic local"
+  },
+  {
+    "dci": "Lidocaina (anestezie)",
+    "forma": "solutie injectabila",
+    "concentratie": "2%",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Anestezic local"
+  },
+  {
+    "dci": "Bupivacaina",
+    "forma": "solutie injectabila",
+    "concentratie": "0.25%",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Anestezic local"
+  },
+  {
+    "dci": "Bupivacaina",
+    "forma": "solutie injectabila",
+    "concentratie": "0.5%",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Anestezic local"
+  },
+  {
+    "dci": "Ropivacaina",
+    "forma": "solutie injectabila",
+    "concentratie": "0.2%",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Anestezic local"
+  },
+  {
+    "dci": "Ropivacaina",
+    "forma": "solutie injectabila",
+    "concentratie": "0.75%",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Anestezic local"
+  },
+  {
+    "dci": "Succinilcolina",
+    "forma": "solutie injectabila",
+    "concentratie": "20 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Relaxant muscular depolarizant"
+  },
+  {
+    "dci": "Vecuroniu",
+    "forma": "pulbere injectabila",
+    "concentratie": "10 mg",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Relaxant muscular non-depolarizant"
+  },
+  {
+    "dci": "Rocuroniu",
+    "forma": "solutie injectabila",
+    "concentratie": "10 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Relaxant muscular non-depolarizant"
+  },
+  {
+    "dci": "Sugammadex",
+    "forma": "solutie injectabila",
+    "concentratie": "200 mg/2ml",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Antagonist relaxante musculare"
+  },
+  {
+    "dci": "Neostigmina",
+    "forma": "solutie injectabila",
+    "concentratie": "0.5 mg/ml",
+    "cale": "injectabil",
+    "clasa": "Anestezie - Antagonist relaxante musculare"
+  },
+  {
+    "dci": "Iod povidona",
+    "forma": "solutie topica",
+    "concentratie": "10%",
+    "cale": "topic",
+    "clasa": "Antiseptic topic"
+  },
+  {
+    "dci": "Clorhexidina",
+    "forma": "solutie topica",
+    "concentratie": "0.5%",
+    "cale": "topic",
+    "clasa": "Antiseptic topic"
+  },
+  {
+    "dci": "Clorhexidina",
+    "forma": "solutie topica",
+    "concentratie": "2%",
+    "cale": "topic",
+    "clasa": "Antiseptic topic"
+  },
+  {
+    "dci": "Alcool etilic",
+    "forma": "solutie topica",
+    "concentratie": "70%",
+    "cale": "topic",
+    "clasa": "Antiseptic topic"
+  }
+]
