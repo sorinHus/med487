@@ -172,7 +172,7 @@ function ModalReteta({ pacientId, medicId, onClose, onSaved, editData = null }) 
                     <input value={linie.doza_frecventa} onChange={e => updateLinie(i, 'doza_frecventa', e.target.value)} className={s.input} placeholder="ex: 1cp/zi" /></div>
                   <div><label className={s.label}>Durată (zile)</label>
                     <input type="number" min="1" value={linie.durata_zile} onChange={e => updateLinie(i, 'durata_zile', e.target.value)} className={s.input} placeholder="30" /></div>
-                  <div><label className={s.label}>Cantitate (cutii)</label>
+                  <div><label className={s.label}>Nr. unități (comprimate/fiole)</label>
                     <input type="number" min="1" value={linie.cantitate} onChange={e => updateLinie(i, 'cantitate', e.target.value)} className={s.input} /></div>
                 </div>
                 <label className={s.label}>Observații medicament</label>
@@ -956,8 +956,10 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
                 </select></div>
               <div><label className={s.label}>Sursa</label>
                 <select value={formDiag.sursa} onChange={e => setFormDiag(p => ({ ...p, sursa: e.target.value }))} className={s.input}>
+                  <option value="consultatie">Consultație</option>
                   <option value="scrisoare">Scrisoare medicală</option>
                   <option value="extern">Document extern</option>
+                  <option value="altele">Altele</option>
                 </select></div>
             </div>
             <label className={s.label}>Observații</label>
@@ -979,7 +981,7 @@ export default function PacientDetalii({ pacient, onBack, moduleActive = [] }) {
               {d.tip === 'cronic'     && <span className={s.badgeDiagCronic}>Cronic</span>}
               {d.tip === 'antecedent' && <span className={s.badgeDiagAntecedent}>Antecedent</span>}
               {d.tip === 'rezolvat'   && <span className={s.badgeDiagRezolvat}>Rezolvat</span>}
-              <span className={s.diagSursa}>{d.sursa === 'consultatie' ? '· consultație' : d.sursa === 'scrisoare' ? '· scrisoare medicală' : '· document extern'}</span>
+              <span className={s.diagSursa}>· {{ consultatie: 'consultație', scrisoare: 'scrisoare medicală', extern: 'document extern', altele: 'altele' }[d.sursa] || d.sursa}</span>
               <span className={s.listRowDate}> · {d.data_adaugarii}</span>
             </div>
             <div className={s.rowActions}>

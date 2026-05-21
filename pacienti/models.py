@@ -366,6 +366,7 @@ class DiagnosticPacient(models.Model):
         ('consultatie', 'Consultație'),
         ('scrisoare', 'Scrisoare medicală'),
         ('extern', 'Document extern'),
+        ('altele', 'Altele'),
     ]
     pacient        = models.ForeignKey(Pacient, on_delete=models.CASCADE, related_name='diagnostice_pacient')
     diagnostic     = models.ForeignKey(Diagnostic, on_delete=models.PROTECT, related_name='diagnostice_pacienti')
