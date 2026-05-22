@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { logout } from './auth'
 import api from './api'
@@ -85,18 +85,16 @@ function AppInterna() {
   const [loading, setLoading]   = useState(true)
   const timerRef                = useRef(null)
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await logout()
     setLoggedIn(false)
     setUser(null)
-  }
+  }, [])
 
-  const resetTimer = () => {
+  const resetTimer = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(() => {
-      handleLogout()
-    }, INACTIVITY_LIMIT)
-  }
+    timerRef.current = setTimeout(handleLogout, INACTIVITY_LIMIT)
+  }, [handleLogout])
 
   useEffect(() => {
     if (!loggedIn) return
@@ -107,7 +105,7 @@ function AppInterna() {
       events.forEach(e => window.removeEventListener(e, resetTimer))
       if (timerRef.current) clearTimeout(timerRef.current)
     }
-  }, [loggedIn])
+  }, [loggedIn, resetTimer])
 
   useEffect(() => {
     const handler = () => { setLoggedIn(false); setUser(null) }

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import s from '../styles/MobilApp.module.css'
 
 const API = import.meta.env.VITE_API_URL || 'https://web-production-26811.up.railway.app/api'
+const INACTIVITY_LIMIT = 2 * 60 * 60 * 1000
 
 const ZILE = ['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă']
 const LUNI = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oct', 'nov', 'dec']
@@ -728,6 +729,7 @@ export default function MobilApp() {
   const [updating, setUpdating]         = useState(null)
   const [showModal, setShowModal]       = useState(false)
   const [editProgramare, setEditProgramare] = useState(null)
+  const timerRef = useRef(null)
 
   useEffect(() => {
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {})
@@ -738,6 +740,22 @@ export default function MobilApp() {
     localStorage.removeItem('mobil_user')
     setUser(null)
   }, [])
+
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(handleLogout, INACTIVITY_LIMIT)
+  }, [handleLogout])
+
+  useEffect(() => {
+    if (!user) return
+    const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll']
+    events.forEach(e => window.addEventListener(e, resetTimer, { passive: true }))
+    resetTimer()
+    return () => {
+      events.forEach(e => window.removeEventListener(e, resetTimer))
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [user, resetTimer])
 
   // Înregistrăm handleLogout global pentru apiFetch
   useEffect(() => {
