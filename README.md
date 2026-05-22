@@ -8,7 +8,13 @@ A full-stack web application for managing a family medicine practice, built unde
 > | 🖥️ Desktop app | [med487.pages.dev/app](https://med487.pages.dev/app) |
 > | 📱 Mobile PWA | [med487.pages.dev/mobil](https://med487.pages.dev/mobil) |
 >
-> Demo credentials: `ion.popescu` / `Ion2026!` (doctor role)
+> Demo credentials
+Doctor
+ion.popescu / Ion2026!
+Assistant
+andra.vasilescu / Andra2026!
+Patient
+1700912567890 / Pacient2026!
 
 ---
 
